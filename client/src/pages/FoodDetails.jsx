@@ -16,6 +16,8 @@ const FoodDetails = () => {
   const { orders, addToOrders, updateOrderQty } = useFavorites();
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
     const load = async () => {
       setLoading(true);
       try {
