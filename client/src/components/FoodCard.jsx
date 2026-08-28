@@ -7,10 +7,20 @@ import { useFavorites } from "../context/FavoritesContext";
 const FoodCard = ({ item }) => {
   const { orders, addToOrders, updateOrderQty } = useFavorites();
   const current = orders.find((f) => f.menuItemId === item._id || f._id === item._id);
-  const prices = item.variants?.length
-    ? item.variants.map((variant) => variant.salePrice ?? variant.price)
-    : [item.salePrice ?? item.price];
-  const startingPrice = Math.min(...prices);
+  const priceOptions = item.variants?.length
+    ? item.variants.map((variant) => ({
+        price: variant.salePrice ?? variant.price,
+        originalPrice: variant.price,
+      }))
+    : [{ price: item.salePrice ?? item.price, originalPrice: item.price }];
+  const lowestPrice = priceOptions.reduce((lowest, option) =>
+    Number(option.price) < Number(lowest.price) ? option : lowest
+  );
+  const startingPrice = lowestPrice.price;
+  const hasDiscount = Number(lowestPrice.originalPrice) > Number(startingPrice);
+  const discountPercent = hasDiscount
+    ? Math.round(((lowestPrice.originalPrice - startingPrice) / lowestPrice.originalPrice) * 100)
+    : 0;
 
   return (
     <motion.div
@@ -68,7 +78,9 @@ const FoodCard = ({ item }) => {
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <span className="min-w-0 font-semibold text-accent">
             {item.variants?.length > 1 && <span className="text-xs text-brown-light mr-1">From</span>}
+            {hasDiscount && <span className="mr-1 text-xs font-medium text-brown-light line-through">₹{lowestPrice.originalPrice}</span>}
             ₹{startingPrice}
+            {hasDiscount && <span className="ml-1 text-[10px] font-bold text-green-600">{discountPercent}% off</span>}
           </span>
 
           {!item.available ? (
