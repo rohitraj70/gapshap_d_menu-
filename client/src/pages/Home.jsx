@@ -94,6 +94,7 @@ const Home = () => {
         <section className="top-banner relative overflow-hidden rounded-[1.75rem] bg-brown-dark px-6 py-8 sm:px-10 sm:py-10 text-cream shadow-soft">
           <div className="top-banner-ring absolute -right-10 -top-16 h-56 w-56 rounded-full border-[22px] border-accent/30" />
           <div className="top-banner-ring absolute right-10 bottom-[-72px] h-40 w-40 rounded-full border-[16px] border-cream/10" />
+          <div className="top-banner-glow absolute left-1/2 top-[-12rem] h-64 w-64 -translate-x-1/2 rounded-full" />
           <div className="relative max-w-xl">
             <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-accent-light">
               <Sparkles size={14} /> Your table is waiting
