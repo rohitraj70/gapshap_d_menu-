@@ -49,6 +49,11 @@ html.dark .top-banner-ring:last-child {
   border-color: rgba(255, 248, 240, 0.08);
 }
 
+html.dark .brand-name {
+  color: #fff8f0;
+  text-shadow: 0 1px 12px rgba(240, 167, 90, 0.2);
+}
+
 html.dark input,
 html.dark textarea,
 html.dark select { color: #f8eee3; }

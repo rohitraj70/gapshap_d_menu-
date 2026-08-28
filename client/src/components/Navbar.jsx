@@ -10,7 +10,7 @@ const Navbar = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
           <img src="/Gapshap-logo.png" alt="Gapshap Cafe" className="w-10 h-10 rounded-xl object-cover shadow-card group-hover:rotate-[-4deg] transition-transform" />
-          <span className="font-display text-xl font-semibold tracking-tight text-brown-dark">
+          <span className="brand-name font-display text-xl font-bold tracking-tight text-brown-dark">
             Gapshap <span className="text-accent">Cafe</span>
           </span>
         </Link>
