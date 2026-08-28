@@ -35,6 +35,17 @@ const Home = () => {
 
   const featured = useMemo(() => items.filter((i) => i.featured && i.available), [items]);
 
+  const availableItemCounts = useMemo(() => {
+    const counts = { all: 0 };
+    items.forEach((item) => {
+      if (!item.available) return;
+      counts.all += 1;
+      const categoryId = item.category?._id || item.category;
+      if (categoryId) counts[categoryId] = (counts[categoryId] || 0) + 1;
+    });
+    return counts;
+  }, [items]);
+
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
       const matchesCategory = activeCategory ? item.category?._id === activeCategory : true;
@@ -88,6 +99,7 @@ const Home = () => {
               categories={categories}
               activeId={activeCategory}
               onSelect={setActiveCategory}
+              itemCounts={availableItemCounts}
             />
           )}
         </section>

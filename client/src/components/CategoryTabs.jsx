@@ -1,4 +1,4 @@
-const CategoryTabs = ({ categories, activeId, onSelect }) => {
+const CategoryTabs = ({ categories, activeId, onSelect, itemCounts = {} }) => {
   return (
     <div className="flex gap-2 overflow-x-auto hide-scrollbar py-1 -mx-4 px-4">
       <button
@@ -9,7 +9,7 @@ const CategoryTabs = ({ categories, activeId, onSelect }) => {
             : "bg-white text-brown-dark border border-brown/10 hover:border-accent/50"
         }`}
       >
-        All
+        All ({itemCounts.all || 0})
       </button>
       {categories.map((cat) => (
         <button
@@ -21,7 +21,7 @@ const CategoryTabs = ({ categories, activeId, onSelect }) => {
               : "bg-white text-brown-dark border border-brown/10 hover:border-accent/50"
           }`}
         >
-          {cat.name}
+          {cat.name} ({itemCounts[cat._id] || 0})
         </button>
       ))}
     </div>
