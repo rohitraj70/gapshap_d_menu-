@@ -71,7 +71,7 @@ const FoodDetails = () => {
   const originalPrice = selectedVariant?.price ?? item.price;
 
   return (
-    <div className="min-h-screen bg-cream pb-28">
+    <div className="min-h-screen bg-cream pb-44 sm:pb-36">
       <div className="relative mx-auto aspect-[4/3] w-full max-w-5xl overflow-hidden bg-cream-dark sm:aspect-[16/10] sm:rounded-b-xl2 lg:aspect-[16/9] lg:rounded-xl2 lg:mt-6 lg:shadow-soft">
         {item.image?.url ? (
           <img src={item.image.url} alt={item.name} className="h-full w-full object-cover object-center" />
@@ -112,9 +112,6 @@ const FoodDetails = () => {
             {item.category.name}
           </span>
         )}
-        {item.description && (
-          <p className="text-sm text-brown-light leading-relaxed mt-4">{item.description}</p>
-        )}
         {item.variants?.length > 0 && (
           <div className="mt-5">
             <p className="text-xs font-semibold text-brown-dark mb-2">Choose size</p>
@@ -134,6 +131,9 @@ const FoodDetails = () => {
               ))}
             </div>
           </div>
+        )}
+        {item.description && (
+          <p className="text-sm text-brown-light leading-relaxed mt-5">{item.description}</p>
         )}
 
         {!item.available ? (
