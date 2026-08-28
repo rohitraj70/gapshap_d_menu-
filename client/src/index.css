@@ -103,6 +103,28 @@ html.dark .collection-clear {
   color: #f0a75a;
 }
 
+@media (max-width: 767px) {
+  .category-tabs-scroll {
+    animation: category-nudge 1.4s ease-in-out 0.7s 2;
+  }
+
+  .category-tabs-cue {
+    display: flex;
+    color: #6f4e37;
+    background: linear-gradient(90deg, rgba(255, 248, 240, 0), #fff8f0 42%);
+  }
+
+  html.dark .category-tabs-cue {
+    color: #f0a75a;
+    background: linear-gradient(90deg, rgba(33, 26, 22, 0), #211a16 42%);
+  }
+}
+
+@keyframes category-nudge {
+  0%, 100% { transform: translateX(0); }
+  45% { transform: translateX(-18px); }
+}
+
 html.dark input,
 html.dark textarea,
 html.dark select { color: #f8eee3; }
