@@ -92,7 +92,12 @@ const FoodDetails = () => {
       <div className="max-w-3xl mx-auto px-4 pt-5">
         <div className="flex items-start justify-between gap-4">
           <h1 className="font-display text-2xl font-bold text-brown-dark">{item.name}</h1>
-          <span className="font-display text-xl font-bold text-accent shrink-0">₹{item.price}</span>
+          <span className="font-display text-xl font-bold text-accent shrink-0">
+            {item.salePrice != null && (
+              <span className="text-sm text-brown-light line-through mr-1">₹{item.price}</span>
+            )}
+            ₹{item.salePrice ?? item.price}
+          </span>
         </div>
         {item.category?.name && (
           <span className="inline-block mt-2 text-xs font-semibold text-brown-light bg-cream-dark px-2.5 py-1 rounded-full">

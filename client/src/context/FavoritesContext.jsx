@@ -28,7 +28,17 @@ export const FavoritesProvider = ({ children }) => {
       if (existing) {
         return prev.map((f) => (f._id === item._id ? { ...f, qty: f.qty + qty } : f));
       }
-      return [...prev, { _id: item._id, name: item.name, price: item.price, image: item.image, qty }];
+      return [
+        ...prev,
+        {
+          _id: item._id,
+          name: item.name,
+          price: item.salePrice ?? item.price,
+          originalPrice: item.price,
+          image: item.image,
+          qty,
+        },
+      ];
     });
   }, []);
 

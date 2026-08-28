@@ -68,7 +68,12 @@ const Favorites = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-brown-dark text-sm line-clamp-1">{item.name}</h3>
-                <p className="text-xs text-brown-light mt-0.5">₹{item.price} each</p>
+                <p className="text-xs text-brown-light mt-0.5">
+                  {item.originalPrice != null && item.originalPrice !== item.price && (
+                    <span className="line-through mr-1">₹{item.originalPrice}</span>
+                  )}
+                  ₹{item.price} each
+                </p>
                 <div className="flex items-center gap-3 mt-2">
                   <button
                     onClick={() => updateQty(item._id, item.qty - 1)}

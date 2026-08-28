@@ -57,7 +57,12 @@ const FoodCard = ({ item }) => {
         </Link>
 
         <div className="flex items-center justify-between mt-3">
-          <span className="font-semibold text-brown-dark">₹{item.price}</span>
+          <span className="font-semibold text-accent">
+            {item.salePrice != null && (
+              <span className="text-xs text-brown-light line-through mr-1">₹{item.price}</span>
+            )}
+            ₹{item.salePrice ?? item.price}
+          </span>
 
           {!item.available ? (
             <span className="text-xs text-brown-light">Not available</span>

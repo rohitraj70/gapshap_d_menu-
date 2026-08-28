@@ -46,18 +46,26 @@ export const getMenuItemsByCategory = asyncHandler(async (req, res) => {
 // @route   POST /api/menu
 // @access  Private/Admin
 export const createMenuItem = asyncHandler(async (req, res) => {
-  const { name, category, description, price, available, featured } = req.body;
+  const { name, category, description, price, salePrice, available, featured } = req.body;
 
   if (!name || !category || price === undefined) {
     res.status(400);
     throw new Error("Name, category and price are required");
   }
 
+  const originalPrice = Number(price);
+  const discountedPrice = salePrice === undefined || salePrice === "" ? null : Number(salePrice);
+  if (!Number.isFinite(originalPrice) || originalPrice < 0 || (discountedPrice !== null && (!Number.isFinite(discountedPrice) || discountedPrice < 0 || discountedPrice >= originalPrice))) {
+    res.status(400);
+    throw new Error("Sale price must be lower than the original price");
+  }
+
   const itemData = {
     name,
     category,
     description,
-    price,
+    price: originalPrice,
+    salePrice: discountedPrice,
     available: available ?? true,
     featured: featured ?? false,
   };
@@ -83,12 +91,17 @@ export const updateMenuItem = asyncHandler(async (req, res) => {
     throw new Error("Menu item not found");
   }
 
-  const { name, category, description, price, available, featured } = req.body;
+  const { name, category, description, price, salePrice, available, featured } = req.body;
 
   item.name = name ?? item.name;
   item.category = category ?? item.category;
   item.description = description ?? item.description;
-  item.price = price ?? item.price;
+  if (price !== undefined) item.price = Number(price);
+  if (salePrice !== undefined) item.salePrice = salePrice === "" ? null : Number(salePrice);
+  if (!Number.isFinite(item.price) || item.price < 0 || (item.salePrice != null && (!Number.isFinite(item.salePrice) || item.salePrice < 0 || item.salePrice >= item.price))) {
+    res.status(400);
+    throw new Error("Sale price must be lower than the original price");
+  }
   if (available !== undefined) item.available = available === true || available === "true";
   if (featured !== undefined) item.featured = featured === true || featured === "true";
 

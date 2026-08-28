@@ -6,6 +6,7 @@ const menuItemSchema = new mongoose.Schema(
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     description: { type: String, trim: true, default: "" },
     price: { type: Number, required: true, min: 0 },
+    salePrice: { type: Number, min: 0, default: null },
     image: {
       url: { type: String, default: "" },
       publicId: { type: String, default: "" },
