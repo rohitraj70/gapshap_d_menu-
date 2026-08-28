@@ -10,6 +10,15 @@ import EmptyState from "../components/EmptyState";
 import { FoodGridSkeleton, ChipsSkeleton } from "../components/Skeletons";
 import { fetchCategories, fetchMenu } from "../services/api";
 
+const shuffleItems = (items) => {
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
+  }
+  return shuffled;
+};
+
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
@@ -23,7 +32,7 @@ const Home = () => {
       try {
         const [catRes, menuRes] = await Promise.all([fetchCategories(), fetchMenu()]);
         setCategories(catRes.data.data);
-        setItems(menuRes.data.data);
+        setItems(shuffleItems(menuRes.data.data));
       } catch (err) {
         console.error("Failed to load menu:", err);
       } finally {
