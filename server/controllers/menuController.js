@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 import MenuItem from "../models/MenuItem.js";
-import { cloudinary } from "../utils/cloudinary.js";
+import { cloudinary, uploadImage } from "../utils/cloudinary.js";
 
 // @desc    Get all menu items (supports ?search=&category=&featured=&available=)
 // @route   GET /api/menu
@@ -63,7 +63,8 @@ export const createMenuItem = asyncHandler(async (req, res) => {
   };
 
   if (req.file) {
-    itemData.image = { url: req.file.path, publicId: req.file.filename };
+    const image = await uploadImage(req.file.buffer);
+    itemData.image = { url: image.secure_url, publicId: image.public_id };
   }
 
   const item = await MenuItem.create(itemData);
@@ -72,10 +73,11 @@ export const createMenuItem = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update menu item
+    const image = await uploadImage(req.file.buffer);
 // @route   PUT /api/menu/:id
 // @access  Private/Admin
 export const updateMenuItem = asyncHandler(async (req, res) => {
-  const item = await MenuItem.findById(req.params.id);
+    item.image = { url: image.secure_url, publicId: image.public_id };
 
   if (!item) {
     res.status(404);
