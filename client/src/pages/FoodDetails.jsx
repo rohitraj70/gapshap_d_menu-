@@ -72,9 +72,9 @@ const FoodDetails = () => {
 
   return (
     <div className="min-h-screen bg-cream pb-28">
-      <div className="relative aspect-square bg-cream-dark">
+      <div className="relative mx-auto aspect-[4/3] w-full max-w-5xl overflow-hidden bg-cream-dark sm:aspect-[16/10] sm:rounded-b-xl2 lg:aspect-[16/9] lg:rounded-xl2 lg:mt-6 lg:shadow-soft">
         {item.image?.url ? (
-          <img src={item.image.url} alt={item.name} className="w-full h-full object-cover" />
+          <img src={item.image.url} alt={item.name} className="h-full w-full object-cover object-center" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-brown-light/50">
             <ImageOff size={40} />
@@ -83,21 +83,21 @@ const FoodDetails = () => {
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
-          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-card flex items-center justify-center text-brown-dark"
+          className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-brown-dark shadow-card backdrop-blur sm:left-6 sm:top-6"
         >
           <ArrowLeft size={20} />
         </button>
-        <div className="absolute top-4 right-4">
+        <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
           <FavoriteButton item={item} size={20} />
         </div>
         {item.featured && (
-          <span className="absolute bottom-4 left-4 bg-accent text-white text-xs font-bold px-3 py-1.5 rounded-full shadow">
+          <span className="absolute bottom-4 left-4 rounded-full bg-accent px-3 py-1.5 text-xs font-bold text-white shadow sm:bottom-6 sm:left-6">
             Most Loved ❤️
           </span>
         )}
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 pt-5">
+      <div className="mx-auto max-w-3xl animate-fade-up px-4 pb-6 pt-6 sm:pt-8">
         <div className="flex items-start justify-between gap-4">
           <h1 className="font-display text-2xl font-bold text-brown-dark">{item.name}</h1>
           <span className="font-display text-xl font-bold text-accent shrink-0">
