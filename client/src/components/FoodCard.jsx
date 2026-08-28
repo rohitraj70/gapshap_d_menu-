@@ -58,6 +58,11 @@ const FoodCard = ({ item }) => {
           {item.description && (
             <p className="text-xs text-brown-light mt-0.5 line-clamp-2">{item.description}</p>
           )}
+          {item.variants?.length > 0 && (
+            <p className="text-[11px] text-brown-light mt-1 line-clamp-1">
+              {item.variants.map((variant) => `${variant.label}: ₹${variant.salePrice ?? variant.price}`).join(" · ")}
+            </p>
+          )}
         </Link>
 
         <div className="flex items-center justify-between mt-3">
@@ -86,6 +91,13 @@ const FoodCard = ({ item }) => {
                 <Plus size={13} />
               </button>
             </div>
+          ) : item.variants?.length > 1 ? (
+            <Link
+              to={`/food/${item._id}`}
+              className="bg-brown text-cream text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-brown-dark transition-colors"
+            >
+              Choose size
+            </Link>
           ) : (
             <button
               onClick={() => addToFavorites(item, 1)}
