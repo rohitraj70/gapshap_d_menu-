@@ -73,12 +73,9 @@ export const createMenuItem = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update menu item
-    const image = await uploadImage(req.file.buffer);
 // @route   PUT /api/menu/:id
 // @access  Private/Admin
 export const updateMenuItem = asyncHandler(async (req, res) => {
-    item.image = { url: image.secure_url, publicId: image.public_id };
-
   if (!item) {
     res.status(404);
     throw new Error("Menu item not found");
@@ -94,10 +91,11 @@ export const updateMenuItem = asyncHandler(async (req, res) => {
   if (featured !== undefined) item.featured = featured;
 
   if (req.file) {
+    const image = await uploadImage(req.file.buffer);
     if (item.image?.publicId) {
       await cloudinary.uploader.destroy(item.image.publicId).catch(() => {});
     }
-    item.image = { url: req.file.path, publicId: req.file.filename };
+    item.image = { url: image.secure_url, publicId: image.public_id };
   }
 
   const updated = await item.save();
