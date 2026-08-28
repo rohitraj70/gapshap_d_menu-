@@ -71,7 +71,7 @@ const FoodDetails = () => {
   const originalPrice = selectedVariant?.price ?? item.price;
 
   return (
-    <div className="min-h-screen bg-cream pb-[calc(7rem+env(safe-area-inset-bottom))] sm:pb-32">
+    <div className="min-h-screen bg-cream pb-6 sm:pb-32">
       <div className="relative mx-auto aspect-[4/3] w-full max-w-5xl overflow-hidden bg-cream-dark sm:aspect-[16/10] sm:rounded-b-xl2 lg:aspect-[16/9] lg:rounded-xl2 lg:mt-6 lg:shadow-soft">
         {item.image?.url ? (
           <img src={item.image.url} alt={item.name} className="h-full w-full object-cover object-center" />
@@ -141,7 +141,7 @@ const FoodDetails = () => {
             Currently unavailable
           </div>
         ) : (
-          <div className="fixed bottom-0 inset-x-0 z-20 border-t border-brown/10 bg-white/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-soft backdrop-blur-md sm:p-4 sm:pb-4">
+          <div className="sticky bottom-0 z-20 -mx-4 border-t border-brown/10 bg-white/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-soft backdrop-blur-md sm:fixed sm:inset-x-0 sm:mx-0 sm:p-4 sm:pb-4">
             <div className="max-w-3xl mx-auto flex items-center gap-3">
               {current ? (
                 <div className="flex min-h-12 items-center gap-4 bg-cream-dark rounded-full px-4 py-2.5 flex-1 justify-center">
