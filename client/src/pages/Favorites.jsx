@@ -22,7 +22,7 @@ const Favorites = () => {
         <EmptyState
           icon={HeartOff}
           title="No orders yet"
-          description="Browse the menu and add dishes you would like to order."
+          description="Browse the menu, add your favorites to this list, and show it at the counter when you are ready."
           action={
             <Link to="/" className="text-accent font-semibold text-sm">
               Browse the menu
@@ -47,6 +47,13 @@ const Favorites = () => {
           >
             Clear all
           </button>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-3xl px-4 pt-4">
+        <div className="rounded-xl2 border border-accent/20 bg-accent/10 p-4">
+          <p className="font-display font-semibold text-brown-dark">A little note for you</p>
+          <p className="mt-1 text-sm leading-5 text-brown-light">Make any changes here, then show this order list to our cashier. We will take care of the rest.</p>
         </div>
       </div>
 

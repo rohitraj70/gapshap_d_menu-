@@ -102,7 +102,7 @@ const Home = () => {
               Good food.<br /><em className="text-accent-light">Better gapshap.</em>
             </h1>
             <p className="mt-4 max-w-sm text-sm leading-6 text-cream/70">
-              Pick a little comfort for the table, then show your selection at the counter.
+              Welcome in. Take a moment, find something delicious, and make yourself comfortable.
             </p>
             <a href="#menu" className="mt-6 inline-flex items-center gap-2 rounded-full bg-cream px-4 py-2.5 text-xs font-bold text-brown-dark hover:bg-accent hover:text-white transition-colors">
               Explore the menu <ArrowDown size={15} />
@@ -111,6 +111,12 @@ const Home = () => {
         </section>
 
         <SearchBar value={search} onChange={setSearch} />
+
+        <div className="grid grid-cols-3 gap-2 rounded-xl2 border border-brown/10 bg-white/70 p-3 text-center shadow-card">
+          <div><p className="text-xs font-bold text-accent">01</p><p className="mt-1 text-[11px] font-semibold text-brown-light">Explore the menu</p></div>
+          <div><p className="text-xs font-bold text-accent">02</p><p className="mt-1 text-[11px] font-semibold text-brown-light">Add your choices</p></div>
+          <div><p className="text-xs font-bold text-accent">03</p><p className="mt-1 text-[11px] font-semibold text-brown-light">Show at the counter</p></div>
+        </div>
 
         {!search && (
           <>
