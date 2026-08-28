@@ -71,7 +71,7 @@ const FoodDetails = () => {
   const originalPrice = selectedVariant?.price ?? item.price;
 
   return (
-    <div className="min-h-screen bg-cream pb-44 sm:pb-36">
+    <div className="min-h-screen bg-cream pb-[calc(7rem+env(safe-area-inset-bottom))] sm:pb-32">
       <div className="relative mx-auto aspect-[4/3] w-full max-w-5xl overflow-hidden bg-cream-dark sm:aspect-[16/10] sm:rounded-b-xl2 lg:aspect-[16/9] lg:rounded-xl2 lg:mt-6 lg:shadow-soft">
         {item.image?.url ? (
           <img src={item.image.url} alt={item.name} className="h-full w-full object-cover object-center" />
@@ -141,10 +141,10 @@ const FoodDetails = () => {
             Currently unavailable
           </div>
         ) : (
-          <div className="fixed bottom-0 inset-x-0 bg-white border-t border-brown/10 p-4 shadow-soft">
+          <div className="fixed bottom-0 inset-x-0 z-20 border-t border-brown/10 bg-white/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-soft backdrop-blur-md sm:p-4 sm:pb-4">
             <div className="max-w-3xl mx-auto flex items-center gap-3">
               {current ? (
-                <div className="flex items-center gap-4 bg-cream-dark rounded-full px-4 py-2.5 flex-1 justify-center">
+                <div className="flex min-h-12 items-center gap-4 bg-cream-dark rounded-full px-4 py-2.5 flex-1 justify-center">
                   <button
                     onClick={() => updateQty(current._id, current.qty - 1)}
                     aria-label="Decrease quantity"
@@ -164,7 +164,7 @@ const FoodDetails = () => {
               ) : (
                 <button
                   onClick={() => addToFavorites(currentSelection, 1)}
-                  className="flex-1 bg-brown text-cream font-semibold py-3 rounded-full hover:bg-brown-dark transition-colors"
+                  className="flex-1 min-h-12 bg-brown text-cream font-semibold py-3 rounded-full hover:bg-brown-dark transition-colors"
                 >
                   Add to Favorites
                 </button>
