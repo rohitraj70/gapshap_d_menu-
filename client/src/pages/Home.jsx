@@ -39,12 +39,37 @@ const getStableMenuOrder = (items) => {
   }
 };
 
+const HOME_STATE_KEY = "gapshap_home_state";
+const readHomeState = () => {
+  try {
+    return JSON.parse(sessionStorage.getItem(HOME_STATE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+};
+
 const Home = () => {
+  const savedState = readHomeState();
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [search, setSearch] = useState(savedState.search || "");
+  const [activeCategory, setActiveCategory] = useState(savedState.activeCategory || null);
+
+  useEffect(() => {
+    return () => {
+      sessionStorage.setItem(
+        HOME_STATE_KEY,
+        JSON.stringify({ search, activeCategory, scrollY: window.scrollY })
+      );
+    };
+  }, [search, activeCategory]);
+
+  useEffect(() => {
+    if (!loading && savedState.scrollY) {
+      requestAnimationFrame(() => window.scrollTo({ top: savedState.scrollY, behavior: "instant" }));
+    }
+  }, [loading, savedState.scrollY]);
 
   useEffect(() => {
     const load = async () => {
