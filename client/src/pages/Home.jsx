@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, SearchX } from "lucide-react";
+import { ArrowDown, Flame, SearchX, Sparkles } from "lucide-react";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import CategoryTabs from "../components/CategoryTabs";
@@ -61,7 +61,26 @@ const Home = () => {
     <div className="min-h-screen bg-cream pb-28">
       <Navbar />
 
-      <div className="max-w-3xl mx-auto px-4 pt-4 space-y-5">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8 space-y-7">
+        <section className="relative overflow-hidden rounded-[1.75rem] bg-brown-dark px-6 py-8 sm:px-10 sm:py-10 text-cream shadow-soft">
+          <div className="absolute -right-10 -top-16 h-56 w-56 rounded-full border-[22px] border-accent/30" />
+          <div className="absolute right-10 bottom-[-72px] h-40 w-40 rounded-full border-[16px] border-cream/10" />
+          <div className="relative max-w-xl">
+            <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-accent-light">
+              <Sparkles size={14} /> Your table is waiting
+            </p>
+            <h1 className="font-display text-4xl leading-[0.98] sm:text-5xl font-semibold tracking-tight">
+              Good food.<br /><em className="text-accent-light">Better gapshap.</em>
+            </h1>
+            <p className="mt-4 max-w-sm text-sm leading-6 text-cream/70">
+              Pick a little comfort for the table, then show your selection at the counter.
+            </p>
+            <a href="#menu" className="mt-6 inline-flex items-center gap-2 rounded-full bg-cream px-4 py-2.5 text-xs font-bold text-brown-dark hover:bg-accent hover:text-white transition-colors">
+              Explore the menu <ArrowDown size={15} />
+            </a>
+          </div>
+        </section>
+
         <SearchBar value={search} onChange={setSearch} />
 
         {!search && (
@@ -71,7 +90,7 @@ const Home = () => {
             ) : (
               featured.length > 0 && (
                 <section>
-                  <h2 className="font-display text-lg font-semibold text-brown-dark flex items-center gap-1.5 mb-3">
+                  <h2 className="font-display text-xl font-semibold text-brown-dark flex items-center gap-1.5 mb-3">
                     Most Loved <Flame size={18} className="text-accent" />
                   </h2>
                   <div className="flex gap-3 overflow-x-auto hide-scrollbar -mx-4 px-4 pb-1">
@@ -91,7 +110,7 @@ const Home = () => {
           </>
         )}
 
-        <section>
+        <section id="menu" className="scroll-mt-24">
           {loading ? (
             <ChipsSkeleton />
           ) : (
@@ -114,14 +133,14 @@ const Home = () => {
               description="Try a different search term or browse another category."
             />
           ) : (
-            <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {filteredItems.map((item) => (
                 <FoodCard key={item._id} item={item} />
               ))}
             </motion.div>
           )}
         </section>
-      </div>
+      </main>
 
       <FloatingFavButton />
     </div>
