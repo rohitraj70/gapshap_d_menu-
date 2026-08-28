@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Tags, UtensilsCrossed, LogOut, Coffee } from "lucide-react";
+import { LayoutDashboard, Tags, UtensilsCrossed, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const links = [
@@ -20,9 +20,7 @@ const AdminSidebar = () => {
   return (
     <aside className="w-full md:w-64 bg-brown-dark text-cream md:min-h-screen flex md:flex-col">
       <div className="p-5 flex items-center gap-2 border-b border-cream/10">
-        <span className="w-9 h-9 rounded-full bg-cream text-brown-dark flex items-center justify-center">
-          <Coffee size={18} />
-        </span>
+        <img src="/Gapshap-logo.png" alt="Gapshap Cafe" className="w-10 h-10 rounded-xl object-cover" />
         <div>
           <p className="font-display font-semibold leading-tight">Gapshap Cafe</p>
           <p className="text-xs text-cream/60">Admin Panel</p>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Coffee, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
@@ -28,9 +28,7 @@ const Login = () => {
     <div className="min-h-screen bg-brown-dark flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-cream rounded-xl2 shadow-soft p-8">
         <div className="flex flex-col items-center mb-6">
-          <span className="w-14 h-14 rounded-full bg-brown text-cream flex items-center justify-center mb-3">
-            <Coffee size={26} />
-          </span>
+          <img src="/Gapshap-logo.png" alt="Gapshap Cafe" className="w-16 h-16 rounded-2xl object-cover shadow-card mb-3" />
           <h1 className="font-display text-xl font-bold text-brown-dark">Gapshap Cafe</h1>
           <p className="text-sm text-brown-light">Admin sign in</p>
         </div>
