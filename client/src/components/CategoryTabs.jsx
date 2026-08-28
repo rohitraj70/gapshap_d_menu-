@@ -1,6 +1,6 @@
 const CategoryTabs = ({ categories, activeId, onSelect, itemCounts = {} }) => {
   return (
-    <div className="flex gap-2 overflow-x-auto hide-scrollbar py-1 -mx-4 px-4">
+    <div className="flex gap-2 overflow-x-auto hide-scrollbar py-1 -mx-4 px-4 md:flex-wrap md:overflow-visible md:mx-0 md:px-0 md:gap-y-2">
       <button
         onClick={() => onSelect(null)}
         className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
