@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import FoodDetails from "./pages/FoodDetails";
 import Favorites from "./pages/Favorites";
+import FavoritesList from "./pages/FavoritesList";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import Categories from "./pages/admin/Categories";
@@ -22,7 +23,8 @@ function App() {
             {/* Customer routes */}
             <Route path="/" element={<Home />} />
             <Route path="/food/:id" element={<FoodDetails />} />
-            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/favorites" element={<FavoritesList />} />
+            <Route path="/orders" element={<Favorites />} />
 
             {/* Admin routes */}
             <Route path="/admin/login" element={<Login />} />

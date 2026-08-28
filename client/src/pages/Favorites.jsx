@@ -6,23 +6,23 @@ import EmptyState from "../components/EmptyState";
 import { useFavorites } from "../context/FavoritesContext";
 
 const Favorites = () => {
-  const { favorites, updateQty, removeFromFavorites, totalAmount, clearFavorites } = useFavorites();
+  const { orders, updateOrderQty, removeFromOrders, totalAmount, clearOrders } = useFavorites();
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
 
-  if (favorites.length === 0) {
+  if (orders.length === 0) {
     return (
       <div className="min-h-screen bg-cream">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
           <button onClick={() => navigate(-1)} aria-label="Go back" className="text-brown-dark">
             <ArrowLeft size={22} />
           </button>
-          <h1 className="font-display text-lg font-semibold text-brown-dark">My Selection</h1>
+          <h1 className="font-display text-lg font-semibold text-brown-dark">My Orders</h1>
         </div>
         <EmptyState
           icon={HeartOff}
-          title="No favorites yet"
-          description="Browse the menu and tap the heart or add button on dishes you like."
+          title="No orders yet"
+          description="Browse the menu and add dishes you would like to order."
           action={
             <Link to="/" className="text-accent font-semibold text-sm">
               Browse the menu
@@ -40,9 +40,9 @@ const Favorites = () => {
           <button onClick={() => navigate(-1)} aria-label="Go back" className="text-brown-dark">
             <ArrowLeft size={22} />
           </button>
-          <h1 className="font-display text-lg font-semibold text-brown-dark flex-1">My Selection</h1>
+          <h1 className="font-display text-lg font-semibold text-brown-dark flex-1">My Orders</h1>
           <button
-            onClick={clearFavorites}
+            onClick={clearOrders}
             className="text-xs font-semibold text-brown-light hover:text-accent transition-colors"
           >
             Clear all
@@ -52,7 +52,7 @@ const Favorites = () => {
 
       <div className="max-w-3xl mx-auto px-4 pt-4 space-y-3">
         <AnimatePresence initial={false}>
-          {favorites.map((item) => (
+          {orders.map((item) => (
             <motion.div
               key={item._id}
               layout
@@ -79,7 +79,7 @@ const Favorites = () => {
                 </p>
                 <div className="flex items-center gap-3 mt-2">
                   <button
-                    onClick={() => updateQty(item._id, item.qty - 1)}
+                    onClick={() => updateOrderQty(item._id, item.qty - 1)}
                     aria-label="Decrease quantity"
                     className="w-7 h-7 rounded-full bg-cream-dark flex items-center justify-center text-brown-dark hover:text-accent"
                   >
@@ -87,7 +87,7 @@ const Favorites = () => {
                   </button>
                   <span className="text-sm font-semibold w-4 text-center">{item.qty}</span>
                   <button
-                    onClick={() => updateQty(item._id, item.qty + 1)}
+                    onClick={() => updateOrderQty(item._id, item.qty + 1)}
                     aria-label="Increase quantity"
                     className="w-7 h-7 rounded-full bg-cream-dark flex items-center justify-center text-brown-dark hover:text-accent"
                   >
@@ -98,7 +98,7 @@ const Favorites = () => {
               <div className="flex flex-col items-end gap-2">
                 <span className="font-semibold text-brown-dark text-sm">₹{item.qty * item.price}</span>
                 <button
-                  onClick={() => removeFromFavorites(item._id)}
+                  onClick={() => removeFromOrders(item._id)}
                   aria-label={`Remove ${item.name}`}
                   className="text-brown-light hover:text-red-500 transition-colors"
                 >

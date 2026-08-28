@@ -13,7 +13,7 @@ const FoodDetails = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(null);
-  const { favorites, addToFavorites, updateQty } = useFavorites();
+  const { orders, addToOrders, updateOrderQty } = useFavorites();
 
   useEffect(() => {
     const load = async () => {
@@ -65,8 +65,8 @@ const FoodDetails = () => {
   const currentSelection = selectedVariant
     ? { ...item, variantLabel: selectedVariant.label, selectedPrice: selectedVariant.salePrice ?? selectedVariant.price, selectedOriginalPrice: selectedVariant.price }
     : item;
-  const current = favorites.find((f) => f.menuItemId === item._id && (f.variantLabel || "") === (selectedVariant?.label || ""))
-    || (!selectedVariant ? favorites.find((f) => f._id === item._id) : null);
+  const current = orders.find((f) => f.menuItemId === item._id && (f.variantLabel || "") === (selectedVariant?.label || ""))
+    || (!selectedVariant ? orders.find((f) => f._id === item._id) : null);
   const displayPrice = selectedVariant?.salePrice ?? selectedVariant?.price ?? item.salePrice ?? item.price;
   const originalPrice = selectedVariant?.price ?? item.price;
 
@@ -146,7 +146,7 @@ const FoodDetails = () => {
               {current ? (
                 <div className="flex min-h-12 items-center gap-4 bg-cream-dark rounded-full px-4 py-2.5 flex-1 justify-center">
                   <button
-                    onClick={() => updateQty(current._id, current.qty - 1)}
+                    onClick={() => updateOrderQty(current._id, current.qty - 1)}
                     aria-label="Decrease quantity"
                     className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
                   >
@@ -154,7 +154,7 @@ const FoodDetails = () => {
                   </button>
                   <span className="font-semibold w-6 text-center">{current.qty}</span>
                   <button
-                    onClick={() => updateQty(current._id, current.qty + 1)}
+                    onClick={() => updateOrderQty(current._id, current.qty + 1)}
                     aria-label="Increase quantity"
                     className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
                   >
@@ -163,10 +163,10 @@ const FoodDetails = () => {
                 </div>
               ) : (
                 <button
-                  onClick={() => addToFavorites(currentSelection, 1)}
+                  onClick={() => addToOrders(currentSelection, 1)}
                   className="flex-1 min-h-12 bg-brown text-cream font-semibold py-3 rounded-full hover:bg-brown-dark transition-colors"
                 >
-                  Add to Favorites
+                  Add to My Orders
                 </button>
               )}
             </div>

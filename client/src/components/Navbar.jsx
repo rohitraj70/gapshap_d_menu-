@@ -15,8 +15,11 @@ const Navbar = () => {
           </span>
         </Link>
         <div className="flex items-center gap-2">
-          <Link to="/favorites" aria-label="Open my selection" title="My selection" className="w-10 h-10 rounded-full bg-cream-dark text-brown-dark flex items-center justify-center hover:bg-accent hover:text-white transition-colors">
+          <Link to="/favorites" aria-label="Open favorites" title="Favorites" className="w-10 h-10 rounded-full bg-cream-dark text-brown-dark flex items-center justify-center hover:bg-accent hover:text-white transition-colors">
             <Heart size={17} />
+          </Link>
+          <Link to="/orders" aria-label="Open my orders" title="My orders" className="hidden sm:flex h-10 items-center gap-2 rounded-full bg-brown px-3 text-xs font-semibold text-cream hover:bg-brown-dark transition-colors">
+            My Orders
           </Link>
           <button
             onClick={toggleDarkMode}

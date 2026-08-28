@@ -5,8 +5,8 @@ import FavoriteButton from "./FavoriteButton";
 import { useFavorites } from "../context/FavoritesContext";
 
 const FoodCard = ({ item }) => {
-  const { favorites, addToFavorites, updateQty } = useFavorites();
-  const current = favorites.find((f) => f.menuItemId === item._id || f._id === item._id);
+  const { orders, addToOrders, updateOrderQty } = useFavorites();
+  const current = orders.find((f) => f.menuItemId === item._id || f._id === item._id);
   const prices = item.variants?.length
     ? item.variants.map((variant) => variant.salePrice ?? variant.price)
     : [item.salePrice ?? item.price];
@@ -76,7 +76,7 @@ const FoodCard = ({ item }) => {
           ) : current ? (
             <div className="flex items-center gap-2 bg-cream-dark rounded-full px-1.5 py-1">
               <button
-                onClick={() => updateQty(current._id, current.qty - 1)}
+                onClick={() => updateOrderQty(current._id, current.qty - 1)}
                 aria-label="Decrease quantity"
                 className="w-6 h-6 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
               >
@@ -84,7 +84,7 @@ const FoodCard = ({ item }) => {
               </button>
               <span className="text-sm font-semibold w-4 text-center">{current.qty}</span>
               <button
-                onClick={() => updateQty(current._id, current.qty + 1)}
+                onClick={() => updateOrderQty(current._id, current.qty + 1)}
                 aria-label="Increase quantity"
                 className="w-6 h-6 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
               >
@@ -100,7 +100,7 @@ const FoodCard = ({ item }) => {
             </Link>
           ) : (
             <button
-              onClick={() => addToFavorites(item, 1)}
+              onClick={() => addToOrders(item, 1)}
               className="flex items-center gap-1 bg-brown text-cream text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-brown-dark transition-colors"
             >
               <Plus size={13} /> Add

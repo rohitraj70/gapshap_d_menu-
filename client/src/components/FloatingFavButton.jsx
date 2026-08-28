@@ -14,7 +14,7 @@ const FloatingFavButton = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 40 }}
-          onClick={() => navigate("/favorites")}
+          onClick={() => navigate("/orders")}
           className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 bg-brown text-cream rounded-full shadow-soft px-5 py-3 flex items-center gap-3 max-w-[92vw]"
         >
           <span className="relative">
@@ -23,7 +23,7 @@ const FloatingFavButton = () => {
               {totalCount}
             </span>
           </span>
-          <span className="text-sm font-semibold">My Selection</span>
+          <span className="text-sm font-semibold">My Orders</span>
           <span className="text-sm font-bold text-accent-light">₹{totalAmount}</span>
         </motion.button>
       )}
