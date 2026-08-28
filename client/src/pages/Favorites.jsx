@@ -13,11 +13,11 @@ const Favorites = () => {
   if (orders.length === 0) {
     return (
       <div className="min-h-screen bg-cream">
-        <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} aria-label="Go back" className="text-brown-dark">
+        <div className="collection-header max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
+          <button onClick={() => navigate(-1)} aria-label="Go back" className="collection-back">
             <ArrowLeft size={22} />
           </button>
-          <h1 className="font-display text-lg font-semibold text-brown-dark">My Orders</h1>
+          <h1 className="collection-title font-display text-lg font-semibold">My Orders</h1>
         </div>
         <EmptyState
           icon={HeartOff}
@@ -35,15 +35,15 @@ const Favorites = () => {
 
   return (
     <div className="min-h-screen bg-cream pb-40">
-      <div className="sticky top-0 z-20 bg-cream/95 backdrop-blur border-b border-brown/10">
+      <div className="collection-header sticky top-0 z-20 bg-cream/95 backdrop-blur border-b border-brown/10">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} aria-label="Go back" className="text-brown-dark">
+          <button onClick={() => navigate(-1)} aria-label="Go back" className="collection-back">
             <ArrowLeft size={22} />
           </button>
-          <h1 className="font-display text-lg font-semibold text-brown-dark flex-1">My Orders</h1>
+          <h1 className="collection-title font-display text-lg font-semibold flex-1">My Orders</h1>
           <button
             onClick={clearOrders}
-            className="text-xs font-semibold text-brown-light hover:text-accent transition-colors"
+            className="collection-clear text-xs font-semibold hover:text-accent transition-colors"
           >
             Clear all
           </button>

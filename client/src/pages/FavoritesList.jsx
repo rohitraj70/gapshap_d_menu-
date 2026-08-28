@@ -11,9 +11,9 @@ const FavoritesList = () => {
   if (favorites.length === 0) {
     return (
       <div className="min-h-screen bg-cream">
-        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-4">
-          <button onClick={() => navigate(-1)} aria-label="Go back" className="text-brown-dark"><ArrowLeft size={22} /></button>
-          <h1 className="font-display text-lg font-semibold text-brown-dark">Favorites</h1>
+        <div className="collection-header mx-auto flex max-w-3xl items-center gap-3 px-4 py-4">
+          <button onClick={() => navigate(-1)} aria-label="Go back" className="collection-back"><ArrowLeft size={22} /></button>
+          <h1 className="collection-title font-display text-lg font-semibold">Favorites</h1>
         </div>
         <EmptyState icon={HeartOff} title="No favorites yet" description="Tap the heart on any dish to save it here." action={<Link to="/" className="text-sm font-semibold text-accent">Browse the menu</Link>} />
       </div>
@@ -22,10 +22,10 @@ const FavoritesList = () => {
 
   return (
     <div className="min-h-screen bg-cream pb-10">
-      <div className="sticky top-0 z-20 border-b border-brown/10 bg-cream/95 backdrop-blur">
+      <div className="collection-header sticky top-0 z-20 border-b border-brown/10 bg-cream/95 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-4">
-          <button onClick={() => navigate(-1)} aria-label="Go back" className="text-brown-dark"><ArrowLeft size={22} /></button>
-          <h1 className="flex-1 font-display text-lg font-semibold text-brown-dark">Favorites</h1>
+          <button onClick={() => navigate(-1)} aria-label="Go back" className="collection-back"><ArrowLeft size={22} /></button>
+          <h1 className="collection-title flex-1 font-display text-lg font-semibold">Favorites</h1>
           <Heart size={18} className="fill-accent text-accent" />
         </div>
       </div>

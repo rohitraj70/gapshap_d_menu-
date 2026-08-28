@@ -85,6 +85,24 @@ html.dark .details-control:hover {
   color: #241b18;
 }
 
+html.dark .collection-header {
+  background-color: rgba(43, 33, 28, 0.97);
+  border-color: rgba(248, 238, 227, 0.14);
+  box-shadow: 0 8px 20px -16px rgba(0, 0, 0, 0.9);
+}
+
+html.dark .collection-title {
+  color: #fff8f0;
+}
+
+html.dark .collection-back {
+  color: #fff8f0;
+}
+
+html.dark .collection-clear {
+  color: #f0a75a;
+}
+
 html.dark input,
 html.dark textarea,
 html.dark select { color: #f8eee3; }
