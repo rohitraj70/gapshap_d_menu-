@@ -65,8 +65,8 @@ const FoodCard = ({ item }) => {
           )}
         </Link>
 
-        <div className="flex items-center justify-between mt-3">
-          <span className="font-semibold text-accent">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <span className="min-w-0 font-semibold text-accent">
             {item.variants?.length > 1 && <span className="text-xs text-brown-light mr-1">From</span>}
             ₹{startingPrice}
           </span>
@@ -74,7 +74,7 @@ const FoodCard = ({ item }) => {
           {!item.available ? (
             <span className="text-xs text-brown-light">Not available</span>
           ) : current ? (
-            <div className="flex items-center gap-2 bg-cream-dark rounded-full px-1.5 py-1">
+            <div className="flex h-9 min-w-[5.5rem] shrink-0 items-center justify-between gap-1 rounded-full bg-cream-dark px-1.5 py-1">
               <button
                 onClick={() => updateOrderQty(current._id, current.qty - 1)}
                 aria-label="Decrease quantity"
