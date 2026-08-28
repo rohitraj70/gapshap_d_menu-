@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FavoritesProvider } from "./context/FavoritesContext";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
@@ -14,9 +15,10 @@ import MenuItems from "./pages/admin/MenuItems";
 function App() {
   return (
     <AuthProvider>
-      <FavoritesProvider>
-        <BrowserRouter>
-          <Routes>
+      <ThemeProvider>
+        <FavoritesProvider>
+          <BrowserRouter>
+            <Routes>
             {/* Customer routes */}
             <Route path="/" element={<Home />} />
             <Route path="/food/:id" element={<FoodDetails />} />
@@ -29,9 +31,10 @@ function App() {
               <Route path="/admin/categories" element={<Categories />} />
               <Route path="/admin/menu" element={<MenuItems />} />
             </Route>
-          </Routes>
-        </BrowserRouter>
-      </FavoritesProvider>
+            </Routes>
+          </BrowserRouter>
+        </FavoritesProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
