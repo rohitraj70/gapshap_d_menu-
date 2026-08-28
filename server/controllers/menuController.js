@@ -76,6 +76,8 @@ export const createMenuItem = asyncHandler(async (req, res) => {
 // @route   PUT /api/menu/:id
 // @access  Private/Admin
 export const updateMenuItem = asyncHandler(async (req, res) => {
+  const item = await MenuItem.findById(req.params.id);
+
   if (!item) {
     res.status(404);
     throw new Error("Menu item not found");
@@ -87,8 +89,8 @@ export const updateMenuItem = asyncHandler(async (req, res) => {
   item.category = category ?? item.category;
   item.description = description ?? item.description;
   item.price = price ?? item.price;
-  if (available !== undefined) item.available = available;
-  if (featured !== undefined) item.featured = featured;
+  if (available !== undefined) item.available = available === true || available === "true";
+  if (featured !== undefined) item.featured = featured === true || featured === "true";
 
   if (req.file) {
     const image = await uploadImage(req.file.buffer);

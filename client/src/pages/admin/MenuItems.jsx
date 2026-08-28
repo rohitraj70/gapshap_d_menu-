@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, X, ImageOff, Heart, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, X, ImageOff, Heart, Eye, EyeOff } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 import {
   fetchCategories,
@@ -208,7 +208,8 @@ const MenuItems = () => {
                           : "text-brown-light border-brown/15 hover:border-red-300"
                       }`}
                     >
-                      <EyeOff size={12} /> {item.available ? "Mark unavailable" : "Mark available"}
+                      {item.available ? <EyeOff size={12} /> : <Eye size={12} />}
+                      {item.available ? "Mark unavailable" : "Mark available"}
                     </button>
                   </div>
 
