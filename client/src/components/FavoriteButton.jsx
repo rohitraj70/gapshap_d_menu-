@@ -15,7 +15,7 @@ const FavoriteButton = ({ item, size = 18, className = "" }) => {
       }}
       aria-label={active ? "Remove from favorites" : "Add to favorites"}
       aria-pressed={active}
-      className={`w-9 h-9 rounded-full flex items-center justify-center bg-white/90 backdrop-blur shadow-card transition-colors ${className}`}
+      className={`details-control w-9 h-9 rounded-full flex items-center justify-center bg-white/90 backdrop-blur shadow-card transition-colors ${className}`}
     >
       <Heart
         size={size}

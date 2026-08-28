@@ -73,6 +73,18 @@ html.dark .brand-name {
   text-shadow: 0 1px 12px rgba(240, 167, 90, 0.2);
 }
 
+html.dark .details-control {
+  background-color: #f8eee3;
+  color: #2b211c;
+  border: 1px solid rgba(240, 167, 90, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+html.dark .details-control:hover {
+  background-color: #f0a75a;
+  color: #241b18;
+}
+
 html.dark input,
 html.dark textarea,
 html.dark select { color: #f8eee3; }

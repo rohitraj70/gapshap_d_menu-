@@ -83,7 +83,7 @@ const FoodDetails = () => {
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
-          className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-brown-dark shadow-card backdrop-blur sm:left-6 sm:top-6"
+          className="details-control absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-brown-dark shadow-card backdrop-blur sm:left-6 sm:top-6"
         >
           <ArrowLeft size={20} />
         </button>
@@ -148,7 +148,7 @@ const FoodDetails = () => {
                   <button
                     onClick={() => updateOrderQty(current._id, current.qty - 1)}
                     aria-label="Decrease quantity"
-                    className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
+                    className="details-control flex h-8 w-8 items-center justify-center rounded-full bg-white text-brown-dark shadow hover:text-accent"
                   >
                     <Minus size={16} />
                   </button>
@@ -156,7 +156,7 @@ const FoodDetails = () => {
                   <button
                     onClick={() => updateOrderQty(current._id, current.qty + 1)}
                     aria-label="Increase quantity"
-                    className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
+                    className="details-control flex h-8 w-8 items-center justify-center rounded-full bg-white text-brown-dark shadow hover:text-accent"
                   >
                     <Plus size={16} />
                   </button>
