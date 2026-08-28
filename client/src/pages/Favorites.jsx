@@ -68,6 +68,9 @@ const Favorites = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-brown-dark text-sm line-clamp-1">{item.name}</h3>
+                {item.variantLabel && (
+                  <p className="text-xs font-semibold text-accent mt-0.5">{item.variantLabel}</p>
+                )}
                 <p className="text-xs text-brown-light mt-0.5">
                   {item.originalPrice != null && item.originalPrice !== item.price && (
                     <span className="line-through mr-1">₹{item.originalPrice}</span>

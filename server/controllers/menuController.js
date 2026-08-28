@@ -46,7 +46,30 @@ export const getMenuItemsByCategory = asyncHandler(async (req, res) => {
 // @route   POST /api/menu
 // @access  Private/Admin
 export const createMenuItem = asyncHandler(async (req, res) => {
-  const { name, category, description, price, salePrice, available, featured } = req.body;
+  const { name, category, description, price, salePrice, variants, available, featured } = req.body;
+
+  let parsedVariants = [];
+  if (variants) {
+    try {
+      parsedVariants = JSON.parse(variants);
+    } catch {
+      res.status(400);
+      throw new Error("Invalid size options");
+    }
+  }
+
+  if (parsedVariants.length > 0) {
+    parsedVariants = parsedVariants.map((variant) => ({
+      label: String(variant.label || "").trim(),
+      price: Number(variant.price),
+      salePrice: variant.salePrice === "" || variant.salePrice == null ? null : Number(variant.salePrice),
+    }));
+    if (parsedVariants.some((variant) => !variant.label || !Number.isFinite(variant.price) || variant.price < 0 ||
+      (variant.salePrice !== null && (!Number.isFinite(variant.salePrice) || variant.salePrice < 0 || variant.salePrice >= variant.price)))) {
+      res.status(400);
+      throw new Error("Each size must have a valid price and sale price must be lower than the price");
+    }
+  }
 
   if (!name || !category || price === undefined) {
     res.status(400);
@@ -66,6 +89,7 @@ export const createMenuItem = asyncHandler(async (req, res) => {
     description,
     price: originalPrice,
     salePrice: discountedPrice,
+    variants: parsedVariants,
     available: available ?? true,
     featured: featured ?? false,
   };
@@ -91,13 +115,32 @@ export const updateMenuItem = asyncHandler(async (req, res) => {
     throw new Error("Menu item not found");
   }
 
-  const { name, category, description, price, salePrice, available, featured } = req.body;
+  const { name, category, description, price, salePrice, variants, available, featured } = req.body;
 
   item.name = name ?? item.name;
   item.category = category ?? item.category;
   item.description = description ?? item.description;
   if (price !== undefined) item.price = Number(price);
   if (salePrice !== undefined) item.salePrice = salePrice === "" ? null : Number(salePrice);
+  if (variants !== undefined) {
+    let parsedVariants;
+    try {
+      parsedVariants = JSON.parse(variants);
+    } catch {
+      res.status(400);
+      throw new Error("Invalid size options");
+    }
+    item.variants = parsedVariants.map((variant) => ({
+      label: String(variant.label || "").trim(),
+      price: Number(variant.price),
+      salePrice: variant.salePrice === "" || variant.salePrice == null ? null : Number(variant.salePrice),
+    }));
+    if (item.variants.some((variant) => !variant.label || !Number.isFinite(variant.price) || variant.price < 0 ||
+      (variant.salePrice !== null && (!Number.isFinite(variant.salePrice) || variant.salePrice < 0 || variant.salePrice >= variant.price)))) {
+      res.status(400);
+      throw new Error("Each size must have a valid price and sale price must be lower than the price");
+    }
+  }
   if (!Number.isFinite(item.price) || item.price < 0 || (item.salePrice != null && (!Number.isFinite(item.salePrice) || item.salePrice < 0 || item.salePrice >= item.price))) {
     res.status(400);
     throw new Error("Sale price must be lower than the original price");

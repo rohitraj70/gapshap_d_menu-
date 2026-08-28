@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, X, ImageOff, Heart, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, X, ImageOff, Heart, Eye, EyeOff, CirclePlus } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 import {
   fetchCategories,
@@ -13,9 +13,7 @@ const emptyForm = {
   name: "",
   category: "",
   description: "",
-  price: "",
-  salePrice: "",
-  saleEnabled: false,
+  variants: [{ label: "Regular", price: "", salePrice: "" }],
   available: true,
   featured: false,
   image: null,
@@ -65,7 +63,13 @@ const MenuItems = () => {
       description: item.description || "",
       price: item.price,
       salePrice: item.salePrice ?? "",
-      saleEnabled: item.salePrice !== null && item.salePrice !== undefined,
+      variants: item.variants?.length
+        ? item.variants.map((variant) => ({
+            label: variant.label,
+            price: variant.price,
+            salePrice: variant.salePrice ?? "",
+          }))
+        : [{ label: "Regular", price: item.price, salePrice: item.salePrice ?? "" }],
       available: item.available,
       featured: item.featured,
       image: null,
@@ -86,12 +90,12 @@ const MenuItems = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!form.name.trim() || !form.category || form.price === "") {
-      setError("Name, category and price are required");
+    if (!form.name.trim() || !form.category || form.variants.some((variant) => !variant.label.trim() || variant.price === "")) {
+      setError("Name, category, size and price are required");
       return;
     }
-    if (form.saleEnabled && (form.salePrice === "" || Number(form.salePrice) >= Number(form.price))) {
-      setError("Sale price must be lower than the original price");
+    if (form.variants.some((variant) => variant.salePrice !== "" && Number(variant.salePrice) >= Number(variant.price))) {
+      setError("Each sale price must be lower than its original price");
       return;
     }
     setSaving(true);
@@ -100,8 +104,9 @@ const MenuItems = () => {
       fd.append("name", form.name.trim());
       fd.append("category", form.category);
       fd.append("description", form.description);
-      fd.append("price", form.price);
-      fd.append("salePrice", form.saleEnabled ? form.salePrice : "");
+      fd.append("price", form.variants[0].price);
+      fd.append("salePrice", form.variants[0].salePrice);
+      fd.append("variants", JSON.stringify(form.variants));
       fd.append("available", form.available);
       fd.append("featured", form.featured);
       if (form.image) fd.append("image", form.image);
@@ -118,6 +123,24 @@ const MenuItems = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const updateVariant = (index, field, value) => {
+    setForm({
+      ...form,
+      variants: form.variants.map((variant, variantIndex) =>
+        variantIndex === index ? { ...variant, [field]: value } : variant
+      ),
+    });
+  };
+
+  const addVariant = () => {
+    setForm({ ...form, variants: [...form.variants, { label: "", price: "", salePrice: "" }] });
+  };
+
+  const removeVariant = (index) => {
+    if (form.variants.length === 1) return;
+    setForm({ ...form, variants: form.variants.filter((_, variantIndex) => variantIndex !== index) });
   };
 
   const handleDelete = async (id) => {
@@ -298,42 +321,37 @@ const MenuItems = () => {
                     ))}
                   </select>
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-brown-dark mb-1">Price (₹)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    className="w-full bg-white rounded-lg px-3 py-2.5 text-sm border border-brown/10 focus:border-accent outline-none"
-                    placeholder="99"
-                  />
-                </div>
               </div>
 
               <div className="rounded-lg bg-white border border-brown/10 p-3">
-                <label className="flex items-center gap-2 text-sm text-brown-dark font-semibold">
-                  <input
-                    type="checkbox"
-                    checked={form.saleEnabled}
-                    onChange={(e) => setForm({ ...form, saleEnabled: e.target.checked })}
-                    className="accent-accent w-4 h-4"
-                  />
-                  Put this item on sale
-                </label>
-                {form.saleEnabled && (
-                  <div className="mt-3">
-                    <label className="block text-xs font-semibold text-brown-dark mb-1">Sale price (₹)</label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={form.salePrice}
-                      onChange={(e) => setForm({ ...form, salePrice: e.target.value })}
-                      className="w-full bg-cream rounded-lg px-3 py-2.5 text-sm border border-brown/10 focus:border-accent outline-none"
-                      placeholder="79"
-                    />
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <p className="text-sm text-brown-dark font-semibold">Sizes and prices</p>
+                    <p className="text-[11px] text-brown-light">Add Regular, Half, Full or any size you serve.</p>
                   </div>
-                )}
+                  <button type="button" onClick={addVariant} className="flex items-center gap-1 text-xs font-semibold text-accent">
+                    <CirclePlus size={15} /> Add size
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {form.variants.map((variant, index) => (
+                    <div key={index} className="grid grid-cols-[1fr_0.7fr_0.7fr_auto] gap-2 items-end">
+                      <label className="text-[11px] text-brown-light">
+                        Size
+                        <input value={variant.label} onChange={(e) => updateVariant(index, "label", e.target.value)} className="mt-1 w-full bg-cream rounded-lg px-2.5 py-2 text-sm border border-brown/10 focus:border-accent outline-none" placeholder="Full" />
+                      </label>
+                      <label className="text-[11px] text-brown-light">
+                        Price
+                        <input type="number" min="0" value={variant.price} onChange={(e) => updateVariant(index, "price", e.target.value)} className="mt-1 w-full bg-cream rounded-lg px-2.5 py-2 text-sm border border-brown/10 focus:border-accent outline-none" placeholder="99" />
+                      </label>
+                      <label className="text-[11px] text-brown-light">
+                        Sale price
+                        <input type="number" min="0" value={variant.salePrice} onChange={(e) => updateVariant(index, "salePrice", e.target.value)} className="mt-1 w-full bg-cream rounded-lg px-2.5 py-2 text-sm border border-brown/10 focus:border-accent outline-none" placeholder="Optional" />
+                      </label>
+                      <button type="button" onClick={() => removeVariant(index)} disabled={form.variants.length === 1} aria-label="Remove size" className="p-2 text-brown-light hover:text-red-500 disabled:opacity-30"><Trash2 size={15} /></button>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div>

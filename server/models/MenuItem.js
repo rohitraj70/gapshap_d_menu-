@@ -7,6 +7,11 @@ const menuItemSchema = new mongoose.Schema(
     description: { type: String, trim: true, default: "" },
     price: { type: Number, required: true, min: 0 },
     salePrice: { type: Number, min: 0, default: null },
+    variants: [{
+      label: { type: String, trim: true, required: true },
+      price: { type: Number, min: 0, required: true },
+      salePrice: { type: Number, min: 0, default: null },
+    }],
     image: {
       url: { type: String, default: "" },
       publicId: { type: String, default: "" },

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useMemo, useCallback } 
 
 const FavoritesContext = createContext(null);
 const STORAGE_KEY = "gapshap_favorites";
+const getSelectionId = (item) => `${item._id}:${item.variantLabel || "default"}`;
 
 export const FavoritesProvider = ({ children }) => {
   const [favorites, setFavorites] = useState(() => {
@@ -18,23 +19,26 @@ export const FavoritesProvider = ({ children }) => {
   }, [favorites]);
 
   const isFavorite = useCallback(
-    (itemId) => favorites.some((f) => f._id === itemId),
+    (itemId) => favorites.some((f) => f.menuItemId === itemId || f._id === itemId),
     [favorites]
   );
 
   const addToFavorites = useCallback((item, qty = 1) => {
     setFavorites((prev) => {
-      const existing = prev.find((f) => f._id === item._id);
+      const selectionId = getSelectionId(item);
+      const existing = prev.find((f) => f._id === selectionId);
       if (existing) {
-        return prev.map((f) => (f._id === item._id ? { ...f, qty: f.qty + qty } : f));
+        return prev.map((f) => (f._id === selectionId ? { ...f, qty: f.qty + qty } : f));
       }
       return [
         ...prev,
         {
-          _id: item._id,
+          _id: selectionId,
+          menuItemId: item._id,
           name: item.name,
-          price: item.salePrice ?? item.price,
-          originalPrice: item.price,
+          variantLabel: item.variantLabel || "",
+          price: item.selectedPrice ?? item.salePrice ?? item.price,
+          originalPrice: item.selectedPrice != null ? item.selectedOriginalPrice : item.price,
           image: item.image,
           qty,
         },
@@ -43,7 +47,7 @@ export const FavoritesProvider = ({ children }) => {
   }, []);
 
   const removeFromFavorites = useCallback((itemId) => {
-    setFavorites((prev) => prev.filter((f) => f._id !== itemId));
+    setFavorites((prev) => prev.filter((f) => f._id !== itemId && f.menuItemId !== itemId));
   }, []);
 
   const toggleFavorite = useCallback(

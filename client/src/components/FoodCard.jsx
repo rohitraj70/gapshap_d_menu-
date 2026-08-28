@@ -6,7 +6,11 @@ import { useFavorites } from "../context/FavoritesContext";
 
 const FoodCard = ({ item }) => {
   const { favorites, addToFavorites, updateQty } = useFavorites();
-  const current = favorites.find((f) => f._id === item._id);
+  const current = favorites.find((f) => f.menuItemId === item._id || f._id === item._id);
+  const prices = item.variants?.length
+    ? item.variants.map((variant) => variant.salePrice ?? variant.price)
+    : [item.salePrice ?? item.price];
+  const startingPrice = Math.min(...prices);
 
   return (
     <motion.div
@@ -58,10 +62,8 @@ const FoodCard = ({ item }) => {
 
         <div className="flex items-center justify-between mt-3">
           <span className="font-semibold text-accent">
-            {item.salePrice != null && (
-              <span className="text-xs text-brown-light line-through mr-1">₹{item.price}</span>
-            )}
-            ₹{item.salePrice ?? item.price}
+            {item.variants?.length > 1 && <span className="text-xs text-brown-light mr-1">From</span>}
+            ₹{startingPrice}
           </span>
 
           {!item.available ? (
@@ -69,7 +71,7 @@ const FoodCard = ({ item }) => {
           ) : current ? (
             <div className="flex items-center gap-2 bg-cream-dark rounded-full px-1.5 py-1">
               <button
-                onClick={() => updateQty(item._id, current.qty - 1)}
+                onClick={() => updateQty(current._id, current.qty - 1)}
                 aria-label="Decrease quantity"
                 className="w-6 h-6 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
               >
@@ -77,7 +79,7 @@ const FoodCard = ({ item }) => {
               </button>
               <span className="text-sm font-semibold w-4 text-center">{current.qty}</span>
               <button
-                onClick={() => updateQty(item._id, current.qty + 1)}
+                onClick={() => updateQty(current._id, current.qty + 1)}
                 aria-label="Increase quantity"
                 className="w-6 h-6 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
               >

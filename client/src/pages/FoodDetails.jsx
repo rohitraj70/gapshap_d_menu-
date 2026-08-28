@@ -12,6 +12,7 @@ const FoodDetails = () => {
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const { favorites, addToFavorites, updateQty } = useFavorites();
 
   useEffect(() => {
@@ -20,6 +21,7 @@ const FoodDetails = () => {
       try {
         const { data } = await fetchMenuItem(id);
         setItem(data.data);
+        setSelectedVariant(data.data.variants?.[0] || null);
       } catch (err) {
         setNotFound(true);
       } finally {
@@ -60,7 +62,13 @@ const FoodDetails = () => {
     );
   }
 
-  const current = favorites.find((f) => f._id === item._id);
+  const currentSelection = selectedVariant
+    ? { ...item, variantLabel: selectedVariant.label, selectedPrice: selectedVariant.salePrice ?? selectedVariant.price, selectedOriginalPrice: selectedVariant.price }
+    : item;
+  const current = favorites.find((f) => f.menuItemId === item._id && (f.variantLabel || "") === (selectedVariant?.label || ""))
+    || (!selectedVariant ? favorites.find((f) => f._id === item._id) : null);
+  const displayPrice = selectedVariant?.salePrice ?? selectedVariant?.price ?? item.salePrice ?? item.price;
+  const originalPrice = selectedVariant?.price ?? item.price;
 
   return (
     <div className="min-h-screen bg-cream pb-28">
@@ -93,10 +101,10 @@ const FoodDetails = () => {
         <div className="flex items-start justify-between gap-4">
           <h1 className="font-display text-2xl font-bold text-brown-dark">{item.name}</h1>
           <span className="font-display text-xl font-bold text-accent shrink-0">
-            {item.salePrice != null && (
-              <span className="text-sm text-brown-light line-through mr-1">₹{item.price}</span>
+            {displayPrice !== originalPrice && (
+              <span className="text-sm text-brown-light line-through mr-1">₹{originalPrice}</span>
             )}
-            ₹{item.salePrice ?? item.price}
+            ₹{displayPrice}
           </span>
         </div>
         {item.category?.name && (
@@ -106,6 +114,26 @@ const FoodDetails = () => {
         )}
         {item.description && (
           <p className="text-sm text-brown-light leading-relaxed mt-4">{item.description}</p>
+        )}
+        {item.variants?.length > 0 && (
+          <div className="mt-5">
+            <p className="text-xs font-semibold text-brown-dark mb-2">Choose size</p>
+            <div className="flex flex-wrap gap-2">
+              {item.variants.map((variant) => (
+                <button
+                  key={variant.label}
+                  onClick={() => setSelectedVariant(variant)}
+                  className={`px-3 py-2 rounded-lg border text-sm font-semibold transition-colors ${
+                    selectedVariant?.label === variant.label
+                      ? "bg-accent text-white border-accent"
+                      : "bg-white text-brown-dark border-brown/15 hover:border-accent"
+                  }`}
+                >
+                  {variant.label} · ₹{variant.salePrice ?? variant.price}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
 
         {!item.available ? (
@@ -118,7 +146,7 @@ const FoodDetails = () => {
               {current ? (
                 <div className="flex items-center gap-4 bg-cream-dark rounded-full px-4 py-2.5 flex-1 justify-center">
                   <button
-                    onClick={() => updateQty(item._id, current.qty - 1)}
+                    onClick={() => updateQty(current._id, current.qty - 1)}
                     aria-label="Decrease quantity"
                     className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
                   >
@@ -126,7 +154,7 @@ const FoodDetails = () => {
                   </button>
                   <span className="font-semibold w-6 text-center">{current.qty}</span>
                   <button
-                    onClick={() => updateQty(item._id, current.qty + 1)}
+                    onClick={() => updateQty(current._id, current.qty + 1)}
                     aria-label="Increase quantity"
                     className="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center text-brown-dark hover:text-accent"
                   >
@@ -135,7 +163,7 @@ const FoodDetails = () => {
                 </div>
               ) : (
                 <button
-                  onClick={() => addToFavorites(item, 1)}
+                  onClick={() => addToFavorites(currentSelection, 1)}
                   className="flex-1 bg-brown text-cream font-semibold py-3 rounded-full hover:bg-brown-dark transition-colors"
                 >
                   Add to Favorites
