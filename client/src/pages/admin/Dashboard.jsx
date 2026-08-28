@@ -4,7 +4,7 @@ import AdminSidebar from "../../components/AdminSidebar";
 import { fetchCategories, fetchMenu } from "../../services/api";
 
 const StatCard = ({ icon: Icon, label, value, tint }) => (
-  <div className="bg-white rounded-xl2 shadow-card p-5 flex items-center gap-4">
+  <div className="bg-white rounded-xl2 shadow-card p-4 sm:p-5 flex items-center gap-3 sm:gap-4">
     <div className={`w-12 h-12 rounded-full flex items-center justify-center ${tint}`}>
       <Icon size={22} />
     </div>
@@ -42,7 +42,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-cream">
       <AdminSidebar />
-      <main className="flex-1 p-6 md:p-8">
+      <main className="min-w-0 flex-1 p-4 sm:p-6 md:p-8">
         <h1 className="font-display text-2xl font-bold text-brown-dark mb-1">Dashboard</h1>
         <p className="text-sm text-brown-light mb-6">Overview of your menu at a glance.</p>
 

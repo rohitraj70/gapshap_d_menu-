@@ -85,7 +85,7 @@ const Categories = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-cream">
       <AdminSidebar />
-      <main className="flex-1 p-6 md:p-8">
+      <main className="min-w-0 flex-1 p-4 sm:p-6 md:p-8">
         <h1 className="font-display text-2xl font-bold text-brown-dark mb-1">Categories</h1>
         <p className="text-sm text-brown-light mb-6">Organize your menu into browsable sections.</p>
 
@@ -119,7 +119,8 @@ const Categories = () => {
           ) : categories.length === 0 ? (
             <p className="p-6 text-sm text-brown-light text-center">No categories yet. Add your first one above.</p>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[28rem] text-sm">
               <thead>
                 <tr className="text-left text-brown-light border-b border-brown/10">
                   <th className="px-4 py-3 font-semibold">Name</th>
@@ -169,6 +170,7 @@ const Categories = () => {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       </main>
