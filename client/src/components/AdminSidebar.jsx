@@ -18,7 +18,7 @@ const AdminSidebar = () => {
   };
 
   return (
-    <aside className="w-full shrink-0 bg-brown-dark text-cream md:min-h-screen md:w-64 flex md:flex-col">
+    <aside className="flex w-full shrink-0 flex-col bg-brown-dark text-cream md:min-h-screen md:w-64">
       <div className="flex items-center gap-2 border-b border-cream/10 p-4 sm:p-5">
         <img src="/Gapshap-logo.png" alt="Gapshap Cafe" className="w-10 h-10 rounded-xl object-cover" />
         <div>
