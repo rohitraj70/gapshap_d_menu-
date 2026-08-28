@@ -2,6 +2,33 @@ import asyncHandler from "express-async-handler";
 import MenuItem from "../models/MenuItem.js";
 import { cloudinary, uploadImage } from "../utils/cloudinary.js";
 
+const parseVariants = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    const error = new Error("Invalid size options");
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
+const normalizeVariants = (value) => parseVariants(value).map((variant) => ({
+  label: String(variant.label || "").trim(),
+  price: Number(variant.price),
+  salePrice: variant.salePrice === "" || variant.salePrice == null ? null : Number(variant.salePrice),
+}));
+
+const validateVariants = (variants) => {
+  if (variants.some((variant) => !variant.label || !Number.isFinite(variant.price) || variant.price < 0 ||
+    (variant.salePrice !== null && (!Number.isFinite(variant.salePrice) || variant.salePrice < 0 || variant.salePrice >= variant.price)))) {
+    const error = new Error("Each size must have a valid price and sale price must be lower than the price");
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
 // @desc    Get all menu items (supports ?search=&category=&featured=&available=)
 // @route   GET /api/menu
 // @access  Public
@@ -48,28 +75,8 @@ export const getMenuItemsByCategory = asyncHandler(async (req, res) => {
 export const createMenuItem = asyncHandler(async (req, res) => {
   const { name, category, description, price, salePrice, variants, available, featured } = req.body;
 
-  let parsedVariants = [];
-  if (variants) {
-    try {
-      parsedVariants = JSON.parse(variants);
-    } catch {
-      res.status(400);
-      throw new Error("Invalid size options");
-    }
-  }
-
-  if (parsedVariants.length > 0) {
-    parsedVariants = parsedVariants.map((variant) => ({
-      label: String(variant.label || "").trim(),
-      price: Number(variant.price),
-      salePrice: variant.salePrice === "" || variant.salePrice == null ? null : Number(variant.salePrice),
-    }));
-    if (parsedVariants.some((variant) => !variant.label || !Number.isFinite(variant.price) || variant.price < 0 ||
-      (variant.salePrice !== null && (!Number.isFinite(variant.salePrice) || variant.salePrice < 0 || variant.salePrice >= variant.price)))) {
-      res.status(400);
-      throw new Error("Each size must have a valid price and sale price must be lower than the price");
-    }
-  }
+  const parsedVariants = normalizeVariants(variants);
+  validateVariants(parsedVariants);
 
   if (!name || !category || price === undefined) {
     res.status(400);
@@ -123,23 +130,8 @@ export const updateMenuItem = asyncHandler(async (req, res) => {
   if (price !== undefined) item.price = Number(price);
   if (salePrice !== undefined) item.salePrice = salePrice === "" ? null : Number(salePrice);
   if (variants !== undefined) {
-    let parsedVariants;
-    try {
-      parsedVariants = JSON.parse(variants);
-    } catch {
-      res.status(400);
-      throw new Error("Invalid size options");
-    }
-    item.variants = parsedVariants.map((variant) => ({
-      label: String(variant.label || "").trim(),
-      price: Number(variant.price),
-      salePrice: variant.salePrice === "" || variant.salePrice == null ? null : Number(variant.salePrice),
-    }));
-    if (item.variants.some((variant) => !variant.label || !Number.isFinite(variant.price) || variant.price < 0 ||
-      (variant.salePrice !== null && (!Number.isFinite(variant.salePrice) || variant.salePrice < 0 || variant.salePrice >= variant.price)))) {
-      res.status(400);
-      throw new Error("Each size must have a valid price and sale price must be lower than the price");
-    }
+    item.variants = normalizeVariants(variants);
+    validateVariants(item.variants);
   }
   if (!Number.isFinite(item.price) || item.price < 0 || (item.salePrice != null && (!Number.isFinite(item.salePrice) || item.salePrice < 0 || item.salePrice >= item.price))) {
     res.status(400);

@@ -41,9 +41,9 @@ export const deleteCategory = (id) => api.delete(`/categories/${id}`);
 
 // Admin menu items (multipart when image included)
 export const createMenuItem = (formData) =>
-  api.post("/menu", formData, { headers: { "Content-Type": "multipart/form-data" } });
+  api.post("/menu", formData);
 export const updateMenuItem = (id, formData) =>
-  api.put(`/menu/${id}`, formData, { headers: { "Content-Type": "multipart/form-data" } });
+  api.put(`/menu/${id}`, formData);
 export const deleteMenuItem = (id) => api.delete(`/menu/${id}`);
 
 export default api;
