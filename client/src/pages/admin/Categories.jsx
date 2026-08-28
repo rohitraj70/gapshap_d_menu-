@@ -11,9 +11,9 @@ import {
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState({ name: "", order: 0 });
+  const [form, setForm] = useState({ name: "" });
   const [editingId, setEditingId] = useState(null);
-  const [editForm, setEditForm] = useState({ name: "", order: 0 });
+  const [editForm, setEditForm] = useState({ name: "" });
   const [error, setError] = useState("");
 
   const load = async () => {
@@ -37,8 +37,8 @@ const Categories = () => {
     setError("");
     if (!form.name.trim()) return;
     try {
-      await createCategory({ name: form.name.trim(), order: Number(form.order) || 0 });
-      setForm({ name: "", order: 0 });
+      await createCategory({ name: form.name.trim() });
+      setForm({ name: "" });
       load();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add category");
@@ -47,12 +47,12 @@ const Categories = () => {
 
   const startEdit = (cat) => {
     setEditingId(cat._id);
-    setEditForm({ name: cat.name, order: cat.order });
+    setEditForm({ name: cat.name });
   };
 
   const saveEdit = async (id) => {
     try {
-      await updateCategory(id, { name: editForm.name.trim(), order: Number(editForm.order) || 0 });
+      await updateCategory(id, { name: editForm.name.trim() });
       setEditingId(null);
       load();
     } catch (err) {
@@ -87,15 +87,6 @@ const Categories = () => {
               className="w-full bg-cream rounded-lg px-3 py-2 text-sm border border-brown/10 focus:border-accent outline-none"
             />
           </div>
-          <div className="w-24">
-            <label className="block text-xs font-semibold text-brown-dark mb-1">Order</label>
-            <input
-              type="number"
-              value={form.order}
-              onChange={(e) => setForm({ ...form, order: e.target.value })}
-              className="w-full bg-cream rounded-lg px-3 py-2 text-sm border border-brown/10 focus:border-accent outline-none"
-            />
-          </div>
           <button
             type="submit"
             className="flex items-center gap-1.5 bg-accent text-white font-semibold px-4 py-2 rounded-lg hover:bg-accent-dark transition-colors"
@@ -120,7 +111,6 @@ const Categories = () => {
               <thead>
                 <tr className="text-left text-brown-light border-b border-brown/10">
                   <th className="px-4 py-3 font-semibold">Name</th>
-                  <th className="px-4 py-3 font-semibold w-24">Order</th>
                   <th className="px-4 py-3 font-semibold w-28 text-right">Actions</th>
                 </tr>
               </thead>
@@ -136,18 +126,6 @@ const Categories = () => {
                         />
                       ) : (
                         <span className="font-medium text-brown-dark">{cat.name}</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      {editingId === cat._id ? (
-                        <input
-                          type="number"
-                          value={editForm.order}
-                          onChange={(e) => setEditForm({ ...editForm, order: e.target.value })}
-                          className="w-16 bg-cream rounded px-2 py-1 border border-brown/10 outline-none"
-                        />
-                      ) : (
-                        cat.order
                       )}
                     </td>
                     <td className="px-4 py-3">
