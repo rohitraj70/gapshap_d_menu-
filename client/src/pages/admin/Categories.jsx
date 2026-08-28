@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, X, Check } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 import {
   fetchCategories,
+  fetchMenu,
   createCategory,
   updateCategory,
   deleteCategory,
@@ -10,6 +11,7 @@ import {
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
+  const [itemCounts, setItemCounts] = useState({});
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: "" });
   const [editingId, setEditingId] = useState(null);
@@ -19,8 +21,18 @@ const Categories = () => {
   const load = async () => {
     setLoading(true);
     try {
-      const { data } = await fetchCategories();
-      setCategories(data.data);
+      const [{ data: categoryResponse }, { data: menuResponse }] = await Promise.all([
+        fetchCategories(),
+        fetchMenu(),
+      ]);
+      setCategories(categoryResponse.data);
+      setItemCounts(
+        menuResponse.data.reduce((counts, item) => {
+          const categoryId = item.category?._id || item.category;
+          if (categoryId) counts[categoryId] = (counts[categoryId] || 0) + 1;
+          return counts;
+        }, {})
+      );
     } catch (err) {
       console.error(err);
     } finally {
@@ -111,6 +123,7 @@ const Categories = () => {
               <thead>
                 <tr className="text-left text-brown-light border-b border-brown/10">
                   <th className="px-4 py-3 font-semibold">Name</th>
+                  <th className="px-4 py-3 font-semibold w-24">Items</th>
                   <th className="px-4 py-3 font-semibold w-28 text-right">Actions</th>
                 </tr>
               </thead>
@@ -128,6 +141,7 @@ const Categories = () => {
                         <span className="font-medium text-brown-dark">{cat.name}</span>
                       )}
                     </td>
+                    <td className="px-4 py-3 text-brown-light">{itemCounts[cat._id] || 0}</td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-2">
                         {editingId === cat._id ? (
