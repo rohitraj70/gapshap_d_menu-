@@ -19,6 +19,26 @@ const shuffleItems = (items) => {
   return shuffled;
 };
 
+const getStableMenuOrder = (items) => {
+  const orderKey = "gapshap_menu_order";
+  const itemsById = new Map(items.map((item) => [item._id, item]));
+
+  try {
+    const storedOrder = JSON.parse(localStorage.getItem(orderKey) || "[]");
+    const existingItems = storedOrder
+      .map((itemId) => itemsById.get(itemId))
+      .filter(Boolean);
+    const knownIds = new Set(storedOrder);
+    const newItems = shuffleItems(items.filter((item) => !knownIds.has(item._id)));
+    const orderedItems = [...existingItems, ...newItems];
+
+    localStorage.setItem(orderKey, JSON.stringify(orderedItems.map((item) => item._id)));
+    return orderedItems;
+  } catch {
+    return shuffleItems(items);
+  }
+};
+
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
@@ -32,7 +52,7 @@ const Home = () => {
       try {
         const [catRes, menuRes] = await Promise.all([fetchCategories(), fetchMenu()]);
         setCategories(catRes.data.data);
-        setItems(shuffleItems(menuRes.data.data));
+        setItems(getStableMenuOrder(menuRes.data.data));
       } catch (err) {
         console.error("Failed to load menu:", err);
       } finally {
