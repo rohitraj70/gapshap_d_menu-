@@ -11,12 +11,14 @@ import {
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
   const [itemCounts, setItemCounts] = useState({});
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: "" });
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: "" });
   const [error, setError] = useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -26,6 +28,7 @@ const Categories = () => {
         fetchMenu(),
       ]);
       setCategories(categoryResponse.data);
+      setMenuItems(menuResponse.data);
       setItemCounts(
         menuResponse.data.reduce((counts, item) => {
           const categoryId = item.category?._id || item.category;
@@ -76,11 +79,18 @@ const Categories = () => {
     if (!confirm("Delete this category? This cannot be undone.")) return;
     try {
       await deleteCategory(id);
+      setSelectedCategoryId((current) => (current === id ? null : current));
       load();
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete category");
     }
   };
+
+  const selectedCategory = categories.find((cat) => cat._id === selectedCategoryId);
+  const selectedItems = menuItems.filter((item) => {
+    const itemCategoryId = item.category?._id || item.category;
+    return itemCategoryId === selectedCategoryId;
+  });
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-cream">
@@ -130,7 +140,13 @@ const Categories = () => {
               </thead>
               <tbody>
                 {categories.map((cat) => (
-                  <tr key={cat._id} className="border-b border-brown/5 last:border-0">
+                  <tr
+                    key={cat._id}
+                    onClick={() => setSelectedCategoryId((current) => (current === cat._id ? null : cat._id))}
+                    className={`border-b border-brown/5 last:border-0 transition-colors ${
+                      selectedCategoryId === cat._id ? "bg-cream" : "hover:bg-cream/50"
+                    }`}
+                  >
                     <td className="px-4 py-3">
                       {editingId === cat._id ? (
                         <input
@@ -139,7 +155,16 @@ const Categories = () => {
                           className="w-full bg-cream rounded px-2 py-1 border border-brown/10 outline-none"
                         />
                       ) : (
-                        <span className="font-medium text-brown-dark">{cat.name}</span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCategoryId((current) => (current === cat._id ? null : cat._id));
+                          }}
+                          className="font-medium text-brown-dark hover:text-accent text-left"
+                        >
+                          {cat.name}
+                        </button>
                       )}
                     </td>
                     <td className="px-4 py-3 text-brown-light">{itemCounts[cat._id] || 0}</td>
@@ -147,19 +172,43 @@ const Categories = () => {
                       <div className="flex justify-end gap-2">
                         {editingId === cat._id ? (
                           <>
-                            <button onClick={() => saveEdit(cat._id)} className="text-green-600 hover:text-green-700">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                saveEdit(cat._id);
+                              }}
+                              className="text-green-600 hover:text-green-700"
+                            >
                               <Check size={16} />
                             </button>
-                            <button onClick={() => setEditingId(null)} className="text-brown-light hover:text-brown-dark">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingId(null);
+                              }}
+                              className="text-brown-light hover:text-brown-dark"
+                            >
                               <X size={16} />
                             </button>
                           </>
                         ) : (
                           <>
-                            <button onClick={() => startEdit(cat)} className="text-brown-light hover:text-accent">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                startEdit(cat);
+                              }}
+                              className="text-brown-light hover:text-accent"
+                            >
                               <Pencil size={16} />
                             </button>
-                            <button onClick={() => handleDelete(cat._id)} className="text-brown-light hover:text-red-500">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete(cat._id);
+                              }}
+                              className="text-brown-light hover:text-red-500"
+                            >
                               <Trash2 size={16} />
                             </button>
                           </>
@@ -173,6 +222,39 @@ const Categories = () => {
             </div>
           )}
         </div>
+
+        {selectedCategory && (
+          <div className="mt-6 bg-white rounded-xl2 shadow-card p-4 sm:p-5">
+            <div className="flex items-center justify-between gap-3 mb-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brown-light">Category</p>
+                <h2 className="font-display text-xl font-semibold text-brown-dark">{selectedCategory.name}</h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedCategoryId(null)}
+                className="text-sm font-semibold text-brown-light hover:text-brown-dark"
+              >
+                Close
+              </button>
+            </div>
+
+            {selectedItems.length === 0 ? (
+              <p className="text-sm text-brown-light">No items in this category yet.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {selectedItems.map((item) => (
+                  <div key={item._id} className="rounded-xl border border-brown/10 bg-cream p-3">
+                    <p className="font-medium text-brown-dark">{item.name}</p>
+                    <p className="text-xs text-brown-light mt-1">
+                      {item.available ? "Available" : "Unavailable"} • ₹{item.salePrice ?? item.price}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );
