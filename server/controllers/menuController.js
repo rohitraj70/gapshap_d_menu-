@@ -31,21 +31,18 @@ const validateVariants = (variants) => {
   }
 };
 
-// @desc    Get menu items with pagination (supports ?search=&category=&featured=&available=&page=&limit=)
+// @desc    Get all menu items (supports ?search=&category=&featured=&available=)
 // @route   GET /api/menu
 // @access  Public
 export const getMenuItems = asyncHandler(async (req, res) => {
-  const { search, category, featured, available, page = "1", limit = "12" } = req.query;
+  const { search, category, featured, available } = req.query;
   const filter = {};
 
   if (category) filter.category = category;
   if (featured !== undefined) filter.featured = featured === "true";
   if (available !== undefined) filter.available = available === "true";
 
-  const pageNumber = Math.max(1, Number(page) || 1);
-  const limitNumber = Math.min(Math.max(1, Number(limit) || 12), 50);
-
-  let query = { ...filter };
+  let items;
 
   if (search) {
     const trimmed = String(search).trim();
@@ -53,35 +50,25 @@ export const getMenuItems = asyncHandler(async (req, res) => {
 
     if (searchTerms.length > 0) {
       const regex = new RegExp(searchTerms.map((term) => escapeRegex(term)).join("|"), "i");
-      query = {
-        ...filter,
+      const searchFilter = {
         $or: [
           { name: regex },
           { description: regex },
           { "variants.label": regex },
         ],
       };
+
+      items = await MenuItem.find({ ...filter, ...searchFilter })
+        .populate("category", "name order")
+        .sort({ createdAt: -1 });
+    } else {
+      items = await MenuItem.find(filter).populate("category", "name order").sort({ createdAt: -1 });
     }
+  } else {
+    items = await MenuItem.find(filter).populate("category", "name order").sort({ createdAt: -1 });
   }
 
-  const total = await MenuItem.countDocuments(query);
-  const totalPages = Math.max(1, Math.ceil(total / limitNumber));
-  const items = await MenuItem.find(query)
-    .populate("category", "name order")
-    .sort({ createdAt: -1 })
-    .skip((pageNumber - 1) * limitNumber)
-    .limit(limitNumber);
-
-  res.json({
-    success: true,
-    count: items.length,
-    total,
-    page: pageNumber,
-    limit: limitNumber,
-    pages: totalPages,
-    hasMore: pageNumber < totalPages,
-    data: items,
-  });
+  res.json({ success: true, count: items.length, data: items });
 });
 
 // @desc    Get single menu item
