@@ -43,6 +43,36 @@ const HOME_STATE_KEY = "gapshap_home_state";
 const INITIAL_VISIBLE_ITEMS = 12;
 const LOAD_MORE_COUNT = 8;
 
+const normalizeSearchText = (value = "") =>
+  String(value)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const buildSearchTerms = (value = "") =>
+  normalizeSearchText(value)
+    .split(" ")
+    .filter(Boolean);
+
+const matchesItemSearch = (item, query) => {
+  const terms = buildSearchTerms(query);
+  if (terms.length === 0) return true;
+
+  const searchableText = [
+    item.name,
+    item.description,
+    item.category?.name,
+    ...(item.variants || []).map((variant) => variant.label),
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const normalizedText = normalizeSearchText(searchableText);
+  return terms.every((term) => normalizedText.includes(term));
+};
+
 const readHomeState = () => {
   try {
     return JSON.parse(localStorage.getItem(HOME_STATE_KEY) || "{}");
@@ -110,10 +140,7 @@ const Home = () => {
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
       const matchesCategory = activeCategory ? item.category?._id === activeCategory : true;
-      const matchesSearch = search
-        ? item.name.toLowerCase().includes(search.toLowerCase()) ||
-          item.description?.toLowerCase().includes(search.toLowerCase())
-        : true;
+      const matchesSearch = matchesItemSearch(item, search);
       return matchesCategory && matchesSearch;
     });
   }, [items, activeCategory, search]);

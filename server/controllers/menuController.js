@@ -2,6 +2,8 @@ import asyncHandler from "express-async-handler";
 import MenuItem from "../models/MenuItem.js";
 import { cloudinary, uploadImage } from "../utils/cloudinary.js";
 
+const escapeRegex = (value = "") => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const parseVariants = (value) => {
   if (!value) return [];
   if (Array.isArray(value)) return value;
@@ -36,12 +38,36 @@ export const getMenuItems = asyncHandler(async (req, res) => {
   const { search, category, featured, available } = req.query;
   const filter = {};
 
-  if (search) filter.$text = { $search: search };
   if (category) filter.category = category;
   if (featured !== undefined) filter.featured = featured === "true";
   if (available !== undefined) filter.available = available === "true";
 
-  const items = await MenuItem.find(filter).populate("category", "name order").sort({ createdAt: -1 });
+  let items;
+
+  if (search) {
+    const trimmed = String(search).trim();
+    const searchTerms = trimmed.split(/\s+/).filter(Boolean);
+
+    if (searchTerms.length > 0) {
+      const regex = new RegExp(searchTerms.map((term) => escapeRegex(term)).join("|"), "i");
+      const searchFilter = {
+        $or: [
+          { name: regex },
+          { description: regex },
+          { "variants.label": regex },
+        ],
+      };
+
+      items = await MenuItem.find({ ...filter, ...searchFilter })
+        .populate("category", "name order")
+        .sort({ createdAt: -1 });
+    } else {
+      items = await MenuItem.find(filter).populate("category", "name order").sort({ createdAt: -1 });
+    }
+  } else {
+    items = await MenuItem.find(filter).populate("category", "name order").sort({ createdAt: -1 });
+  }
+
   res.json({ success: true, count: items.length, data: items });
 });
 
