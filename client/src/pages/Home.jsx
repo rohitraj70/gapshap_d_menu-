@@ -45,7 +45,7 @@ const LOAD_MORE_COUNT = 8;
 
 const readHomeState = () => {
   try {
-    return JSON.parse(sessionStorage.getItem(HOME_STATE_KEY) || "{}");
+    return JSON.parse(localStorage.getItem(HOME_STATE_KEY) || "{}");
   } catch {
     return {};
   }
@@ -63,7 +63,7 @@ const Home = () => {
 
   useEffect(() => {
     return () => {
-      sessionStorage.setItem(
+      localStorage.setItem(
         HOME_STATE_KEY,
         JSON.stringify({ search, activeCategory, scrollY: window.scrollY })
       );
