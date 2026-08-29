@@ -40,6 +40,9 @@ const getStableMenuOrder = (items) => {
 };
 
 const HOME_STATE_KEY = "gapshap_home_state";
+const INITIAL_VISIBLE_ITEMS = 12;
+const LOAD_MORE_COUNT = 8;
+
 const readHomeState = () => {
   try {
     return JSON.parse(sessionStorage.getItem(HOME_STATE_KEY) || "{}");
@@ -55,6 +58,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(savedState.search || "");
   const [activeCategory, setActiveCategory] = useState(savedState.activeCategory || null);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_ITEMS);
 
   useEffect(() => {
     return () => {
@@ -72,6 +76,10 @@ const Home = () => {
   }, [loading, savedState.scrollY]);
 
   useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE_ITEMS);
+  }, [search, activeCategory]);
+
+  useEffect(() => {
     const load = async () => {
       setLoading(true);
       try {
@@ -87,7 +95,7 @@ const Home = () => {
     load();
   }, []);
 
-  const featured = useMemo(() => items.filter((i) => i.featured && i.available), [items]);
+  const featured = useMemo(() => items.filter((i) => i.featured && i.available).slice(0, 8), [items]);
 
   const availableItemCounts = useMemo(() => {
     const counts = { all: 0 };
@@ -110,6 +118,13 @@ const Home = () => {
       return matchesCategory && matchesSearch;
     });
   }, [items, activeCategory, search]);
+
+  const visibleItems = useMemo(
+    () => filteredItems.slice(0, visibleCount),
+    [filteredItems, visibleCount]
+  );
+
+  const hasMoreItems = visibleCount < filteredItems.length;
 
   return (
     <div className="min-h-screen bg-cream pb-28">
@@ -188,11 +203,25 @@ const Home = () => {
               description="Try a different search term or browse another category."
             />
           ) : (
-            <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-              {filteredItems.map((item) => (
-                <FoodCard key={item._id} item={item} />
-              ))}
-            </motion.div>
+            <>
+              <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                {visibleItems.map((item) => (
+                  <FoodCard key={item._id} item={item} />
+                ))}
+              </motion.div>
+
+              {hasMoreItems && (
+                <div className="mt-5 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((count) => count + LOAD_MORE_COUNT)}
+                    className="rounded-full bg-brown px-5 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-dark"
+                  >
+                    Load more items
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </section>
       </main>
