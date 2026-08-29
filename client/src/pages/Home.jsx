@@ -62,12 +62,10 @@ const Home = () => {
   const loadMoreRef = useRef(null);
 
   useEffect(() => {
-    return () => {
-      localStorage.setItem(
-        HOME_STATE_KEY,
-        JSON.stringify({ search, activeCategory, scrollY: window.scrollY })
-      );
-    };
+    localStorage.setItem(
+      HOME_STATE_KEY,
+      JSON.stringify({ search, activeCategory, scrollY: window.scrollY })
+    );
   }, [search, activeCategory]);
 
   useEffect(() => {
