@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, Flame, SearchX, Sparkles } from "lucide-react";
 import Navbar from "../components/Navbar";
@@ -59,6 +59,7 @@ const Home = () => {
   const [search, setSearch] = useState(savedState.search || "");
   const [activeCategory, setActiveCategory] = useState(savedState.activeCategory || null);
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_ITEMS);
+  const loadMoreRef = useRef(null);
 
   useEffect(() => {
     return () => {
@@ -125,6 +126,27 @@ const Home = () => {
   );
 
   const hasMoreItems = visibleCount < filteredItems.length;
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasMoreItems) return undefined;
+
+    const node = loadMoreRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+        if (firstEntry?.isIntersecting) {
+          setVisibleCount((count) => Math.min(count + LOAD_MORE_COUNT, filteredItems.length));
+        }
+      },
+      {
+        rootMargin: "200px 0px",
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [filteredItems.length, hasMoreItems]);
 
   return (
     <div className="min-h-screen bg-cream pb-28">
@@ -210,17 +232,7 @@ const Home = () => {
                 ))}
               </motion.div>
 
-              {hasMoreItems && (
-                <div className="mt-5 flex justify-center">
-                  <button
-                    type="button"
-                    onClick={() => setVisibleCount((count) => count + LOAD_MORE_COUNT)}
-                    className="rounded-full bg-brown px-5 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-dark"
-                  >
-                    Load more items
-                  </button>
-                </div>
-              )}
+              {hasMoreItems && <div ref={loadMoreRef} className="mt-5 h-1" />}
             </>
           )}
         </section>
