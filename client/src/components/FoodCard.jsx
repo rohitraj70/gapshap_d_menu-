@@ -62,14 +62,14 @@ const FoodCard = ({ item }) => {
 
       <div className="p-3">
         <Link to={`/food/${item._id}`}>
-          <h3 className="font-display font-semibold text-brown-dark leading-snug line-clamp-1">
+          <h3 className="font-display font-semibold text-brown-dark leading-snug text-[0.95rem] sm:text-[1rem] break-words line-clamp-2 sm:line-clamp-1">
             {item.name}
           </h3>
           {item.description && (
-            <p className="text-xs text-brown-light mt-0.5 line-clamp-2">{item.description}</p>
+            <p className="text-[11px] sm:text-xs text-brown-light mt-0.5 line-clamp-2">{item.description}</p>
           )}
           {item.variants?.length > 0 && (
-            <p className="text-[11px] text-brown-light mt-1 line-clamp-1">
+            <p className="text-[10px] sm:text-[11px] text-brown-light mt-1 line-clamp-1">
               {item.variants.map((variant) => `${variant.label}: ₹${variant.salePrice ?? variant.price}`).join(" · ")}
             </p>
           )}
