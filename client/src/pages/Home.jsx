@@ -251,7 +251,11 @@ const Home = () => {
             />
           ) : (
             <>
-              <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+              <motion.div
+                layout
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+                style={{ contentVisibility: "auto", containIntrinsicSize: "260px 360px" }}
+              >
                 {visibleItems.map((item) => (
                   <FoodCard key={item._id} item={item} />
                 ))}

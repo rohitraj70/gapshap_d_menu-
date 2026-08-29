@@ -1,10 +1,11 @@
+import { memo } from "react";
 import { Plus, Minus, ImageOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import FavoriteButton from "./FavoriteButton";
 import { useFavorites } from "../context/FavoritesContext";
 
-const FoodCard = ({ item }) => {
+const FoodCard = memo(({ item }) => {
   const { orders, addToOrders, updateOrderQty } = useFavorites();
   const current = orders.find((f) => f.menuItemId === item._id || f._id === item._id);
   const priceOptions = item.variants?.length
@@ -122,6 +123,8 @@ const FoodCard = ({ item }) => {
       </div>
     </motion.div>
   );
-};
+});
+
+FoodCard.displayName = "FoodCard";
 
 export default FoodCard;
