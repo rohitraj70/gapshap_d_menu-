@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, Flame, SearchX, Sparkles } from "lucide-react";
 import Navbar from "../components/Navbar";
@@ -10,38 +10,8 @@ import EmptyState from "../components/EmptyState";
 import { FoodGridSkeleton, ChipsSkeleton } from "../components/Skeletons";
 import { fetchCategories, fetchMenu } from "../services/api";
 
-const shuffleItems = (items) => {
-  const shuffled = [...items];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[index]];
-  }
-  return shuffled;
-};
-
-const getStableMenuOrder = (items) => {
-  const orderKey = "gapshap_menu_order";
-  const itemsById = new Map(items.map((item) => [item._id, item]));
-
-  try {
-    const storedOrder = JSON.parse(localStorage.getItem(orderKey) || "[]");
-    const existingItems = storedOrder
-      .map((itemId) => itemsById.get(itemId))
-      .filter(Boolean);
-    const knownIds = new Set(storedOrder);
-    const newItems = shuffleItems(items.filter((item) => !knownIds.has(item._id)));
-    const orderedItems = [...existingItems, ...newItems];
-
-    localStorage.setItem(orderKey, JSON.stringify(orderedItems.map((item) => item._id)));
-    return orderedItems;
-  } catch {
-    return shuffleItems(items);
-  }
-};
-
 const HOME_STATE_KEY = "gapshap_home_state";
-const INITIAL_VISIBLE_ITEMS = 12;
-const LOAD_MORE_COUNT = 8;
+const PAGE_SIZE = 12;
 
 const normalizeSearchText = (value = "") =>
   String(value)
@@ -86,9 +56,12 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [search, setSearch] = useState(savedState.search || "");
   const [activeCategory, setActiveCategory] = useState(savedState.activeCategory || null);
-  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_ITEMS);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [categoriesReady, setCategoriesReady] = useState(false);
   const loadMoreRef = useRef(null);
 
   useEffect(() => {
@@ -104,25 +77,56 @@ const Home = () => {
     }
   }, [loading, savedState.scrollY]);
 
-  useEffect(() => {
-    setVisibleCount(INITIAL_VISIBLE_ITEMS);
-  }, [search, activeCategory]);
+  const loadMenuPage = useCallback(
+    async (nextPage, { append = false } = {}) => {
+      const params = { page: nextPage, limit: PAGE_SIZE };
+      if (activeCategory) params.category = activeCategory;
+      if (search) params.search = search;
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
       try {
-        const [catRes, menuRes] = await Promise.all([fetchCategories(), fetchMenu()]);
-        setCategories(catRes.data.data);
-        setItems(getStableMenuOrder(menuRes.data.data));
+        const { data } = await fetchMenu(params);
+        const nextItems = Array.isArray(data?.data) ? data.data : [];
+
+        setItems((prev) => (append ? [...prev, ...nextItems] : nextItems));
+        setHasMore(Boolean(data?.hasMore ?? false));
+        setPage(nextPage);
+        return data;
       } catch (err) {
         console.error("Failed to load menu:", err);
+        return null;
+      }
+    },
+    [activeCategory, search]
+  );
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const catRes = await fetchCategories();
+        setCategories(catRes.data.data || []);
+      } catch (err) {
+        console.error("Failed to load categories:", err);
       } finally {
-        setLoading(false);
+        setCategoriesReady(true);
       }
     };
-    load();
+
+    loadCategories();
   }, []);
+
+  useEffect(() => {
+    if (!categoriesReady) return;
+
+    const reloadMenu = async () => {
+      setLoading(true);
+      setItems([]);
+      setHasMore(true);
+      await loadMenuPage(1, { append: false });
+      setLoading(false);
+    };
+
+    reloadMenu();
+  }, [categoriesReady, activeCategory, search, loadMenuPage]);
 
   const featured = useMemo(() => items.filter((i) => i.featured && i.available).slice(0, 8), [items]);
 
@@ -145,23 +149,19 @@ const Home = () => {
     });
   }, [items, activeCategory, search]);
 
-  const visibleItems = useMemo(
-    () => filteredItems.slice(0, visibleCount),
-    [filteredItems, visibleCount]
-  );
-
-  const hasMoreItems = visibleCount < filteredItems.length;
-
   useEffect(() => {
-    if (!loadMoreRef.current || !hasMoreItems) return undefined;
+    if (!loadMoreRef.current || !hasMore || loading || loadingMore) return undefined;
 
     const node = loadMoreRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0];
-        if (firstEntry?.isIntersecting) {
-          setVisibleCount((count) => Math.min(count + LOAD_MORE_COUNT, filteredItems.length));
-        }
+        if (!firstEntry?.isIntersecting) return;
+
+        setLoadingMore(true);
+        loadMenuPage(page + 1, { append: true }).finally(() => {
+          setLoadingMore(false);
+        });
       },
       {
         rootMargin: "200px 0px",
@@ -171,7 +171,7 @@ const Home = () => {
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [filteredItems.length, hasMoreItems]);
+  }, [hasMore, loading, loadingMore, loadMenuPage, page]);
 
   return (
     <div className="min-h-screen bg-cream pb-28">
@@ -252,12 +252,13 @@ const Home = () => {
           ) : (
             <>
               <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-                {visibleItems.map((item) => (
+                {filteredItems.map((item) => (
                   <FoodCard key={item._id} item={item} />
                 ))}
               </motion.div>
 
-              {hasMoreItems && <div ref={loadMoreRef} className="mt-5 h-1" />}
+              {hasMore && <div ref={loadMoreRef} className="mt-5 h-1" />}
+              {loadingMore && <div className="mt-4 text-center text-xs font-semibold uppercase tracking-[0.18em] text-brown-light">Loading more…</div>}
             </>
           )}
         </section>
