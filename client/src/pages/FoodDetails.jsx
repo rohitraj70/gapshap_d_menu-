@@ -99,7 +99,7 @@ const FoodDetails = () => {
         )}
       </div>
 
-      <div className="mx-auto max-w-3xl animate-fade-up px-4 pb-6 pt-6 sm:pt-8">
+      <div className="mx-auto max-w-3xl animate-fade-up px-4 pb-24 pt-6 sm:pb-32 sm:pt-8">
         <div className="flex items-start justify-between gap-4">
           <h1 className="font-display text-2xl font-bold text-brown-dark">{item.name}</h1>
           <span className="font-display text-xl font-bold text-accent shrink-0">
@@ -115,7 +115,7 @@ const FoodDetails = () => {
           </span>
         )}
         {item.variants?.length > 0 && (
-          <div className="mt-5">
+          <div className="mt-5 pb-2">
             <p className="text-xs font-semibold text-brown-dark mb-2">Choose size</p>
             <div className="flex flex-wrap gap-2">
               {item.variants.map((variant) => (
