@@ -70,20 +70,6 @@ const Favorites = () => {
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl px-3.5 pt-3 sm:px-4">
-        <div className="rounded-[1.8rem] border border-[#f1d7bb] bg-gradient-to-br from-[#fffaf4] via-[#fff] to-[#fff3e7] p-3.5 shadow-[0_24px_48px_-28px_rgba(111,78,55,0.7)]">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brown-light">Order summary</p>
-              <p className="mt-1 font-display text-lg font-semibold text-brown-dark">Ready to place?</p>
-            </div>
-            <div className="rounded-full border border-[#f0d2a3] bg-white/80 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-brown-dark shadow-sm">
-              {orders.length} dishes
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="mx-auto max-w-3xl px-3.5 pt-4 sm:px-4">
         <div className="rounded-[2rem] border border-[#f1dfce] bg-white/85 p-2.5 shadow-[0_28px_50px_-30px_rgba(40,25,20,0.65)] backdrop-blur-sm dark:bg-[#2b211c]/90 dark:border-[#4f3b30]">
           <div className="flex items-center justify-between px-2 py-1.5">
@@ -94,7 +80,7 @@ const Favorites = () => {
             </div>
           </div>
 
-          <div className="scroll-panel max-h-[46vh] min-h-[220px] overflow-y-auto overscroll-contain px-2 pb-2 pt-1 space-y-3">
+          <div className="scroll-panel max-h-[54vh] min-h-[260px] overflow-y-auto overscroll-contain px-2 pb-2 pt-1 space-y-3">
             <AnimatePresence initial={false}>
               {orders.map((item) => (
                 <motion.div
