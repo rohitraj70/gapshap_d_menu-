@@ -16,9 +16,9 @@ A mobile-first digital menu for Gapshap Cafe, built on the MERN stack. Customers
 gapshap-cafe/
 ├── server/            Express API
 │   ├── config/db.js
-│   ├── models/         User, Category, MenuItem
-│   ├── controllers/    auth, category, menu
-│   ├── routes/         auth, category, menu
+│   ├── models/         User, Category, MenuItem, Order
+│   ├── controllers/    auth, category, menu, order
+│   ├── routes/         auth, category, menu, orders
 │   ├── middleware/      JWT protect, error handler
 │   ├── utils/           cloudinary, token
 │   ├── seed/createAdmin.js   one-time admin creation script
@@ -26,7 +26,7 @@ gapshap-cafe/
 ├── client/            React app
 │   └── src/
 │       ├── components/   Navbar, SearchBar, CategoryTabs, FoodCard, FavoriteButton, AdminSidebar, ...
-│       ├── pages/         Home, FoodDetails, Favorites, admin/*
+│       ├── pages/         Home, FoodDetails, Favorites, OrderCheckout, OrderStatus, admin/*
 │       ├── context/       FavoritesContext (localStorage), AuthContext (JWT)
 │       └── services/api.js
 ├── render.yaml         Render deploy blueprint for the API
@@ -70,18 +70,32 @@ Visit `http://localhost:5173` for the customer menu and `http://localhost:5173/a
 | GET | `/api/menu` | List menu items — supports `?search=`, `?category=`, `?featured=`, `?available=` |
 | GET | `/api/menu/:id` | Single menu item |
 | GET | `/api/menu/category/:categoryId` | Items in a category |
+| POST | `/api/orders` | Submit a customer order with name, phone/address or table info and order items |
+| GET | `/api/orders/:id` | Fetch a submitted order to check its current status |
 
 ### Admin (Bearer token required)
 | Method | Route | Description |
 |---|---|---|
 | POST | `/api/auth/login` | Get a JWT |
 | GET | `/api/auth/me` | Current admin profile |
+| GET | `/api/orders` | View all submitted orders |
+| PUT | `/api/orders/:id/status` | Confirm or decline an order |
 | POST / PUT / DELETE | `/api/categories(/:id)` | Manage categories |
 | POST / PUT / DELETE | `/api/menu(/:id)` | Manage menu items (multipart form for image upload) |
 
+## Order flow
+
+Customers can now place real orders from the app instead of only showing a list at the counter.
+
+- If the customer is ordering outside the cafe: they enter name, phone number, and address.
+- If they are in the cafe: they enter name and the table number from the QR code.
+- A submitted order appears in the admin Orders screen with all item details.
+- The admin can confirm or decline the order.
+- The customer can then view the final status on the order-status page.
+
 ## How favorites work
 
-The customer's "My Selection" list lives entirely in `localStorage` via `FavoritesContext` — nothing is sent to the server, since there's no online ordering. The floating button, badge count, and estimated total all derive from that same context, so they stay in sync everywhere in the app.
+The customer's "My Selection" list lives in `localStorage` via `FavoritesContext`, and the final checkout flow turns that selection into a saved order record in MongoDB. The floating button, badge count, and estimated total stay in sync across the cart experience.
 
 ## Deployment
 

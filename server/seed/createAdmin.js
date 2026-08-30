@@ -6,7 +6,7 @@ import connectDB from "../config/db.js";
 import User from "../models/User.js";
 import mongoose from "mongoose";
 
-dotenv.config();
+dotenv.config({ path: new URL("../.env", import.meta.url) });
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 const ask = (q) => new Promise((resolve) => rl.question(q, resolve));

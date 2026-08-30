@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Minus, Plus, Trash2, HeartOff, Bell } from "lucide-react";
+import { ArrowLeft, Minus, Plus, Trash2, HeartOff, Bell, CheckCircle2, XCircle } from "lucide-react";
 import EmptyState from "../components/EmptyState";
 import { useFavorites } from "../context/FavoritesContext";
 
@@ -124,12 +124,20 @@ const Favorites = () => {
             <span className="font-display text-xl font-bold text-brown-dark">₹{totalAmount}</span>
           </div>
           {!showConfirm ? (
-            <button
-              onClick={() => setShowConfirm(true)}
-              className="w-full bg-accent text-white font-semibold py-3.5 rounded-full hover:bg-accent-dark transition-colors flex items-center justify-center gap-2"
-            >
-              <Bell size={18} /> Show at Counter
-            </button>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <button
+                onClick={() => setShowConfirm(true)}
+                className="w-full bg-accent text-white font-semibold py-3.5 rounded-full hover:bg-accent-dark transition-colors flex items-center justify-center gap-2"
+              >
+                <Bell size={18} /> Show at Counter
+              </button>
+              <button
+                onClick={() => navigate("/checkout")}
+                className="w-full bg-brown-dark text-white font-semibold py-3.5 rounded-full hover:bg-brown transition-colors flex items-center justify-center gap-2"
+              >
+                <CheckCircle2 size={18} /> Place Order
+              </button>
+            </div>
           ) : (
             <motion.div
               initial={{ opacity: 0, y: 8 }}

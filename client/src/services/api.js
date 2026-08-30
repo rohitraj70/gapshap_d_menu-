@@ -30,6 +30,12 @@ export const fetchMenu = (params) => api.get("/menu", { params });
 export const fetchMenuItem = (id) => api.get(`/menu/${id}`);
 export const fetchMenuByCategory = (categoryId) => api.get(`/menu/category/${categoryId}`);
 
+// Orders
+export const createOrder = (payload) => api.post("/orders", payload);
+export const getOrders = () => api.get("/orders");
+export const getOrderById = (id) => api.get(`/orders/${id}`);
+export const updateOrderStatus = (id, status) => api.put(`/orders/${id}/status`, { status });
+
 // Auth
 export const loginAdmin = (payload) => api.post("/auth/login", payload);
 export const getMe = () => api.get("/auth/me");

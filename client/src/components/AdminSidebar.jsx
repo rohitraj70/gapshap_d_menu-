@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Tags, UtensilsCrossed, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, Tags, UtensilsCrossed, LogOut, Menu, X, ClipboardList } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const links = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/admin/orders", label: "Orders", icon: ClipboardList },
   { to: "/admin/categories", label: "Categories", icon: Tags },
   { to: "/admin/menu", label: "Menu Items", icon: UtensilsCrossed },
 ];
