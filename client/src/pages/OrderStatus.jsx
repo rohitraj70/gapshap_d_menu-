@@ -40,7 +40,9 @@ const mergeCustomerOrders = (incoming = []) => {
     merged.set(entry._id, { ...previous, ...entry });
   });
 
-  return [...merged.values()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  return [...merged.values()]
+    .filter((entry) => !["completed", "declined"].includes(entry.status))
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 };
 
 const OrderStatus = () => {
@@ -131,6 +133,23 @@ const OrderStatus = () => {
 
           <h1 className="mt-4 font-display text-3xl font-bold text-brown-dark">Order status</h1>
           <p className="mt-2 text-sm text-brown-light">{config.note}</p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              onClick={() => navigate("/order-history")}
+              className="rounded-full border border-accent/30 bg-accent/10 px-3 py-2 text-sm font-semibold text-accent hover:bg-accent/15"
+            >
+              View order history
+            </button>
+            {order.status === "completed" || order.status === "declined" ? (
+              <button
+                onClick={() => navigate("/")}
+                className="rounded-full border border-brown/10 bg-white px-3 py-2 text-sm font-semibold text-brown-dark hover:bg-cream"
+              >
+                Back to menu
+              </button>
+            ) : null}
+          </div>
 
           <div className="mt-6 rounded-2xl bg-cream-dark p-4">
             <p className="text-xs uppercase tracking-[0.2em] text-brown-light">Delivery details</p>

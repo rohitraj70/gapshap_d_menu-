@@ -19,7 +19,9 @@ const mergeCustomerOrders = (incoming = []) => {
     merged.set(entry._id, { ...previous, ...entry });
   });
 
-  return [...merged.values()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  return [...merged.values()]
+    .filter((entry) => !["completed", "declined"].includes(entry.status))
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 };
 
 const OrderHistory = () => {
