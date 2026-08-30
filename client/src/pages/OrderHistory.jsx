@@ -9,6 +9,19 @@ const statusMap = {
   declined: { label: "Declined", icon: XCircle, className: "bg-rose-100 text-rose-700" },
 };
 
+const mergeCustomerOrders = (incoming = []) => {
+  const stored = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
+  const merged = new Map();
+
+  [...stored, ...incoming].forEach((entry) => {
+    if (!entry || !entry._id) return;
+    const previous = merged.get(entry._id) || {};
+    merged.set(entry._id, { ...previous, ...entry });
+  });
+
+  return [...merged.values()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+};
+
 const OrderHistory = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
@@ -18,7 +31,8 @@ const OrderHistory = () => {
     const loadOrders = () => {
       try {
         const raw = localStorage.getItem("gapshap_customer_orders");
-        const list = raw ? JSON.parse(raw) : [];
+        const list = raw ? mergeCustomerOrders(JSON.parse(raw)) : [];
+        localStorage.setItem("gapshap_customer_orders", JSON.stringify(list));
         setOrders(list);
       } catch (error) {
         console.error(error);
@@ -32,8 +46,9 @@ const OrderHistory = () => {
   }, []);
 
   const saveOrders = (nextList) => {
-    localStorage.setItem("gapshap_customer_orders", JSON.stringify(nextList));
-    setOrders(nextList);
+    const deduped = mergeCustomerOrders(nextList);
+    localStorage.setItem("gapshap_customer_orders", JSON.stringify(deduped));
+    setOrders(deduped);
   };
 
   useEffect(() => {
@@ -41,7 +56,8 @@ const OrderHistory = () => {
       const stored = localStorage.getItem("gapshap_customer_orders");
       if (!stored) return;
       try {
-        const parsed = JSON.parse(stored);
+        const parsed = mergeCustomerOrders(JSON.parse(stored));
+        localStorage.setItem("gapshap_customer_orders", JSON.stringify(parsed));
         setOrders(parsed);
       } catch (error) {
         console.error(error);

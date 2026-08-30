@@ -30,6 +30,19 @@ const statusConfig = {
   },
 };
 
+const mergeCustomerOrders = (incoming = []) => {
+  const stored = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
+  const merged = new Map();
+
+  [...stored, ...incoming].forEach((entry) => {
+    if (!entry || !entry._id) return;
+    const previous = merged.get(entry._id) || {};
+    merged.set(entry._id, { ...previous, ...entry });
+  });
+
+  return [...merged.values()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+};
+
 const OrderStatus = () => {
   const [searchParams] = useSearchParams();
   const [order, setOrder] = useState(null);
@@ -47,12 +60,17 @@ const OrderStatus = () => {
 
       try {
         const res = await getOrderById(orderId);
-        setOrder(res.data.data);
+        const serverOrder = res.data.data;
+        const nextHistory = mergeCustomerOrders([serverOrder]);
+        localStorage.setItem("gapshap_customer_orders", JSON.stringify(nextHistory));
+        setOrder(serverOrder);
       } catch (error) {
         console.error(error);
         const localOrders = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
         const localMatch = localOrders.find((entry) => entry._id === orderId);
-        if (localMatch) setOrder(localMatch);
+        if (localMatch) {
+          setOrder(localMatch);
+        }
       } finally {
         setLoading(false);
       }

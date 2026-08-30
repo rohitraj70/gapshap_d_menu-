@@ -9,6 +9,19 @@ const ORDER_TYPES = {
   in_cafe: "I am in the cafe",
 };
 
+const mergeCustomerOrders = (incoming = []) => {
+  const stored = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
+  const merged = new Map();
+
+  [...stored, ...incoming].forEach((entry) => {
+    if (!entry || !entry._id) return;
+    const previous = merged.get(entry._id) || {};
+    merged.set(entry._id, { ...previous, ...entry });
+  });
+
+  return [...merged.values()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+};
+
 const OrderCheckout = () => {
   const navigate = useNavigate();
   const { orders, totalAmount, clearOrders } = useFavorites();
@@ -67,8 +80,7 @@ const OrderCheckout = () => {
 
       const response = await createOrder(payload);
       const newOrder = response.data.data;
-      const storedHistory = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
-      const nextHistory = [newOrder, ...storedHistory].slice(0, 30);
+      const nextHistory = mergeCustomerOrders([newOrder]).slice(0, 30);
       localStorage.setItem("gapshap_latest_order_id", newOrder._id);
       localStorage.setItem("gapshap_customer_orders", JSON.stringify(nextHistory));
       clearOrders();
