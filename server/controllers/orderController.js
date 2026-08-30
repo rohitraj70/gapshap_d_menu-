@@ -1,52 +1,5 @@
 import asyncHandler from "express-async-handler";
-import twilio from "twilio";
 import Order from "../models/Order.js";
-
-const sendWhatsAppAlert = async (order) => {
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const fromNumber = process.env.TWILIO_WHATSAPP_FROM;
-  const adminNumbers = (process.env.ADMIN_WHATSAPP_NUMBERS || "")
-    .split(",")
-    .map((num) => num.trim())
-    .filter(Boolean);
-
-  if (!accountSid || !authToken || !fromNumber || adminNumbers.length === 0) {
-    return;
-  }
-
-  const client = twilio(accountSid, authToken);
-  const itemSummary = order.items
-    .map((item) => `${item.name}${item.variantLabel ? ` (${item.variantLabel})` : ""} x${item.qty}`)
-    .join("; ");
-
-  const messageText = [
-    "New order received 🚨",
-    `Order ID: ${order._id}`,
-    `Customer: ${order.customerName}`,
-    `Type: ${order.orderType === "outside" ? "Delivery" : "In-cafe"}`,
-    order.orderType === "outside"
-      ? `Phone: ${order.phone}\nAddress: ${order.address}`
-      : `Table: ${order.tableNumber}`,
-    `Items: ${itemSummary}`,
-    `Total: ₹${order.totalAmount}`,
-    `Open admin panel: ${process.env.ADMIN_PANEL_URL || "http://localhost:5173/admin/orders"}`,
-  ].join("\n");
-
-  try {
-    await Promise.all(
-      adminNumbers.map((to) =>
-        client.messages.create({
-          from: fromNumber,
-          to,
-          body: messageText,
-        })
-      )
-    );
-  } catch (error) {
-    console.error("WhatsApp notification failed:", error.message);
-  }
-};
 
 export const createOrder = asyncHandler(async (req, res) => {
   const { customerName, phone, address, tableNumber, orderType, items, notes } = req.body;
@@ -119,8 +72,6 @@ export const createOrder = asyncHandler(async (req, res) => {
       },
     });
   }
-
-  await sendWhatsAppAlert(order.toObject());
 
   res.status(201).json({ success: true, data: order });
 });
