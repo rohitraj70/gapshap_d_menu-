@@ -64,6 +64,15 @@ export const createOrder = asyncHandler(async (req, res) => {
     notes: notes?.trim() || "",
   });
 
+  if (global.io) {
+    global.io.to("admin-room").emit("new-order", {
+      order: {
+        ...order.toObject(),
+        status: order.status || "pending",
+      },
+    });
+  }
+
   res.status(201).json({ success: true, data: order });
 });
 

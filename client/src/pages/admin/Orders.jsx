@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { Check, X, Clock3, Phone, MapPin, User, UtensilsCrossed, Store, TableProperties } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { io } from "socket.io-client";
+import { Check, X, Clock3, Phone, MapPin, User, UtensilsCrossed, Store, TableProperties, BellRing } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
 import { getOrders, updateOrderStatus } from "../../services/api";
 
@@ -98,6 +99,33 @@ const OrderCard = ({ order, onStatusChange }) => {
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(null);
+  const [newOrderCount, setNewOrderCount] = useState(0);
+  const audioContextRef = useRef(null);
+
+  const playAlertTone = () => {
+    const AudioCtor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtor) return;
+
+    const audioContext = audioContextRef.current || new AudioCtor();
+    audioContextRef.current = audioContext;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.type = "triangle";
+    oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(440, audioContext.currentTime + 0.2);
+
+    gainNode.gain.setValueAtTime(0.0001, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.07, audioContext.currentTime + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.35);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.38);
+  };
 
   const loadOrders = async () => {
     try {
@@ -114,12 +142,61 @@ const Orders = () => {
     loadOrders();
   }, []);
 
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission().catch(() => undefined);
+    }
+  }, []);
+
+  useEffect(() => {
+    const socket = io(import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api$/, "") : "http://localhost:5001", {
+      withCredentials: true,
+    });
+
+    socket.emit("admin:join");
+
+    socket.on("new-order", (payload) => {
+      const incomingOrder = payload?.order;
+      if (!incomingOrder?._id) return;
+
+      setOrders((prev) => {
+        const exists = prev.some((order) => order._id === incomingOrder._id);
+        if (exists) return prev;
+        return [incomingOrder, ...prev];
+      });
+
+      setNewOrderCount((prev) => prev + 1);
+      playAlertTone();
+
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("New order received", {
+          body: `${incomingOrder.customerName} placed a ${incomingOrder.orderType === "outside" ? "delivery" : "table"} order for ₹${incomingOrder.totalAmount}`,
+          icon: "/Gapshap-logo.png",
+        });
+      }
+
+      setToast({
+        title: "New order received",
+        message: `${incomingOrder.customerName} placed a ${incomingOrder.orderType === "outside" ? "delivery" : "table"} order for ₹${incomingOrder.totalAmount}`,
+      });
+    });
+
+    return () => socket.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timeout = setTimeout(() => setToast(null), 5000);
+    return () => clearTimeout(timeout);
+  }, [toast]);
+
   const pendingCount = useMemo(() => orders.filter((order) => order.status === "pending").length, [orders]);
 
   const handleStatusChange = async (orderId, nextStatus) => {
     try {
       await updateOrderStatus(orderId, nextStatus);
       setOrders((prev) => prev.map((order) => order._id === orderId ? { ...order, status: nextStatus } : order));
+      setNewOrderCount((prev) => (prev > 0 ? Math.max(0, prev - 1) : 0));
     } catch (error) {
       console.error(error);
     }
@@ -129,14 +206,32 @@ const Orders = () => {
     <div className="min-h-screen flex flex-col md:flex-row bg-cream">
       <AdminSidebar />
       <main className="min-w-0 flex-1 p-4 sm:p-6 md:p-8">
+        {toast && (
+          <div className="fixed right-4 top-20 z-50 w-[min(380px,calc(100vw-2rem))] rounded-2xl border border-amber-200 bg-amber-50 p-4 shadow-xl">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 rounded-full bg-amber-500 p-2 text-white">
+                <BellRing size={16} />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-amber-900">{toast.title}</p>
+                <p className="mt-1 text-sm text-amber-800">{toast.message}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold text-brown-dark">Orders</h1>
             <p className="text-sm text-brown-light">Review new customer orders and confirm or decline them.</p>
           </div>
-          <div className="rounded-full bg-accent/10 px-3 py-1.5 text-sm font-semibold text-accent">
-            {pendingCount} pending
-          </div>
+          <button
+            type="button"
+            onClick={() => setNewOrderCount(0)}
+            className="rounded-full bg-accent/10 px-3 py-1.5 text-sm font-semibold text-accent transition-colors hover:bg-accent/15"
+          >
+            {newOrderCount > 0 ? `${newOrderCount} new` : `${pendingCount} pending`}
+          </button>
         </div>
 
         {loading ? (
