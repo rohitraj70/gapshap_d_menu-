@@ -61,64 +61,73 @@ const Favorites = () => {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 pt-4">
-        <div className="scroll-panel max-h-[calc(100vh-290px)] min-h-[180px] overflow-y-auto overscroll-contain pb-2 pr-1 space-y-3">
-          <AnimatePresence initial={false}>
-            {orders.map((item) => (
-              <motion.div
-                key={item._id}
-                layout
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="group bg-white rounded-2xl border border-brown/5 shadow-card p-3 flex items-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-soft"
-              >
-                <div className="w-16 h-16 rounded-xl bg-cream-dark overflow-hidden shrink-0 ring-1 ring-brown/5">
-                  {item.image?.url && (
-                    <img src={item.image.url} alt={item.name} className="w-full h-full object-cover" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-brown-dark text-sm line-clamp-1">{item.name}</h3>
-                  {item.variantLabel && (
-                    <p className="text-[11px] font-semibold text-accent mt-0.5">{item.variantLabel}</p>
-                  )}
-                  <p className="text-xs text-brown-light mt-1">
-                    {item.originalPrice != null && item.originalPrice !== item.price && (
-                      <span className="line-through mr-1">₹{item.originalPrice}</span>
+        <div className="rounded-[1.5rem] border border-brown/10 bg-white/80 shadow-card backdrop-blur-sm dark:bg-[#2b211c]/90">
+          <div className="flex items-center justify-between border-b border-brown/10 px-3 py-2.5">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brown-light dark:text-[#f3d7b9]">Selected items</p>
+            </div>
+            <span className="rounded-full bg-cream-dark dark:bg-[#3a2a22] px-2 py-1 text-[10px] font-semibold text-brown-dark dark:text-[#fff8f0]">{orders.length} items</span>
+          </div>
+
+          <div className="scroll-panel max-h-[calc(100vh-310px)] min-h-[180px] overflow-y-auto overscroll-contain p-3 space-y-3">
+            <AnimatePresence initial={false}>
+              {orders.map((item) => (
+                <motion.div
+                  key={item._id}
+                  layout
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="group bg-white dark:bg-[#312922] rounded-2xl border border-brown/5 shadow-card p-3 flex items-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-soft"
+                >
+                  <div className="w-16 h-16 rounded-xl bg-cream-dark overflow-hidden shrink-0 ring-1 ring-brown/5">
+                    {item.image?.url && (
+                      <img src={item.image.url} alt={item.name} className="w-full h-full object-cover" />
                     )}
-                    ₹{item.price} each
-                  </p>
-                  <div className="flex items-center gap-3 mt-2">
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-brown-dark dark:text-[#fff8f0] text-sm line-clamp-1">{item.name}</h3>
+                    {item.variantLabel && (
+                      <p className="text-[11px] font-semibold text-accent mt-0.5">{item.variantLabel}</p>
+                    )}
+                    <p className="text-xs text-brown-light dark:text-[#f3d7b9] mt-1">
+                      {item.originalPrice != null && item.originalPrice !== item.price && (
+                        <span className="line-through mr-1">₹{item.originalPrice}</span>
+                      )}
+                      ₹{item.price} each
+                    </p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <button
+                        onClick={() => updateOrderQty(item._id, item.qty - 1)}
+                        aria-label="Decrease quantity"
+                        className="w-7 h-7 rounded-full bg-cream-dark dark:bg-[#43352d] flex items-center justify-center text-brown-dark dark:text-[#fff8f0] hover:text-accent transition-colors"
+                      >
+                        <Minus size={14} />
+                      </button>
+                      <span className="text-sm font-semibold w-4 text-center dark:text-[#fff8f0]">{item.qty}</span>
+                      <button
+                        onClick={() => updateOrderQty(item._id, item.qty + 1)}
+                        aria-label="Increase quantity"
+                        className="w-7 h-7 rounded-full bg-cream-dark dark:bg-[#43352d] flex items-center justify-center text-brown-dark dark:text-[#fff8f0] hover:text-accent transition-colors"
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-2 pl-1">
+                    <span className="font-semibold text-brown-dark dark:text-[#fff8f0] text-sm">₹{item.qty * item.price}</span>
                     <button
-                      onClick={() => updateOrderQty(item._id, item.qty - 1)}
-                      aria-label="Decrease quantity"
-                      className="w-7 h-7 rounded-full bg-cream-dark flex items-center justify-center text-brown-dark hover:text-accent transition-colors"
+                      onClick={() => removeFromOrders(item._id)}
+                      aria-label={`Remove ${item.name}`}
+                      className="text-brown-light dark:text-[#f3d7b9] hover:text-red-500 transition-colors p-1"
                     >
-                      <Minus size={14} />
-                    </button>
-                    <span className="text-sm font-semibold w-4 text-center">{item.qty}</span>
-                    <button
-                      onClick={() => updateOrderQty(item._id, item.qty + 1)}
-                      aria-label="Increase quantity"
-                      className="w-7 h-7 rounded-full bg-cream-dark flex items-center justify-center text-brown-dark hover:text-accent transition-colors"
-                    >
-                      <Plus size={14} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
-                </div>
-                <div className="flex flex-col items-end gap-2 pl-1">
-                  <span className="font-semibold text-brown-dark text-sm">₹{item.qty * item.price}</span>
-                  <button
-                    onClick={() => removeFromOrders(item._id)}
-                    aria-label={`Remove ${item.name}`}
-                    className="text-brown-light hover:text-red-500 transition-colors p-1"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
