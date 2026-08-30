@@ -200,6 +200,19 @@ const Home = () => {
 
         <SearchBar value={search} onChange={setSearch} />
 
+        <section id="menu" className="scroll-mt-24">
+          {loading ? (
+            <ChipsSkeleton />
+          ) : (
+            <CategoryTabs
+              categories={categories}
+              activeId={activeCategory}
+              onSelect={setActiveCategory}
+              itemCounts={availableItemCounts}
+            />
+          )}
+        </section>
+
         {!search && (
           <>
             {loading ? (
@@ -226,19 +239,6 @@ const Home = () => {
             )}
           </>
         )}
-
-        <section id="menu" className="scroll-mt-24">
-          {loading ? (
-            <ChipsSkeleton />
-          ) : (
-            <CategoryTabs
-              categories={categories}
-              activeId={activeCategory}
-              onSelect={setActiveCategory}
-              itemCounts={availableItemCounts}
-            />
-          )}
-        </section>
 
         <section>
           {loading ? (
