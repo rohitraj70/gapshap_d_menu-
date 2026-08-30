@@ -34,16 +34,19 @@ const Favorites = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream pb-40">
+    <div className="min-h-screen bg-cream pb-32">
       <div className="collection-header sticky top-0 z-20 bg-cream/95 backdrop-blur border-b border-brown/10">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
-          <button onClick={() => navigate(-1)} aria-label="Go back" className="collection-back">
-            <ArrowLeft size={22} />
+          <button onClick={() => navigate(-1)} aria-label="Go back" className="collection-back rounded-full bg-white/70 p-2 shadow-sm">
+            <ArrowLeft size={20} />
           </button>
-          <h1 className="collection-title font-display text-lg font-semibold flex-1">My Orders</h1>
+          <div className="flex-1">
+            <h1 className="collection-title font-display text-lg font-semibold">My Orders</h1>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-brown-light">{orders.length} item{orders.length > 1 ? "s" : ""}</p>
+          </div>
           <button
             onClick={clearOrders}
-            className="collection-clear text-xs font-semibold hover:text-accent transition-colors"
+            className="collection-clear text-[11px] font-semibold uppercase tracking-[0.12em] hover:text-accent transition-colors"
           >
             Clear all
           </button>
@@ -51,14 +54,14 @@ const Favorites = () => {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 pt-4">
-        <div className="rounded-xl2 border border-accent/20 bg-accent/10 p-4">
+        <div className="rounded-2xl border border-accent/20 bg-accent/10 p-4 shadow-sm">
           <p className="font-display font-semibold text-brown-dark">A little note for you</p>
-          <p className="mt-1 text-sm leading-5 text-brown-light">Make any changes here, then show this order list to our cashier. We will take care of the rest.</p>
+          <p className="mt-1 text-sm leading-5 text-brown-light">Review everything here, adjust quantities if needed, and show your order to the cashier when you're ready.</p>
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl px-4 pt-4 pb-40">
-        <div className="max-h-[calc(100vh-230px)] overflow-y-auto overscroll-contain pr-1 space-y-3">
+      <div className="mx-auto max-w-3xl px-4 pt-4">
+        <div className="scroll-panel max-h-[calc(100vh-265px)] overflow-y-auto overscroll-contain pb-2 pr-1 space-y-3">
           <AnimatePresence initial={false}>
             {orders.map((item) => (
               <motion.div
@@ -67,9 +70,9 @@ const Favorites = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="bg-white rounded-xl2 shadow-card p-3 flex items-center gap-3"
+                className="group bg-white rounded-2xl border border-brown/5 shadow-card p-3 flex items-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-soft"
               >
-                <div className="w-16 h-16 rounded-lg bg-cream-dark overflow-hidden shrink-0">
+                <div className="w-16 h-16 rounded-xl bg-cream-dark overflow-hidden shrink-0 ring-1 ring-brown/5">
                   {item.image?.url && (
                     <img src={item.image.url} alt={item.name} className="w-full h-full object-cover" />
                   )}
@@ -77,9 +80,9 @@ const Favorites = () => {
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-brown-dark text-sm line-clamp-1">{item.name}</h3>
                   {item.variantLabel && (
-                    <p className="text-xs font-semibold text-accent mt-0.5">{item.variantLabel}</p>
+                    <p className="text-[11px] font-semibold text-accent mt-0.5">{item.variantLabel}</p>
                   )}
-                  <p className="text-xs text-brown-light mt-0.5">
+                  <p className="text-xs text-brown-light mt-1">
                     {item.originalPrice != null && item.originalPrice !== item.price && (
                       <span className="line-through mr-1">₹{item.originalPrice}</span>
                     )}
@@ -89,7 +92,7 @@ const Favorites = () => {
                     <button
                       onClick={() => updateOrderQty(item._id, item.qty - 1)}
                       aria-label="Decrease quantity"
-                      className="w-7 h-7 rounded-full bg-cream-dark flex items-center justify-center text-brown-dark hover:text-accent"
+                      className="w-7 h-7 rounded-full bg-cream-dark flex items-center justify-center text-brown-dark hover:text-accent transition-colors"
                     >
                       <Minus size={14} />
                     </button>
@@ -97,18 +100,18 @@ const Favorites = () => {
                     <button
                       onClick={() => updateOrderQty(item._id, item.qty + 1)}
                       aria-label="Increase quantity"
-                      className="w-7 h-7 rounded-full bg-cream-dark flex items-center justify-center text-brown-dark hover:text-accent"
+                      className="w-7 h-7 rounded-full bg-cream-dark flex items-center justify-center text-brown-dark hover:text-accent transition-colors"
                     >
                       <Plus size={14} />
                     </button>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col items-end gap-2 pl-1">
                   <span className="font-semibold text-brown-dark text-sm">₹{item.qty * item.price}</span>
                   <button
                     onClick={() => removeFromOrders(item._id)}
                     aria-label={`Remove ${item.name}`}
-                    className="text-brown-light hover:text-red-500 transition-colors"
+                    className="text-brown-light hover:text-red-500 transition-colors p-1"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -119,8 +122,8 @@ const Favorites = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 inset-x-0 bg-white border-t border-brown/10 p-4 shadow-soft">
-        <div className="max-w-3xl mx-auto space-y-3">
+      <div className="fixed bottom-0 inset-x-0 z-30 border-t border-brown/10 bg-white/95 backdrop-blur-lg shadow-[0_-12px_28px_rgba(0,0,0,0.08)]">
+        <div className="max-w-3xl mx-auto px-4 py-3.5 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm text-brown-light">Estimated Total</span>
             <span className="font-display text-xl font-bold text-brown-dark">₹{totalAmount}</span>
@@ -130,13 +133,13 @@ const Favorites = () => {
             <div className="grid gap-2 sm:grid-cols-2">
               <button
                 onClick={() => setShowConfirm(true)}
-                className="w-full bg-accent text-white font-semibold py-3.5 rounded-full hover:bg-accent-dark transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-accent text-white font-semibold py-3.5 rounded-full hover:bg-accent-dark transition-colors flex items-center justify-center gap-2 shadow-sm"
               >
                 <Bell size={18} /> Show at Counter
               </button>
               <button
                 onClick={() => navigate("/checkout")}
-                className="w-full bg-brown-dark text-white font-semibold py-3.5 rounded-full hover:bg-brown transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-brown-dark text-white font-semibold py-3.5 rounded-full hover:bg-brown transition-colors flex items-center justify-center gap-2 shadow-sm"
               >
                 <CheckCircle2 size={18} /> Place Order
               </button>
@@ -145,7 +148,7 @@ const Favorites = () => {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-cream-dark rounded-xl2 p-4 text-center"
+              className="bg-cream-dark rounded-2xl p-4 text-center border border-brown/5"
             >
               <p className="font-display font-semibold text-brown-dark">
                 Show this screen to the cashier

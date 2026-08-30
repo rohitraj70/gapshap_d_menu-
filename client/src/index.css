@@ -143,6 +143,26 @@ html.dark select option { background: #2b211c; }
   background: transparent;
 }
 
+.scroll-panel {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(111, 78, 55, 0.35) transparent;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-panel::-webkit-scrollbar-thumb {
+  background: rgba(111, 78, 55, 0.35);
+  border-radius: 9999px;
+}
+
+.scroll-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
