@@ -19,9 +19,7 @@ const mergeCustomerOrders = (incoming = []) => {
     merged.set(entry._id, { ...previous, ...entry });
   });
 
-  return [...merged.values()]
-    .filter((entry) => !["completed", "declined"].includes(entry.status))
-    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  return [...merged.values()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 };
 
 const OrderHistory = () => {
@@ -99,7 +97,7 @@ const OrderHistory = () => {
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <h1 className="font-display text-3xl font-bold text-brown-dark">Order history</h1>
-            <p className="text-sm text-brown-light">Track your orders until they are marked complete or declined.</p>
+            <p className="text-sm text-brown-light">Your recent orders stay here so you can track the latest updates.</p>
           </div>
         </div>
 
@@ -108,25 +106,25 @@ const OrderHistory = () => {
             No orders yet. Place your first order from the menu.
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {orders.map((order) => {
               const config = statusMap[order.status] || statusMap.pending;
               const StatusIcon = config.icon;
 
               return (
-                <div key={order._id} className="rounded-2xl bg-white p-4 shadow-card">
-                  <div className="flex flex-col gap-3 border-b border-brown/10 pb-3 sm:flex-row sm:items-center sm:justify-between">
+                <div key={order._id} className="rounded-2xl bg-white p-3 shadow-card">
+                  <div className="flex flex-col gap-2 border-b border-brown/10 pb-2 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-brown-light">Order ID</p>
-                      <p className="font-display text-xl font-bold text-brown-dark">#{String(order._id).slice(-6)}</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-brown-light">Order ID</p>
+                      <p className="font-display text-lg font-bold text-brown-dark">#{String(order._id).slice(-6)}</p>
                     </div>
-                    <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold ${config.className}`}>
-                      <StatusIcon size={16} /> {config.label}
+                    <div className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${config.className}`}>
+                      <StatusIcon size={14} /> {config.label}
                     </div>
                   </div>
 
-                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <div className="space-y-2 text-sm text-brown-light">
+                  <div className="mt-3 grid gap-2 text-xs text-brown-light sm:grid-cols-2">
+                    <div className="space-y-1.5">
                       <div><span className="font-semibold text-brown-dark">Name:</span> {order.customerName}</div>
                       {order.orderType === "outside" ? (
                         <>
@@ -137,25 +135,25 @@ const OrderHistory = () => {
                         <div><span className="font-semibold text-brown-dark">Table:</span> {order.tableNumber}</div>
                       )}
                     </div>
-                    <div className="space-y-2 text-sm text-brown-light">
+                    <div className="space-y-1.5">
                       <div><span className="font-semibold text-brown-dark">Type:</span> {order.orderType === "outside" ? "Outside cafe" : "In cafe"}</div>
                       <div><span className="font-semibold text-brown-dark">Created:</span> {new Date(order.createdAt).toLocaleString()}</div>
                       <div><span className="font-semibold text-brown-dark">Total:</span> ₹{order.totalAmount}</div>
                     </div>
                   </div>
 
-                  <div className="mt-4 rounded-xl bg-cream-dark p-3">
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-brown-light">Items</p>
-                    <div className="space-y-2 text-sm text-brown-dark">
+                  <div className="mt-3 rounded-xl bg-cream-dark p-2.5">
+                    <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-brown-light">Items</p>
+                    <div className="space-y-1.5 text-xs text-brown-dark">
                       {order.items.map((item, index) => (
-                        <div key={`${order._id}-${index}`} className="flex items-center justify-between gap-3 rounded-lg bg-white px-2.5 py-2">
-                          <div>
-                            <div className="font-medium">{item.name}</div>
-                            {item.variantLabel && <div className="text-xs text-brown-light">{item.variantLabel}</div>}
+                        <div key={`${order._id}-${index}`} className="flex items-center justify-between gap-3 rounded-lg bg-white px-2 py-1.5">
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate font-medium">{item.name}</div>
+                            {item.variantLabel && <div className="truncate text-[10px] text-brown-light">{item.variantLabel}</div>}
                           </div>
-                          <div className="text-right">
+                          <div className="text-right text-[11px]">
                             <div>{item.qty} × ₹{item.price}</div>
-                            <div className="text-xs text-brown-light">₹{item.qty * item.price}</div>
+                            <div className="text-brown-light">₹{item.qty * item.price}</div>
                           </div>
                         </div>
                       ))}
@@ -165,27 +163,19 @@ const OrderHistory = () => {
                   {order.orderType === "outside" && order.phone && order.status !== "declined" && order.status !== "completed" && (
                     <button
                       onClick={() => handleCall(order.phone)}
-                      className="mt-4 inline-flex items-center gap-2 rounded-full bg-brown-dark px-4 py-2 text-sm font-semibold text-white hover:bg-brown"
+                      className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-brown-dark px-3 py-1.5 text-xs font-semibold text-white hover:bg-brown"
                     >
-                      <PhoneCall size={16} /> Call customer
+                      <PhoneCall size={14} /> Call customer
                     </button>
                   )}
 
-                  <div className="mt-4 flex gap-2">
+                  <div className="mt-3 flex gap-2">
                     <button
                       onClick={() => navigate(`/order-status?id=${order._id}`)}
-                      className="rounded-full border border-accent/30 bg-accent/10 px-3 py-2 text-sm font-semibold text-accent hover:bg-accent/15"
+                      className="rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1.5 text-xs font-semibold text-accent hover:bg-accent/15"
                     >
                       View status
                     </button>
-                    {order.status === "completed" || order.status === "declined" ? (
-                      <button
-                        onClick={() => saveOrders(orders.filter((entry) => entry._id !== order._id))}
-                        className="rounded-full border border-brown/10 bg-white px-3 py-2 text-sm font-semibold text-brown-dark hover:bg-cream"
-                      >
-                        Remove
-                      </button>
-                    ) : null}
                   </div>
                 </div>
               );

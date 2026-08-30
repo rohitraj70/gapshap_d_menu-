@@ -68,7 +68,8 @@ export const createOrder = asyncHandler(async (req, res) => {
 });
 
 export const getOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find().sort({ createdAt: -1 });
+  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const orders = await Order.find({ createdAt: { $gte: twentyFourHoursAgo } }).sort({ createdAt: -1 });
   res.json({ success: true, count: orders.length, data: orders });
 });
 
