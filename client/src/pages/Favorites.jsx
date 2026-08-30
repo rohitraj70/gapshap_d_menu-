@@ -61,7 +61,7 @@ const Favorites = () => {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 pt-4">
-        <div className="scroll-panel max-h-[calc(100vh-265px)] overflow-y-auto overscroll-contain pb-2 pr-1 space-y-3">
+        <div className="scroll-panel max-h-[calc(100vh-290px)] min-h-[180px] overflow-y-auto overscroll-contain pb-2 pr-1 space-y-3">
           <AnimatePresence initial={false}>
             {orders.map((item) => (
               <motion.div
@@ -122,43 +122,43 @@ const Favorites = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 inset-x-0 z-30 border-t border-brown/10 bg-white/95 backdrop-blur-lg shadow-[0_-12px_28px_rgba(0,0,0,0.08)]">
-        <div className="max-w-3xl mx-auto px-4 py-3.5 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-brown-light">Estimated Total</span>
-            <span className="font-display text-xl font-bold text-brown-dark">₹{totalAmount}</span>
+      <div className="fixed bottom-0 inset-x-0 z-30 border-t border-brown/10 bg-white/95 dark:bg-[#2b211c]/95 backdrop-blur-lg shadow-[0_-12px_28px_rgba(0,0,0,0.08)]">
+        <div className="max-w-3xl mx-auto px-4 py-3 space-y-2.5">
+          <div className="flex items-center justify-between rounded-2xl bg-amber-50/80 dark:bg-[#3a2a22] px-3 py-2 border border-amber-200/70 dark:border-[#5b4032]">
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-brown-light dark:text-[#f3d7b9]">Estimated Total</span>
+            <span className="font-display text-2xl font-bold text-brown-dark dark:text-[#fff8f0]">₹{totalAmount}</span>
           </div>
 
           {!showConfirm ? (
             <div className="grid gap-2 sm:grid-cols-2">
               <button
                 onClick={() => setShowConfirm(true)}
-                className="w-full bg-accent text-white font-semibold py-3.5 rounded-full hover:bg-accent-dark transition-colors flex items-center justify-center gap-2 shadow-sm"
+                className="w-full bg-accent text-white font-semibold py-2.5 sm:py-3.5 rounded-full hover:bg-accent-dark transition-colors flex items-center justify-center gap-2 shadow-sm text-[11px] sm:text-sm"
               >
-                <Bell size={18} /> Show at Counter
+                <Bell size={16} className="sm:w-[18px] sm:h-[18px]" /> Show at Counter
               </button>
               <button
                 onClick={() => navigate("/checkout")}
-                className="w-full bg-brown-dark text-white font-semibold py-3.5 rounded-full hover:bg-brown transition-colors flex items-center justify-center gap-2 shadow-sm"
+                className="w-full bg-brown-dark text-white font-semibold py-2.5 sm:py-3.5 rounded-full hover:bg-brown transition-colors flex items-center justify-center gap-2 shadow-sm text-[11px] sm:text-sm"
               >
-                <CheckCircle2 size={18} /> Place Order
+                <CheckCircle2 size={16} className="sm:w-[18px] sm:h-[18px]" /> Place Order
               </button>
             </div>
           ) : (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-cream-dark rounded-2xl p-4 text-center border border-brown/5"
+              className="bg-cream-dark dark:bg-[#342821] rounded-2xl p-4 text-center border border-brown/5"
             >
-              <p className="font-display font-semibold text-brown-dark">
+              <p className="font-display font-semibold text-brown-dark dark:text-[#fff8f0]">
                 Show this screen to the cashier
               </p>
-              <p className="text-xs text-brown-light mt-1">
+              <p className="text-[11px] text-brown-light dark:text-[#f3d7b9] mt-1">
                 They'll confirm your order and take payment at the counter.
               </p>
               <button
                 onClick={() => setShowConfirm(false)}
-                className="mt-3 text-xs font-semibold text-accent"
+                className="mt-3 text-[11px] font-semibold text-accent"
               >
                 Keep editing selection
               </button>
@@ -167,7 +167,7 @@ const Favorites = () => {
 
           <button
             onClick={() => navigate("/order-history")}
-            className="w-full border border-brown/10 bg-white text-brown-dark font-semibold py-3 rounded-full hover:bg-cream transition-colors"
+            className="w-full border border-brown/10 bg-white dark:bg-[#2b211c] text-brown-dark dark:text-[#fff8f0] font-semibold py-2.5 sm:py-3 rounded-full hover:bg-cream transition-colors text-[11px] sm:text-sm"
           >
             View order history
           </button>
