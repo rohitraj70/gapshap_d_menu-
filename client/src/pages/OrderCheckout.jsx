@@ -67,7 +67,10 @@ const OrderCheckout = () => {
 
       const response = await createOrder(payload);
       const newOrder = response.data.data;
+      const storedHistory = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
+      const nextHistory = [newOrder, ...storedHistory].slice(0, 30);
       localStorage.setItem("gapshap_latest_order_id", newOrder._id);
+      localStorage.setItem("gapshap_customer_orders", JSON.stringify(nextHistory));
       clearOrders();
       setMessage("Order placed successfully. Please wait for the admin to confirm it.");
       setTimeout(() => navigate(`/order-status?id=${newOrder._id}`), 1200);

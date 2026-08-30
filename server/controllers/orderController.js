@@ -87,7 +87,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   const { status } = req.body;
   const { id } = req.params;
 
-  if (!status || !["pending", "confirmed", "declined"].includes(status)) {
+  if (!status || !["pending", "confirmed", "completed", "declined"].includes(status)) {
     res.status(400);
     throw new Error("Valid order status is required");
   }

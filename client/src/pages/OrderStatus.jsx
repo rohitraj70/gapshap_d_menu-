@@ -16,6 +16,12 @@ const statusConfig = {
     className: "bg-emerald-100 text-emerald-700",
     note: "Your order has been confirmed. Please head to the counter or wait for the team to prepare it.",
   },
+  completed: {
+    label: "Completed",
+    icon: CheckCircle2,
+    className: "bg-sky-100 text-sky-700",
+    note: "This order has been completed. You can now close this page or place a new order.",
+  },
   declined: {
     label: "Declined",
     icon: XCircle,
@@ -44,6 +50,9 @@ const OrderStatus = () => {
         setOrder(res.data.data);
       } catch (error) {
         console.error(error);
+        const localOrders = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
+        const localMatch = localOrders.find((entry) => entry._id === orderId);
+        if (localMatch) setOrder(localMatch);
       } finally {
         setLoading(false);
       }

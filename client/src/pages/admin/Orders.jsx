@@ -6,6 +6,7 @@ import { getOrders, updateOrderStatus } from "../../services/api";
 const statusStyles = {
   pending: "bg-amber-100 text-amber-700",
   confirmed: "bg-emerald-100 text-emerald-700",
+  completed: "bg-sky-100 text-sky-700",
   declined: "bg-rose-100 text-rose-700",
 };
 
@@ -64,14 +65,24 @@ const OrderCard = ({ order, onStatusChange }) => {
 
       {order.notes && <p className="mt-4 text-sm text-brown-light">Note: {order.notes}</p>}
 
-      {order.status === "pending" && (
+      {(order.status === "pending" || order.status === "confirmed") && (
         <div className="mt-4 flex flex-wrap gap-2">
-          <button
-            onClick={() => onStatusChange(order._id, "confirmed")}
-            className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-          >
-            <Check size={16} /> Confirm
-          </button>
+          {order.status === "pending" && (
+            <button
+              onClick={() => onStatusChange(order._id, "confirmed")}
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+            >
+              <Check size={16} /> Confirm
+            </button>
+          )}
+          {order.status === "confirmed" && (
+            <button
+              onClick={() => onStatusChange(order._id, "completed")}
+              className="inline-flex items-center gap-2 rounded-full bg-sky-600 px-3 py-2 text-sm font-semibold text-white hover:bg-sky-700"
+            >
+              <Check size={16} /> Mark completed
+            </button>
+          )}
           <button
             onClick={() => onStatusChange(order._id, "declined")}
             className="inline-flex items-center gap-2 rounded-full bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700"

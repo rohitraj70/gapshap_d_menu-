@@ -10,6 +10,7 @@ import Favorites from "./pages/Favorites";
 import FavoritesList from "./pages/FavoritesList";
 import OrderCheckout from "./pages/OrderCheckout";
 import OrderStatus from "./pages/OrderStatus";
+import OrderHistory from "./pages/OrderHistory";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import Orders from "./pages/admin/Orders";
@@ -30,6 +31,7 @@ function App() {
             <Route path="/orders" element={<Favorites />} />
             <Route path="/checkout" element={<OrderCheckout />} />
             <Route path="/order-status" element={<OrderStatus />} />
+            <Route path="/order-history" element={<OrderHistory />} />
             <Route path="*" element={<Navigate to="/" replace />} />
 
             {/* Admin routes */}

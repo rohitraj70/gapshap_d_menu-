@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Minus, Plus, Trash2, HeartOff, Bell, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, Minus, Plus, Trash2, HeartOff, Bell, CheckCircle2 } from "lucide-react";
 import EmptyState from "../components/EmptyState";
 import { useFavorites } from "../context/FavoritesContext";
 
@@ -123,6 +123,7 @@ const Favorites = () => {
             <span className="text-sm text-brown-light">Estimated Total</span>
             <span className="font-display text-xl font-bold text-brown-dark">₹{totalAmount}</span>
           </div>
+
           {!showConfirm ? (
             <div className="grid gap-2 sm:grid-cols-2">
               <button
@@ -158,6 +159,13 @@ const Favorites = () => {
               </button>
             </motion.div>
           )}
+
+          <button
+            onClick={() => navigate("/order-history")}
+            className="w-full border border-brown/10 bg-white text-brown-dark font-semibold py-3 rounded-full hover:bg-cream transition-colors"
+          >
+            View order history
+          </button>
         </div>
       </div>
     </div>
