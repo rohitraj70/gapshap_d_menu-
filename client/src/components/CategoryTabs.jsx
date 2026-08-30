@@ -3,13 +3,13 @@ import { ChevronRight } from "lucide-react";
 const CategoryTabs = ({ categories, activeId, onSelect, itemCounts = {} }) => {
   return (
     <div className="relative -mx-4 md:mx-0">
-      <div className="category-tabs-scroll flex gap-2 overflow-x-auto hide-scrollbar py-1 px-4 md:flex-wrap md:overflow-visible md:px-0 md:gap-y-2">
+      <div className="category-tabs-scroll flex gap-2 overflow-x-auto hide-scrollbar px-4 py-1 md:flex-wrap md:overflow-visible md:px-0 md:gap-y-2">
         <button
           onClick={() => onSelect(null)}
-          className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+          className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
             activeId === null
-              ? "bg-brown text-cream shadow-card"
-              : "bg-white text-brown-dark border border-brown/10 hover:border-accent/50"
+              ? "bg-brown text-cream shadow-[0_10px_20px_-14px_rgba(111,78,55,0.9)]"
+              : "border border-[#f0dfd0] bg-[#fffaf7] text-brown-dark hover:border-accent/60 dark:border-[#4d3b31] dark:bg-[#2d231f] dark:text-[#fff8f0]"
           }`}
         >
           All ({itemCounts.all || 0})
@@ -18,10 +18,10 @@ const CategoryTabs = ({ categories, activeId, onSelect, itemCounts = {} }) => {
           <button
             key={cat._id}
             onClick={() => onSelect(cat._id)}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
+            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all ${
               activeId === cat._id
-                ? "bg-brown text-cream shadow-card"
-                : "bg-white text-brown-dark border border-brown/10 hover:border-accent/50"
+                ? "bg-brown text-cream shadow-[0_10px_20px_-14px_rgba(111,78,55,0.9)]"
+                : "border border-[#f0dfd0] bg-[#fffaf7] text-brown-dark hover:border-accent/60 dark:border-[#4d3b31] dark:bg-[#2d231f] dark:text-[#fff8f0]"
             }`}
           >
             {cat.name} ({itemCounts[cat._id] || 0})
