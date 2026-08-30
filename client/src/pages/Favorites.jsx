@@ -11,13 +11,14 @@ const Favorites = () => {
 
   if (orders.length === 0) {
     return (
-      <div className="min-h-screen bg-cream">
+      <div className="min-h-screen bg-cream pb-[8rem]">
         <div className="collection-header max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
           <button onClick={() => navigate(-1)} aria-label="Go back" className="collection-back">
             <ArrowLeft size={22} />
           </button>
           <h1 className="collection-title font-display text-lg font-semibold">My Orders</h1>
         </div>
+
         <EmptyState
           icon={HeartOff}
           title="No orders yet"
@@ -28,6 +29,25 @@ const Favorites = () => {
             </Link>
           }
         />
+
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-brown/10 bg-white/95 shadow-[0_-16px_34px_-20px_rgba(0,0,0,0.24)] backdrop-blur-xl dark:bg-[#2b211c]/95">
+          <div className="mx-auto max-w-3xl px-3.5 py-3 sm:px-4">
+            <div className="grid grid-cols-1 gap-2">
+              <button
+                onClick={() => navigate("/order-history")}
+                className="w-full rounded-full border border-[#eddfd0] bg-white px-3 py-2.5 text-[11px] font-semibold text-brown-dark transition-colors hover:bg-cream dark:border-[#5b4032] dark:bg-[#2b211c] dark:text-[#fff8f0]"
+              >
+                View order history
+              </button>
+              <button
+                onClick={() => navigate("/")}
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-brown-dark px-3 py-2.75 text-[11px] font-semibold text-white shadow-[0_12px_18px_-12px_rgba(111,78,55,0.9)] transition-colors hover:bg-brown"
+              >
+                Browse menu
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
