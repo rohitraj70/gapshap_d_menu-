@@ -8,26 +8,35 @@ const statusConfig = {
     label: "Pending",
     icon: Clock3,
     className: "bg-amber-100 text-amber-700",
-    note: "Your order has been received and is waiting for the admin to review it.",
+    note: "Your order has been received and is waiting for confirmation from the kitchen.",
   },
   confirmed: {
     label: "Confirmed",
     icon: CheckCircle2,
     className: "bg-emerald-100 text-emerald-700",
-    note: "Your order has been confirmed. Please head to the counter or wait for the team to prepare it.",
+    note: "Your order is confirmed. Please wait for delivery, and pay when it reaches you.",
   },
   completed: {
     label: "Completed",
     icon: CheckCircle2,
     className: "bg-sky-100 text-sky-700",
-    note: "This order has been completed. You can now close this page or place a new order.",
+    note: "This order has been completed. It will remain in your history for a short time before being cleared.",
   },
   declined: {
     label: "Declined",
     icon: XCircle,
     className: "bg-rose-100 text-rose-700",
-    note: "This order was declined by the admin. Please contact the cafe if you want to update it.",
+    note: "This order was declined by the cafe. If you want to update it, please contact the restaurant.",
   },
+};
+
+const ORDER_HISTORY_TTL_MS = 4 * 60 * 60 * 1000;
+
+const shouldKeepOrderHistory = (order) => {
+  if (!order || !order._id || !order.createdAt) return false;
+  if (!["completed", "declined"].includes(order.status)) return true;
+  const ageMs = Date.now() - new Date(order.createdAt).getTime();
+  return ageMs <= ORDER_HISTORY_TTL_MS;
 };
 
 const mergeCustomerOrders = (incoming = []) => {
@@ -40,7 +49,9 @@ const mergeCustomerOrders = (incoming = []) => {
     merged.set(entry._id, { ...previous, ...entry });
   });
 
-  return [...merged.values()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  return [...merged.values()]
+    .filter(shouldKeepOrderHistory)
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 };
 
 const OrderStatus = () => {

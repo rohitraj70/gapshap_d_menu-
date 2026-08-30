@@ -9,6 +9,15 @@ const statusMap = {
   declined: { label: "Declined", icon: XCircle, className: "bg-rose-100 text-rose-700" },
 };
 
+const ORDER_HISTORY_TTL_MS = 4 * 60 * 60 * 1000;
+
+const shouldKeepOrderHistory = (order) => {
+  if (!order || !order._id || !order.createdAt) return false;
+  if (!["completed", "declined"].includes(order.status)) return true;
+  const ageMs = Date.now() - new Date(order.createdAt).getTime();
+  return ageMs <= ORDER_HISTORY_TTL_MS;
+};
+
 const mergeCustomerOrders = (incoming = []) => {
   const stored = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
   const merged = new Map();
@@ -19,7 +28,9 @@ const mergeCustomerOrders = (incoming = []) => {
     merged.set(entry._id, { ...previous, ...entry });
   });
 
-  return [...merged.values()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  return [...merged.values()]
+    .filter(shouldKeepOrderHistory)
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 };
 
 const OrderHistory = () => {

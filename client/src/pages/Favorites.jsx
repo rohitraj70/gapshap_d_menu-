@@ -1,14 +1,12 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Minus, Plus, Trash2, HeartOff, Bell, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Minus, Plus, Trash2, HeartOff, CheckCircle2, Info } from "lucide-react";
 import EmptyState from "../components/EmptyState";
 import { useFavorites } from "../context/FavoritesContext";
 
 const Favorites = () => {
   const { orders, updateOrderQty, removeFromOrders, totalAmount, clearOrders } = useFavorites();
   const navigate = useNavigate();
-  const [showConfirm, setShowConfirm] = useState(false);
   const totalItems = orders.reduce((sum, item) => sum + item.qty, 0);
 
   if (orders.length === 0) {
@@ -57,6 +55,22 @@ const Favorites = () => {
       </div>
 
       <div className="mx-auto max-w-3xl px-3.5 pt-4 sm:px-4">
+        <div className="rounded-[1.5rem] border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-3.5 shadow-[0_20px_40px_-28px_rgba(111,78,55,0.8)]">
+          <div className="flex items-start gap-2.5">
+            <div className="mt-0.5 rounded-full bg-white/80 p-1.5 text-amber-700 shadow-sm">
+              <Info size={14} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brown-light">Notice</p>
+              <p className="mt-1 text-[12px] leading-5 text-brown-dark">
+                Place your order now. Our kitchen will confirm it first, then you pay when your order is delivered.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-3xl px-3.5 pt-3 sm:px-4">
         <div className="rounded-[1.8rem] border border-[#f1d7bb] bg-gradient-to-br from-[#fffaf4] via-[#fff] to-[#fff3e7] p-3.5 shadow-[0_24px_48px_-28px_rgba(111,78,55,0.7)]">
           <div className="flex items-center justify-between gap-3">
             <div>
