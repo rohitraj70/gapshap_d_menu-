@@ -169,44 +169,21 @@ const Favorites = () => {
             </div>
           </div>
 
-          {!showConfirm ? (
-            <div className="mt-2 grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setShowConfirm(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-accent px-3 py-2.75 text-[11px] font-semibold text-white shadow-[0_12px_18px_-12px_rgba(230,126,34,0.8)] transition-colors hover:bg-accent-dark"
-              >
-                <Bell size={16} /> Show at Counter
-              </button>
-              <button
-                onClick={() => navigate("/checkout")}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-brown-dark px-3 py-2.75 text-[11px] font-semibold text-white shadow-[0_12px_18px_-12px_rgba(111,78,55,0.9)] transition-colors hover:bg-brown"
-              >
-                <CheckCircle2 size={16} /> Place Order
-              </button>
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-2 rounded-[1.4rem] border border-[#f0d9be] bg-[#f7efe7] p-4 text-center dark:border-[#5b4032] dark:bg-[#342821]"
+          <div className="mt-2 grid grid-cols-1 gap-2">
+            <button
+              onClick={() => navigate("/checkout")}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-brown-dark px-3 py-2.75 text-[11px] font-semibold text-white shadow-[0_12px_18px_-12px_rgba(111,78,55,0.9)] transition-colors hover:bg-brown"
             >
-              <p className="font-display text-base font-semibold text-brown-dark dark:text-[#fff8f0]">Show this screen to the cashier</p>
-              <p className="mt-1 text-[11px] text-brown-light dark:text-[#f3d7b9]">They’ll confirm your order and take payment at the counter.</p>
-              <button
-                onClick={() => setShowConfirm(false)}
-                className="mt-3 text-[11px] font-semibold text-accent"
-              >
-                Keep editing selection
-              </button>
-            </motion.div>
-          )}
+              <CheckCircle2 size={16} /> Place Order
+            </button>
 
-          <button
-            onClick={() => navigate("/order-history")}
-            className="mt-2 w-full rounded-full border border-[#eddfd0] bg-white px-3 py-2.5 text-[11px] font-semibold text-brown-dark transition-colors hover:bg-cream dark:border-[#5b4032] dark:bg-[#2b211c] dark:text-[#fff8f0]"
-          >
-            View order history
-          </button>
+            <button
+              onClick={() => navigate("/order-history")}
+              className="w-full rounded-full border border-[#eddfd0] bg-white px-3 py-2.5 text-[11px] font-semibold text-brown-dark transition-colors hover:bg-cream dark:border-[#5b4032] dark:bg-[#2b211c] dark:text-[#fff8f0]"
+            >
+              View order history
+            </button>
+          </div>
         </div>
       </div>
     </div>
