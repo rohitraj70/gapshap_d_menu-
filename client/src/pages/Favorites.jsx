@@ -156,14 +156,14 @@ const Favorites = () => {
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-brown/10 bg-white/95 shadow-[0_-16px_34px_-20px_rgba(0,0,0,0.24)] backdrop-blur-xl dark:bg-[#2b211c]/95">
-        <div className="mx-auto max-w-3xl px-3.5 py-3 sm:px-4">
-          <div className="rounded-[1.5rem] border border-[#f2d9b6] bg-gradient-to-r from-[#fef5ea] to-[#f4eadf] px-3.5 py-2.5 dark:border-[#5b4032] dark:from-[#3a2a22] dark:to-[#312922]">
+        <div className="mx-auto max-w-3xl px-3.5 py-2.5 sm:px-4">
+          <div className="rounded-[1.2rem] border border-[#f1d7bb] bg-gradient-to-r from-[#fffaf4] via-[#fff] to-[#f9efe6] px-3 py-2.5 shadow-[0_12px_24px_-18px_rgba(111,78,55,0.7)] dark:border-[#5b4032] dark:from-[#332922] dark:via-[#2e241f] dark:to-[#2a201d]">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-brown-light dark:text-[#f3d7b9]">Estimated total</p>
-                <p className="font-display text-[1.9rem] font-bold leading-none text-brown-dark dark:text-[#fff8f0]">₹{totalAmount}</p>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-brown-light dark:text-[#f3d7b9]">Estimated total</p>
+                <p className="mt-0.5 font-display text-[1.45rem] font-bold leading-none text-brown-dark dark:text-[#fff8f0]">₹{totalAmount}</p>
               </div>
-              <span className="rounded-full bg-white px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-brown-dark shadow-sm dark:bg-[#2b211c] dark:text-[#fff8f0]">
+              <span className="rounded-full bg-[#f7efe7] px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-brown-dark shadow-sm dark:bg-[#3a2c27] dark:text-[#fff8f0]">
                 {totalItems} items
               </span>
             </div>
