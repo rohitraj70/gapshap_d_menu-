@@ -55,14 +55,14 @@ const Favorites = () => {
       </div>
 
       <div className="mx-auto max-w-3xl px-3.5 pt-4 sm:px-4">
-        <div className="rounded-[1.5rem] border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-3.5 shadow-[0_20px_40px_-28px_rgba(111,78,55,0.8)]">
+        <div className="rounded-[1.5rem] border border-amber-200 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-100 p-3.5 shadow-[0_20px_40px_-28px_rgba(111,78,55,0.8)] dark:border-[#5b4032] dark:from-[#352a24] dark:via-[#2d231f] dark:to-[#352b25]">
           <div className="flex items-start gap-2.5">
-            <div className="mt-0.5 rounded-full bg-white/80 p-1.5 text-amber-700 shadow-sm">
+            <div className="mt-0.5 rounded-full bg-white/90 p-1.5 text-amber-700 shadow-sm dark:bg-[#3f2f2a] dark:text-[#ffd7a4]">
               <Info size={14} />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brown-light">Notice</p>
-              <p className="mt-1 text-[12px] leading-5 text-brown-dark">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brown-light dark:text-[#f3d7b9]">Notice</p>
+              <p className="mt-1 text-[12px] leading-5 text-brown-dark dark:text-[#fff8f0]">
                 Place your order now. Our kitchen will confirm it first, then you pay when your order is delivered.
               </p>
             </div>
