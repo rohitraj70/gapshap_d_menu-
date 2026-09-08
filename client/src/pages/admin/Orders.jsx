@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { Check, X, Clock3, Phone, MapPin, User, UtensilsCrossed, Store, TableProperties, BellRing } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
-import { getOrders, updateOrderStatus } from "../../services/api";
+import { API_BASE_URL, getOrders, updateOrderStatus } from "../../services/api";
 
 const statusStyles = {
   pending: "bg-amber-100 text-amber-700",
@@ -149,11 +149,16 @@ const Orders = () => {
   }, []);
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api$/, "") : "http://localhost:5001", {
+    const socket = io(API_BASE_URL.replace(/\/api\/?$/, ""), {
       withCredentials: true,
     });
 
-    socket.emit("admin:join");
+    const refreshOrders = () => loadOrders();
+
+    socket.on("connect", () => {
+      socket.emit("admin:join");
+      refreshOrders();
+    });
 
     socket.on("new-order", (payload) => {
       const incomingOrder = payload?.order;
@@ -181,7 +186,14 @@ const Orders = () => {
       });
     });
 
-    return () => socket.disconnect();
+    window.addEventListener("focus", refreshOrders);
+    document.addEventListener("visibilitychange", refreshOrders);
+
+    return () => {
+      socket.disconnect();
+      window.removeEventListener("focus", refreshOrders);
+      document.removeEventListener("visibilitychange", refreshOrders);
+    };
   }, []);
 
   useEffect(() => {
