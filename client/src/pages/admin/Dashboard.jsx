@@ -141,7 +141,7 @@ const Dashboard = () => {
           <div className="mb-3 flex items-end justify-between gap-3">
             <div>
               <h2 className="font-display text-xl font-bold text-brown-dark">Order analysis</h2>
-              <p className="text-xs text-brown-light">Orders from the last 24 hours</p>
+              <p className="text-xs text-brown-light">Orders from today</p>
             </div>
             <ClipboardList size={20} className="text-accent" />
           </div>

@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import Order from "../models/Order.js";
 import { notifyTelegramNewOrder } from "../utils/telegram.js";
 import { ensureOrdersAreOpen } from "./settingsController.js";
+import { getStartOfCurrentDay } from "../utils/orderRetention.js";
 
 export const createOrder = asyncHandler(async (req, res) => {
   if (!(await ensureOrdersAreOpen())) {
@@ -86,8 +87,7 @@ export const createOrder = asyncHandler(async (req, res) => {
 });
 
 export const getOrders = asyncHandler(async (req, res) => {
-  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const orders = await Order.find({ createdAt: { $gte: twentyFourHoursAgo } }).sort({ createdAt: -1 });
+  const orders = await Order.find({ createdAt: { $gte: getStartOfCurrentDay() } }).sort({ createdAt: -1 });
   res.json({ success: true, count: orders.length, data: orders });
 });
 

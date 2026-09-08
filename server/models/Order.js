@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { getNextMidnight } from "../utils/orderRetention.js";
 
 const orderItemSchema = new mongoose.Schema(
   {
@@ -30,10 +31,11 @@ const orderSchema = new mongoose.Schema(
     items: { type: [orderItemSchema], required: true },
     totalAmount: { type: Number, required: true, min: 0 },
     notes: { type: String, default: "" },
+    expiresAt: { type: Date, default: getNextMidnight },
   },
   { timestamps: true }
 );
 
-orderSchema.index({ createdAt: 1 }, { expireAfterSeconds: 24 * 60 * 60 });
+orderSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model("Order", orderSchema);

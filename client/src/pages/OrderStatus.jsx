@@ -30,13 +30,11 @@ const statusConfig = {
   },
 };
 
-const ORDER_HISTORY_TTL_MS = 4 * 60 * 60 * 1000;
-
 const shouldKeepOrderHistory = (order) => {
   if (!order || !order._id || !order.createdAt) return false;
-  if (!["completed", "declined"].includes(order.status)) return true;
-  const ageMs = Date.now() - new Date(order.createdAt).getTime();
-  return ageMs <= ORDER_HISTORY_TTL_MS;
+  const created = new Date(order.createdAt);
+  const today = new Date();
+  return created.toDateString() === today.toDateString();
 };
 
 const mergeCustomerOrders = (incoming = []) => {
