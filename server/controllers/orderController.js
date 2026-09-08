@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Order from "../models/Order.js";
+import { notifyTelegramNewOrder } from "../utils/telegram.js";
 
 export const createOrder = asyncHandler(async (req, res) => {
   const { customerName, phone, address, tableNumber, orderType, items, notes } = req.body;
@@ -72,6 +73,8 @@ export const createOrder = asyncHandler(async (req, res) => {
       },
     });
   }
+
+  notifyTelegramNewOrder(order);
 
   res.status(201).json({ success: true, data: order });
 });
