@@ -4,7 +4,10 @@ const ThemeContext = createContext(null);
 const STORAGE_KEY = "gapshap_dark_mode";
 
 export const ThemeProvider = ({ children }) => {
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem(STORAGE_KEY) === "true");
+  const [darkMode, setDarkMode] = useState(() => {
+    const storedPreference = localStorage.getItem(STORAGE_KEY);
+    return storedPreference === null ? true : storedPreference === "true";
+  });
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
