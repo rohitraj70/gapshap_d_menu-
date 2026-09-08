@@ -25,7 +25,6 @@ const FoodCard = memo(({ item }) => {
 
   return (
     <motion.div
-      layout
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       className={`group relative overflow-hidden rounded-[1.2rem] border border-[#f0dfd0] bg-[#fffaf7] shadow-[0_18px_34px_-24px_rgba(68,48,38,0.8)] transition-transform duration-200 hover:-translate-y-0.5 dark:border-[#453730] dark:bg-[#2a211d] ${
