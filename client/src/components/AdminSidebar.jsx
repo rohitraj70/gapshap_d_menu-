@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Tags, UtensilsCrossed, LogOut, Menu, X, ClipboardList } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { getOrders } from "../services/api";
 
 const links = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -15,10 +16,34 @@ const AdminSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState(0);
 
   useEffect(() => {
     setDrawerOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadPendingCount = async () => {
+      try {
+        const response = await getOrders();
+        if (active) {
+          setPendingCount((response.data.data || []).filter((order) => order.status === "pending").length);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadPendingCount();
+    const interval = setInterval(loadPendingCount, 15000);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -39,9 +64,14 @@ const AdminSidebar = () => {
           onClick={() => setDrawerOpen(true)}
           aria-label="Open admin navigation"
           aria-expanded={drawerOpen}
-          className="flex h-11 w-11 items-center justify-center rounded-xl bg-brown-dark text-cream shadow-card"
+          className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-brown-dark text-cream shadow-card"
         >
           <Menu size={21} />
+          {pendingCount > 0 && (
+            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white ring-2 ring-cream">
+              {pendingCount > 99 ? "99+" : pendingCount}
+            </span>
+          )}
         </button>
       </div>
 
@@ -81,7 +111,12 @@ const AdminSidebar = () => {
             }
           >
             <Icon size={18} />
-            {label}
+            <span className="flex-1">{label}</span>
+            {to === "/admin/orders" && pendingCount > 0 && (
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-white">
+                {pendingCount > 99 ? "99+" : pendingCount}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>
