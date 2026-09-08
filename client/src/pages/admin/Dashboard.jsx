@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Tags, UtensilsCrossed, Heart, CheckCircle2, Phone, Power, Save } from "lucide-react";
+import { Tags, UtensilsCrossed, Heart, CheckCircle2, Phone, Power, Save, ClipboardList, Clock3, CircleCheck, CircleX } from "lucide-react";
 import AdminSidebar from "../../components/AdminSidebar";
-import { fetchCategories, fetchMenu, fetchCafeSettings, updateCafeSettings } from "../../services/api";
+import { fetchCategories, fetchMenu, fetchCafeSettings, updateCafeSettings, getOrders } from "../../services/api";
 
 const StatCard = ({ icon: Icon, label, value, tint }) => (
   <div className="bg-white rounded-xl2 shadow-card p-4 sm:p-5 flex items-center gap-3 sm:gap-4">
@@ -15,19 +15,31 @@ const StatCard = ({ icon: Icon, label, value, tint }) => (
   </div>
 );
 
+const OrderStatCard = ({ icon: Icon, label, value, tint }) => (
+  <div className="rounded-xl2 border border-brown/10 bg-white p-4 shadow-card">
+    <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-full ${tint}`}>
+      <Icon size={19} />
+    </div>
+    <p className="font-display text-2xl font-bold text-brown-dark">{value}</p>
+    <p className="mt-0.5 text-xs text-brown-light">{label}</p>
+  </div>
+);
+
 const Dashboard = () => {
   const [stats, setStats] = useState({ categories: 0, items: 0, featured: 0, available: 0 });
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState({ acceptingOrders: true, customerCareNumber: "" });
   const [settingsMessage, setSettingsMessage] = useState("");
   const [savingSettings, setSavingSettings] = useState(false);
+  const [orderStats, setOrderStats] = useState({ total: 0, pending: 0, confirmed: 0, completed: 0, declined: 0 });
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [catRes, menuRes, settingsRes] = await Promise.all([fetchCategories(), fetchMenu(), fetchCafeSettings()]);
+        const [catRes, menuRes, settingsRes, ordersRes] = await Promise.all([fetchCategories(), fetchMenu(), fetchCafeSettings(), getOrders()]);
         const items = menuRes.data.data;
         setSettings(settingsRes.data.data);
+        updateOrderStats(ordersRes.data.data || []);
         setStats({
           categories: catRes.data.count,
           items: items.length,
@@ -42,6 +54,30 @@ const Dashboard = () => {
     };
     load();
   }, []);
+
+  useEffect(() => {
+    const refreshOrderStats = async () => {
+      try {
+        const response = await getOrders();
+        updateOrderStats(response.data.data || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const interval = setInterval(refreshOrderStats, 15000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const updateOrderStats = (orders) => {
+    setOrderStats({
+      total: orders.length,
+      pending: orders.filter((order) => order.status === "pending").length,
+      confirmed: orders.filter((order) => order.status === "confirmed").length,
+      completed: orders.filter((order) => order.status === "completed").length,
+      declined: orders.filter((order) => order.status === "declined").length,
+    });
+  };
 
   const saveSettings = async (event) => {
     event.preventDefault();
@@ -100,6 +136,23 @@ const Dashboard = () => {
             />
           </div>
         )}
+
+        <section className="mt-6">
+          <div className="mb-3 flex items-end justify-between gap-3">
+            <div>
+              <h2 className="font-display text-xl font-bold text-brown-dark">Order analysis</h2>
+              <p className="text-xs text-brown-light">Orders from the last 24 hours</p>
+            </div>
+            <ClipboardList size={20} className="text-accent" />
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            <OrderStatCard icon={ClipboardList} label="Total orders" value={orderStats.total} tint="bg-accent/15 text-accent" />
+            <OrderStatCard icon={Clock3} label="Pending" value={orderStats.pending} tint="bg-amber-100 text-amber-700" />
+            <OrderStatCard icon={CircleCheck} label="Confirmed" value={orderStats.confirmed} tint="bg-emerald-100 text-emerald-700" />
+            <OrderStatCard icon={CheckCircle2} label="Completed" value={orderStats.completed} tint="bg-sky-100 text-sky-700" />
+            <OrderStatCard icon={CircleX} label="Declined" value={orderStats.declined} tint="bg-rose-100 text-rose-700" />
+          </div>
+        </section>
 
         <section className="mt-6 max-w-2xl rounded-2xl border border-brown/10 bg-white p-4 shadow-card sm:p-6">
           <div className="flex items-start gap-3">
