@@ -102,6 +102,7 @@ const Orders = () => {
   const [toast, setToast] = useState(null);
   const [newOrderCount, setNewOrderCount] = useState(0);
   const audioContextRef = useRef(null);
+  const knownOrderIdsRef = useRef(new Set());
 
   const playAlertTone = () => {
     const AudioCtor = window.AudioContext || window.webkitAudioContext;
@@ -127,10 +128,34 @@ const Orders = () => {
     oscillator.stop(audioContext.currentTime + 0.38);
   };
 
-  const loadOrders = async () => {
+  const announceNewOrder = (incomingOrder) => {
+    setNewOrderCount((prev) => prev + 1);
+    playAlertTone();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("New order received", {
+        body: `${incomingOrder.customerName} placed a ${incomingOrder.orderType === "outside" ? "delivery" : "table"} order for ₹${incomingOrder.totalAmount}`,
+        icon: "/Gapshap-logo.png",
+      });
+    }
+
+    setToast({
+      title: "New order received",
+      message: `${incomingOrder.customerName} placed a ${incomingOrder.orderType === "outside" ? "delivery" : "table"} order for ₹${incomingOrder.totalAmount}`,
+    });
+  };
+
+  const loadOrders = async (announce = false) => {
     try {
       const res = await getOrders();
-      setOrders(res.data.data || []);
+      const nextOrders = res.data.data || [];
+      const newOrders = announce && knownOrderIdsRef.current.size > 0
+        ? nextOrders.filter((order) => !knownOrderIdsRef.current.has(order._id))
+        : [];
+
+      setOrders(nextOrders);
+      knownOrderIdsRef.current = new Set(nextOrders.map((order) => order._id));
+      newOrders.forEach(announceNewOrder);
     } catch (error) {
       console.error(error);
     } finally {
@@ -140,6 +165,11 @@ const Orders = () => {
 
   useEffect(() => {
     loadOrders();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => loadOrders(true), 15000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -153,7 +183,7 @@ const Orders = () => {
       withCredentials: true,
     });
 
-    const refreshOrders = () => loadOrders();
+    const refreshOrders = () => loadOrders(true);
 
     socket.on("connect", () => {
       socket.emit("admin:join");
@@ -169,21 +199,8 @@ const Orders = () => {
         if (exists) return prev;
         return [incomingOrder, ...prev];
       });
-
-      setNewOrderCount((prev) => prev + 1);
-      playAlertTone();
-
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification("New order received", {
-          body: `${incomingOrder.customerName} placed a ${incomingOrder.orderType === "outside" ? "delivery" : "table"} order for ₹${incomingOrder.totalAmount}`,
-          icon: "/Gapshap-logo.png",
-        });
-      }
-
-      setToast({
-        title: "New order received",
-        message: `${incomingOrder.customerName} placed a ${incomingOrder.orderType === "outside" ? "delivery" : "table"} order for ₹${incomingOrder.totalAmount}`,
-      });
+      knownOrderIdsRef.current.add(incomingOrder._id);
+      announceNewOrder(incomingOrder);
     });
 
     window.addEventListener("focus", refreshOrders);
