@@ -34,4 +34,6 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+orderSchema.index({ createdAt: 1 }, { expireAfterSeconds: 24 * 60 * 60 });
+
 export default mongoose.model("Order", orderSchema);
