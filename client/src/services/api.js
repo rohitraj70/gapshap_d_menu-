@@ -38,6 +38,10 @@ export const getOrders = () => api.get("/orders");
 export const getOrderById = (id) => api.get(`/orders/${id}`);
 export const updateOrderStatus = (id, status) => api.put(`/orders/${id}/status`, { status });
 
+// Cafe settings
+export const fetchCafeSettings = () => api.get("/settings");
+export const updateCafeSettings = (payload) => api.put("/settings", payload);
+
 // Auth
 export const loginAdmin = (payload) => api.post("/auth/login", payload);
 export const getMe = () => api.get("/auth/me");

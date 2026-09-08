@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, Flame, SearchX, Sparkles } from "lucide-react";
+import { ArrowDown, Flame, SearchX, Sparkles, Phone, ShoppingBag } from "lucide-react";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import CategoryTabs from "../components/CategoryTabs";
@@ -8,7 +8,7 @@ import FoodCard from "../components/FoodCard";
 import FloatingFavButton from "../components/FloatingFavButton";
 import EmptyState from "../components/EmptyState";
 import { FoodGridSkeleton, ChipsSkeleton } from "../components/Skeletons";
-import { fetchCategories, fetchMenu } from "../services/api";
+import { fetchCategories, fetchMenu, fetchCafeSettings } from "../services/api";
 
 const shuffleItems = (items) => {
   const shuffled = [...items];
@@ -89,6 +89,7 @@ const Home = () => {
   const [search, setSearch] = useState(savedState.search || "");
   const [activeCategory, setActiveCategory] = useState(savedState.activeCategory || null);
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_ITEMS);
+  const [cafeSettings, setCafeSettings] = useState({ acceptingOrders: true, customerCareNumber: "" });
   const loadMoreRef = useRef(null);
 
   useEffect(() => {
@@ -112,9 +113,10 @@ const Home = () => {
     const load = async () => {
       setLoading(true);
       try {
-        const [catRes, menuRes] = await Promise.all([fetchCategories(), fetchMenu()]);
+        const [catRes, menuRes, settingsRes] = await Promise.all([fetchCategories(), fetchMenu(), fetchCafeSettings()]);
         setCategories(catRes.data.data);
         setItems(getStableMenuOrder(menuRes.data.data));
+        setCafeSettings(settingsRes.data.data);
       } catch (err) {
         console.error("Failed to load menu:", err);
       } finally {
@@ -196,6 +198,27 @@ const Home = () => {
               Explore the menu <ArrowDown size={15} />
             </a>
           </div>
+        </section>
+
+        <section className={`flex flex-col gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center sm:justify-between ${cafeSettings.acceptingOrders ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"}`}>
+          <div className="flex items-start gap-3">
+            <div className={`mt-0.5 rounded-full p-2 ${cafeSettings.acceptingOrders ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"}`}>
+              {cafeSettings.acceptingOrders ? <ShoppingBag size={17} /> : <Phone size={17} />}
+            </div>
+            <div>
+              <p className={`text-sm font-bold ${cafeSettings.acceptingOrders ? "text-emerald-800" : "text-amber-900"}`}>
+                {cafeSettings.acceptingOrders ? "Orders are open" : "Orders are temporarily closed"}
+              </p>
+              <p className={`mt-1 text-xs ${cafeSettings.acceptingOrders ? "text-emerald-700" : "text-amber-800"}`}>
+                {cafeSettings.acceptingOrders ? "Place your order and we will confirm it shortly." : "Please try again later or contact the cafe."}
+              </p>
+            </div>
+          </div>
+          {cafeSettings.customerCareNumber && (
+            <a href={`tel:${cafeSettings.customerCareNumber}`} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold text-brown-dark shadow-sm ring-1 ring-brown/10">
+              <Phone size={15} /> {cafeSettings.customerCareNumber}
+            </a>
+          )}
         </section>
 
         <SearchBar value={search} onChange={setSearch} />

@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, CheckCircle2, MessageSquareText, MapPin, Phone, UserRound, TableProperties } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useFavorites } from "../context/FavoritesContext";
-import { createOrder } from "../services/api";
+import { createOrder, fetchCafeSettings } from "../services/api";
 
 const ORDER_TYPES = {
   outside: "Outside the cafe",
@@ -34,6 +34,13 @@ const OrderCheckout = () => {
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
+  const [cafeSettings, setCafeSettings] = useState({ acceptingOrders: true, customerCareNumber: "" });
+
+  useEffect(() => {
+    fetchCafeSettings()
+      .then((response) => setCafeSettings(response.data.data))
+      .catch(() => undefined);
+  }, []);
 
   const cartItems = useMemo(
     () => orders.map((item) => ({
@@ -48,6 +55,11 @@ const OrderCheckout = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!cafeSettings.acceptingOrders) {
+      setMessage("The cafe is not accepting orders right now. Please try again later.");
+      return;
+    }
 
     if (!customerName.trim()) {
       setMessage("Please enter your name.");
@@ -115,6 +127,11 @@ const OrderCheckout = () => {
         <div className="rounded-3xl bg-white p-4 shadow-card sm:p-6">
           <h1 className="font-display text-3xl font-bold text-brown-dark">Place your order</h1>
           <p className="mt-1 text-sm text-brown-light">Choose how you are ordering and share the details we need.</p>
+
+          <div className={`mt-4 flex flex-col gap-2 rounded-xl border p-3 sm:flex-row sm:items-center sm:justify-between ${cafeSettings.acceptingOrders ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-amber-200 bg-amber-50 text-amber-900"}`}>
+            <span className="text-sm font-semibold">{cafeSettings.acceptingOrders ? "Orders are currently open." : "Orders are currently closed."}</span>
+            {cafeSettings.customerCareNumber && <a href={`tel:${cafeSettings.customerCareNumber}`} className="inline-flex items-center gap-1.5 text-sm font-bold underline"><Phone size={15} /> {cafeSettings.customerCareNumber}</a>}
+          </div>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-5">
             <div>
@@ -198,10 +215,10 @@ const OrderCheckout = () => {
 
             <button
               type="submit"
-              disabled={submitting}
+              disabled={submitting || !cafeSettings.acceptingOrders}
               className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-accent px-5 py-3.5 text-base font-bold text-white shadow-[0_16px_24px_-14px_rgba(230,126,34,0.95)] transition-all hover:bg-accent-dark active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {submitting ? "Placing order..." : <><CheckCircle2 size={20} /> Place order</>}
+              {!cafeSettings.acceptingOrders ? "Orders are closed" : submitting ? "Placing order..." : <><CheckCircle2 size={20} /> Place order</>}
             </button>
           </form>
         </div>

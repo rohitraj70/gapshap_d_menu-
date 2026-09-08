@@ -1,8 +1,14 @@
 import asyncHandler from "express-async-handler";
 import Order from "../models/Order.js";
 import { notifyTelegramNewOrder } from "../utils/telegram.js";
+import { ensureOrdersAreOpen } from "./settingsController.js";
 
 export const createOrder = asyncHandler(async (req, res) => {
+  if (!(await ensureOrdersAreOpen())) {
+    res.status(403);
+    throw new Error("The cafe is not accepting orders right now. Please try again later.");
+  }
+
   const { customerName, phone, address, tableNumber, orderType, items, notes } = req.body;
 
   if (!customerName || !customerName.trim()) {
