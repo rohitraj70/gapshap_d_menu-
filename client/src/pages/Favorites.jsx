@@ -100,7 +100,7 @@ const Favorites = () => {
             </div>
           </div>
 
-          <div className="scroll-panel max-h-[54vh] min-h-[260px] overflow-y-auto overscroll-contain px-2 pb-2 pt-1 space-y-3">
+          <div className="scroll-panel min-h-[220px] max-h-[54dvh] touch-pan-y overflow-y-auto overscroll-y-contain px-2 pb-2 pt-1 space-y-3">
             <AnimatePresence initial={false}>
               {orders.map((item) => (
                 <motion.div

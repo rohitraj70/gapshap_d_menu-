@@ -173,6 +173,8 @@ html.dark select option { background: #2b211c; }
   scrollbar-width: thin;
   scrollbar-color: rgba(111, 78, 55, 0.45) transparent;
   scroll-behavior: smooth;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
 
