@@ -199,9 +199,9 @@ const OrderCheckout = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-full bg-accent px-4 py-3.5 text-sm font-semibold text-white hover:bg-accent-dark disabled:opacity-60"
+              className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-accent px-5 py-3.5 text-base font-bold text-white shadow-[0_16px_24px_-14px_rgba(230,126,34,0.95)] transition-all hover:bg-accent-dark active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {submitting ? "Placing order..." : "Place order"}
+              {submitting ? "Placing order..." : <><CheckCircle2 size={20} /> Place order</>}
             </button>
           </form>
         </div>

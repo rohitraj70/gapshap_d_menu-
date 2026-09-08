@@ -192,9 +192,9 @@ const Favorites = () => {
           <div className="mt-2 grid grid-cols-1 gap-2">
             <button
               onClick={() => navigate("/checkout")}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-brown-dark px-3 py-2.75 text-[11px] font-semibold text-white shadow-[0_12px_18px_-12px_rgba(111,78,55,0.9)] transition-colors hover:bg-brown"
+              className="flex min-h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-brown-dark px-4 py-3 text-base font-bold text-white shadow-[0_16px_24px_-14px_rgba(111,78,55,0.95)] transition-all hover:bg-brown active:scale-[0.99]"
             >
-              <CheckCircle2 size={16} /> Place Order
+              <CheckCircle2 size={20} /> Place Order
             </button>
 
             <button
