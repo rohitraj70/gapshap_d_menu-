@@ -8,6 +8,7 @@ export const notifyTelegramNewOrder = async (order) => {
 
   if (!botToken || !chatId) return false;
 
+  const adminOrdersUrl = `${(process.env.CLIENT_URL || "http://localhost:5173").replace(/\/$/, "")}/admin/orders`;
   const itemLines = order.items
     .map((item) => `• ${escapeHtml(item.name)} x${item.qty} - ₹${item.qty * item.price}`)
     .join("\n");
@@ -25,6 +26,7 @@ export const notifyTelegramNewOrder = async (order) => {
     "",
     `<b>Total: ₹${order.totalAmount}</b>`,
     order.notes ? `Note: ${escapeHtml(order.notes)}` : "",
+    `<a href="${escapeHtml(adminOrdersUrl)}">Open admin orders</a>`,
   ].filter(Boolean).join("\n");
 
   try {
