@@ -168,11 +168,10 @@ const FoodDetails = () => {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`flex h-6 w-6 items-center justify-center rounded-full border ${isSelected ? "border-accent bg-accent text-white" : "border-brown/10 bg-white text-brown-light"}`}>
+                      <div className={`flex h-6 w-6 items-center justify-center rounded-full border ${isSelected ? "border-accent bg-accent text-white" : "border-brown/15 bg-white text-brown-dark"}`}>
                         {isSelected ? <Check size={12} /> : <span className="inline-block h-2 w-2 rounded-full bg-current" />}
                       </div>
-                      <div>
-                        <div className="font-semibold text-brown-dark">{variant.label}</div>
+                      <div className="min-w-0">
                         {hasVariantDiscount && (
                           <div className="text-[10px] font-semibold text-brown-light line-through">₹{variant.price}</div>
                         )}
@@ -180,7 +179,7 @@ const FoodDetails = () => {
                     </div>
 
                     <div className="text-right">
-                      <div className="font-display text-lg font-bold text-accent">₹{variantPrice}</div>
+                      <div className="font-display text-lg font-bold text-brown-dark">₹{variantPrice}</div>
                       {hasVariantDiscount && (
                         <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-600">Save</div>
                       )}
