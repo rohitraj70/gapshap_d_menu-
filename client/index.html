@@ -13,8 +13,18 @@
       rel="stylesheet"
     />
     <script>
-      document.documentElement.classList.add('dark');
-      document.documentElement.style.colorScheme = 'dark';
+      (() => {
+        try {
+          const savedTheme = localStorage.getItem('gapshap_theme');
+          const isDark = savedTheme ? savedTheme === 'dark' : true;
+          document.documentElement.classList.toggle('dark', isDark);
+          document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+          localStorage.setItem('gapshap_theme', isDark ? 'dark' : 'light');
+        } catch (error) {
+          document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
+        }
+      })();
     </script>
   </head>
   <body class="bg-cream text-brown-dark font-body antialiased">
