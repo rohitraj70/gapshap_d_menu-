@@ -9,9 +9,9 @@ const Navbar = () => {
     <header className="sticky top-0 z-30 border-b border-[#3a2a24] bg-[#1a1412]/90 backdrop-blur-md shadow-[0_12px_30px_-24px_rgba(0,0,0,0.6)]">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3.5 sm:px-6">
         <Link to="/" className="group flex items-center gap-2.5">
-          <img src="/Gapshap-logo.png" alt="Gapshap Cafe" className="h-10 w-10 rounded-xl object-cover shadow-card transition-transform group-hover:rotate-[-4deg]" />
+          <img src="/Gapshap-logo.png" alt="Gapshup Cafe" className="h-10 w-10 rounded-xl object-cover shadow-card transition-transform group-hover:rotate-[-4deg]" />
           <span className="brand-name font-display text-xl font-bold tracking-tight text-[#fff8f0]">
-            Gapshap <span className="text-accent">Cafe</span>
+            Gapshup <span className="text-accent">Cafe</span>
           </span>
         </Link>
         <div className="flex items-center gap-2">

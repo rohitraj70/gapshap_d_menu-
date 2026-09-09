@@ -197,7 +197,7 @@ const Home = () => {
               <Sparkles size={14} /> Your table is waiting
             </p>
             <h1 className="font-display text-4xl leading-[0.98] sm:text-5xl font-semibold tracking-tight">
-              Good food.<br /><em className="text-accent-light">Better gapshap.</em>
+              Good food.<br /><em className="text-accent-light">Better gapshup.</em>
             </h1>
             <p className="mt-4 max-w-md text-sm leading-6 text-cream/70">
               Welcome in. Explore the menu, add your picks to My Orders, then show your list at the counter.

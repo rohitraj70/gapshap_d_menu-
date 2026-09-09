@@ -54,9 +54,9 @@ const AdminSidebar = () => {
     <>
       <div className="flex items-center justify-between border-b border-brown/10 bg-cream px-4 py-3 md:hidden">
         <div className="flex items-center gap-2.5">
-          <img src="/Gapshap-logo.png" alt="Gapshap Cafe" className="h-9 w-9 rounded-xl object-cover shadow-card" />
+          <img src="/Gapshap-logo.png" alt="Gapshup Cafe" className="h-9 w-9 rounded-xl object-cover shadow-card" />
           <div>
-            <p className="font-display text-base font-semibold leading-tight text-brown-dark">Gapshap Cafe</p>
+            <p className="font-display text-base font-semibold leading-tight text-brown-dark">Gapshup Cafe</p>
             <p className="text-[11px] text-brown-light">Admin Panel</p>
           </div>
         </div>
@@ -85,9 +85,9 @@ const AdminSidebar = () => {
 
     <aside className={`fixed inset-y-0 left-0 z-50 flex w-[min(84vw,20rem)] shrink-0 -translate-x-full flex-col bg-brown-dark text-cream shadow-soft transition-transform duration-200 md:static md:min-h-screen md:w-64 md:translate-x-0 md:shadow-none ${drawerOpen ? "translate-x-0" : ""}`}>
       <div className="flex items-center gap-2 border-b border-cream/10 p-4 sm:p-5">
-        <img src="/Gapshap-logo.png" alt="Gapshap Cafe" className="w-10 h-10 rounded-xl object-cover" />
+        <img src="/Gapshap-logo.png" alt="Gapshup Cafe" className="w-10 h-10 rounded-xl object-cover" />
         <div>
-          <p className="font-display font-semibold leading-tight">Gapshap Cafe</p>
+          <p className="font-display font-semibold leading-tight">Gapshup Cafe</p>
           <p className="text-xs text-cream/60">Admin Panel</p>
         </div>
         <button

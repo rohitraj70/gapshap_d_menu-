@@ -28,8 +28,8 @@ const Login = () => {
     <div className="min-h-screen bg-brown-dark flex items-center justify-center px-4">
       <div className="w-full max-w-sm bg-cream rounded-xl2 shadow-soft p-8">
         <div className="flex flex-col items-center mb-6">
-          <img src="/Gapshap-logo.png" alt="Gapshap Cafe" className="w-16 h-16 rounded-2xl object-cover shadow-card mb-3" />
-          <h1 className="font-display text-xl font-bold text-brown-dark">Gapshap Cafe</h1>
+          <img src="/Gapshap-logo.png" alt="Gapshup Cafe" className="w-16 h-16 rounded-2xl object-cover shadow-card mb-3" />
+          <h1 className="font-display text-xl font-bold text-brown-dark">Gapshup Cafe</h1>
           <p className="text-sm text-brown-light">Admin sign in</p>
         </div>
 
