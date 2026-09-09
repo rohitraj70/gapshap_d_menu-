@@ -46,18 +46,21 @@ const OrderCard = ({ order, onStatusChange }) => {
         </div>
       </div>
 
-      <div className="mt-4 rounded-xl bg-cream-dark p-3">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-brown-light">Items</p>
-        <div className="space-y-2 text-sm text-brown-dark">
+      <div className="mt-4 rounded-xl bg-[#f8efe6] p-3 ring-1 ring-[#ead7c0] dark:bg-[#2a211d] dark:ring-[#5d4336]">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6f4e37] dark:text-[#f0c28c]">Items</p>
+        <div className="space-y-2 text-sm">
           {order.items.map((item, index) => (
-            <div key={`${order._id}-${index}`} className="flex items-center justify-between gap-3 rounded-lg bg-white/80 px-2.5 py-2">
+            <div
+              key={`${order._id}-${index}`}
+              className="flex items-center justify-between gap-3 rounded-lg border border-[#eadcc8] bg-[#fffdfb] px-2.5 py-2 text-[#2c1d15] shadow-sm dark:border-[#5d4336] dark:bg-[#2b211c] dark:text-[#fff8f0]"
+            >
               <div>
-                <div className="font-medium">{item.name}</div>
-                {item.variantLabel && <div className="text-xs text-brown-light">{item.variantLabel}</div>}
+                <div className="font-medium text-[#2c1d15] dark:text-[#fff8f0]">{item.name}</div>
+                {item.variantLabel && <div className="text-xs text-[#7b5d4f] dark:text-[#d7bba3]">{item.variantLabel}</div>}
               </div>
               <div className="text-right">
-                <div className="font-semibold">{item.qty} × ₹{item.price}</div>
-                <div className="text-xs text-brown-light">₹{item.qty * item.price}</div>
+                <div className="font-semibold text-[#2c1d15] dark:text-[#fff8f0]">{item.qty} × ₹{item.price}</div>
+                <div className="text-xs text-[#7b5d4f] dark:text-[#d7bba3]">₹{item.qty * item.price}</div>
               </div>
             </div>
           ))}
