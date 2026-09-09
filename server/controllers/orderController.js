@@ -119,5 +119,15 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
 
   order.status = status;
   await order.save();
+
+  if (global.io) {
+    global.io.to(`order:${id}`).emit("order:status-updated", {
+      order: {
+        ...order.toObject(),
+        status: order.status,
+      },
+    });
+  }
+
   res.json({ success: true, data: order });
 });

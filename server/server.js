@@ -35,6 +35,16 @@ io.on("connection", (socket) => {
     console.log("Admin connected for live notifications");
   });
 
+  socket.on("order:join", ({ orderId }) => {
+    if (!orderId) return;
+    socket.join(`order:${orderId}`);
+  });
+
+  socket.on("order:leave", ({ orderId }) => {
+    if (!orderId) return;
+    socket.leave(`order:${orderId}`);
+  });
+
   socket.on("disconnect", () => {
     console.log("Socket disconnected");
   });

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { io } from "socket.io-client";
 import { CheckCircle2, Clock3, XCircle, ArrowLeft } from "lucide-react";
-import { getOrderById } from "../services/api";
+import { API_BASE_URL, getOrderById } from "../services/api";
 
 const statusConfig = {
   pending: {
@@ -57,35 +58,69 @@ const OrderStatus = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const socketRef = useRef(null);
 
   const orderId = searchParams.get("id");
 
   useEffect(() => {
-    const fetchOrder = async () => {
-      if (!orderId) {
-        setLoading(false);
-        return;
-      }
+    if (!orderId) {
+      setLoading(false);
+      return undefined;
+    }
 
+    let isMounted = true;
+
+    const fetchOrder = async () => {
       try {
         const res = await getOrderById(orderId);
+        if (!isMounted) return;
+
         const serverOrder = res.data.data;
         const nextHistory = mergeCustomerOrders([serverOrder]);
         localStorage.setItem("gapshap_customer_orders", JSON.stringify(nextHistory));
         setOrder(serverOrder);
       } catch (error) {
         console.error(error);
+        if (!isMounted) return;
+
         const localOrders = JSON.parse(localStorage.getItem("gapshap_customer_orders") || "[]");
         const localMatch = localOrders.find((entry) => entry._id === orderId);
         if (localMatch) {
           setOrder(localMatch);
         }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchOrder();
+
+    const socket = io(API_BASE_URL.replace(/\/api\/?$/, ""), {
+      withCredentials: true,
+    });
+    socketRef.current = socket;
+
+    socket.on("connect", () => {
+      socket.emit("order:join", { orderId });
+    });
+
+    socket.on("order:status-updated", (payload) => {
+      const incomingOrder = payload?.order;
+      if (!incomingOrder || incomingOrder._id !== orderId) return;
+
+      const nextHistory = mergeCustomerOrders([incomingOrder]);
+      localStorage.setItem("gapshap_customer_orders", JSON.stringify(nextHistory));
+      setOrder(incomingOrder);
+      setLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+      socket.emit("order:leave", { orderId });
+      socket.disconnect();
+    };
   }, [orderId]);
 
   if (!orderId) {
