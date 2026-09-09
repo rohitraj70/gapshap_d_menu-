@@ -31,18 +31,18 @@ const validateVariants = (variants) => {
   }
 };
 
-// @desc    Get all menu items (supports ?search=&category=&featured=&available=)
+// @desc    Get all menu items (supports ?search=&category=&featured=&available=&limit=&skip=)
 // @route   GET /api/menu
 // @access  Public
 export const getMenuItems = asyncHandler(async (req, res) => {
-  const { search, category, featured, available } = req.query;
+  const { search, category, featured, available, limit, skip } = req.query;
   const filter = {};
 
   if (category) filter.category = category;
   if (featured !== undefined) filter.featured = featured === "true";
   if (available !== undefined) filter.available = available === "true";
 
-  let items;
+  let searchFilter = {};
 
   if (search) {
     const trimmed = String(search).trim();
@@ -50,25 +50,37 @@ export const getMenuItems = asyncHandler(async (req, res) => {
 
     if (searchTerms.length > 0) {
       const regex = new RegExp(searchTerms.map((term) => escapeRegex(term)).join("|"), "i");
-      const searchFilter = {
+      searchFilter = {
         $or: [
           { name: regex },
           { description: regex },
           { "variants.label": regex },
         ],
       };
-
-      items = await MenuItem.find({ ...filter, ...searchFilter })
-        .populate("category", "name order")
-        .sort({ createdAt: -1 });
-    } else {
-      items = await MenuItem.find(filter).populate("category", "name order").sort({ createdAt: -1 });
     }
-  } else {
-    items = await MenuItem.find(filter).populate("category", "name order").sort({ createdAt: -1 });
   }
 
-  res.json({ success: true, count: items.length, data: items });
+  const finalFilter = { ...filter, ...searchFilter };
+  const parsedLimit = Number(limit);
+  const parsedSkip = Number(skip);
+  const safeSkip = Number.isFinite(parsedSkip) && parsedSkip > 0 ? parsedSkip : 0;
+  const hasPagination = Number.isFinite(parsedLimit) && parsedLimit > 0;
+
+  const listQuery = MenuItem.find(finalFilter)
+    .populate("category", "name order")
+    .sort({ createdAt: -1 });
+
+  const totalCount = await MenuItem.countDocuments(finalFilter);
+  const items = hasPagination
+    ? await listQuery.skip(safeSkip).limit(parsedLimit).exec()
+    : await listQuery.exec();
+
+  res.json({
+    success: true,
+    count: items.length,
+    total: totalCount,
+    data: items,
+  });
 });
 
 // @desc    Get single menu item

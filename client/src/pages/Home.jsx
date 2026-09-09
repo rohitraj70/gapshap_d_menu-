@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, Flame, SearchX, Sparkles, Phone, ShoppingBag } from "lucide-react";
 import Navbar from "../components/Navbar";
@@ -40,6 +40,7 @@ const getStableMenuOrder = (items) => {
 };
 
 const HOME_STATE_KEY = "gapshap_home_state";
+const INITIAL_MENU_LIMIT = 24;
 const INITIAL_VISIBLE_ITEMS = 12;
 const LOAD_MORE_COUNT = 8;
 
@@ -89,6 +90,8 @@ const Home = () => {
   const [search, setSearch] = useState(savedState.search || "");
   const [activeCategory, setActiveCategory] = useState(savedState.activeCategory || null);
   const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_ITEMS);
+  const [hasMoreServerItems, setHasMoreServerItems] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [cafeSettings, setCafeSettings] = useState({ acceptingOrders: true, customerCareNumber: "" });
   const loadMoreRef = useRef(null);
 
@@ -109,14 +112,37 @@ const Home = () => {
     setVisibleCount(INITIAL_VISIBLE_ITEMS);
   }, [search, activeCategory]);
 
+  const loadMenuPage = useCallback(
+    async (offset = 0, append = false) => {
+      try {
+        const response = await fetchMenu({ limit: INITIAL_MENU_LIMIT, skip: offset });
+        const menuData = response.data?.data || [];
+        const nextItems = getStableMenuOrder(menuData);
+
+        setItems((prev) => {
+          if (!append || offset === 0) return nextItems;
+          const seenIds = new Set(prev.map((item) => item._id));
+          const newItems = nextItems.filter((item) => !seenIds.has(item._id));
+          return getStableMenuOrder([...prev, ...newItems]);
+        });
+
+        const totalCount = response.data?.total ?? menuData.length + offset;
+        setHasMoreServerItems(totalCount > offset + menuData.length);
+      } catch (err) {
+        console.error("Failed to load menu:", err);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       try {
-        const [catRes, menuRes, settingsRes] = await Promise.all([fetchCategories(), fetchMenu(), fetchCafeSettings()]);
+        const [catRes, settingsRes] = await Promise.all([fetchCategories(), fetchCafeSettings()]);
         setCategories(catRes.data.data);
-        setItems(getStableMenuOrder(menuRes.data.data));
         setCafeSettings(settingsRes.data.data);
+        await loadMenuPage(0, false);
       } catch (err) {
         console.error("Failed to load menu:", err);
       } finally {
@@ -124,7 +150,7 @@ const Home = () => {
       }
     };
     load();
-  }, []);
+  }, [loadMenuPage]);
 
   const featured = useMemo(() => items.filter((i) => i.featured && i.available).slice(0, 8), [items]);
 
@@ -161,8 +187,13 @@ const Home = () => {
     const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0];
-        if (firstEntry?.isIntersecting) {
-          setVisibleCount((count) => Math.min(count + LOAD_MORE_COUNT, filteredItems.length));
+        if (!firstEntry?.isIntersecting || loadingMore) return;
+
+        setVisibleCount((count) => Math.min(count + LOAD_MORE_COUNT, filteredItems.length));
+
+        if (hasMoreServerItems && items.length <= visibleCount + LOAD_MORE_COUNT) {
+          setLoadingMore(true);
+          loadMenuPage(items.length, true).finally(() => setLoadingMore(false));
         }
       },
       {
@@ -173,7 +204,7 @@ const Home = () => {
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, [filteredItems.length, hasMoreItems]);
+  }, [filteredItems.length, hasMoreItems, hasMoreServerItems, items.length, loadingMore, loadMenuPage, visibleCount]);
 
   return (
     <div className="min-h-screen bg-cream pb-28">
