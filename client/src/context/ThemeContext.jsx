@@ -1,30 +1,18 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 
-const ThemeContext = createContext(null);
-const STORAGE_KEY = "gapshap_dark_mode";
+const ThemeContext = createContext({ darkMode: true });
 
 export const ThemeProvider = ({ children }) => {
-  const [darkMode, setDarkMode] = useState(() => {
-    const storedPreference = localStorage.getItem(STORAGE_KEY);
-    return storedPreference === null ? true : storedPreference === "true";
-  });
-
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", darkMode);
-    localStorage.setItem(STORAGE_KEY, String(darkMode));
-  }, [darkMode]);
-
-  const toggleDarkMode = () => setDarkMode((current) => !current);
+    document.documentElement.classList.add("dark");
+    document.documentElement.style.colorScheme = "dark";
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+    <ThemeContext.Provider value={{ darkMode: true }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) throw new Error("useTheme must be used within ThemeProvider");
-  return context;
-};
+export const useTheme = () => useContext(ThemeContext);
