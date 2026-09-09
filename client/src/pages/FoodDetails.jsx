@@ -163,25 +163,26 @@ const FoodDetails = () => {
                     onClick={() => setSelectedVariant(variant)}
                     className={`group relative flex items-center justify-between rounded-2xl border p-3 text-left transition-all duration-200 ${
                       isSelected
-                        ? "border-accent bg-cream-dark shadow-[0_14px_28px_-20px_rgba(180,102,55,0.65)]"
-                        : "border-brown/10 bg-[#fffaf7] hover:border-accent/60 hover:bg-[#fff9f5]"
+                        ? "border-accent bg-accent text-white shadow-[0_18px_30px_-22px_rgba(230,126,34,0.9)]"
+                        : "border-brown/15 bg-white text-brown-dark hover:border-accent/60 hover:bg-[#fff9f5]"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`flex h-6 w-6 items-center justify-center rounded-full border ${isSelected ? "border-accent bg-accent text-white" : "border-brown/15 bg-white text-brown-dark"}`}>
+                      <div className={`flex h-6 w-6 items-center justify-center rounded-full border ${isSelected ? "border-white bg-white text-accent" : "border-brown/15 bg-[#f8f2ee] text-brown-dark"}`}>
                         {isSelected ? <Check size={12} /> : <span className="inline-block h-2 w-2 rounded-full bg-current" />}
                       </div>
                       <div className="min-w-0">
+                        <div className={`font-semibold ${isSelected ? "text-white" : "text-brown-dark"}`}>{variant.label}</div>
                         {hasVariantDiscount && (
-                          <div className="text-[10px] font-semibold text-brown-light line-through">₹{variant.price}</div>
+                          <div className={`text-[10px] font-semibold line-through ${isSelected ? "text-white/75" : "text-brown-light"}`}>₹{variant.price}</div>
                         )}
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <div className="font-display text-lg font-bold text-brown-dark">₹{variantPrice}</div>
+                      <div className={`font-display text-lg font-bold ${isSelected ? "text-white" : "text-brown-dark"}`}>₹{variantPrice}</div>
                       {hasVariantDiscount && (
-                        <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-600">Save</div>
+                        <div className={`text-[10px] font-bold uppercase tracking-[0.12em] ${isSelected ? "text-emerald-100" : "text-emerald-600"}`}>Save</div>
                       )}
                     </div>
                   </button>
