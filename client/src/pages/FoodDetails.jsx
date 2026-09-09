@@ -76,8 +76,8 @@ const FoodDetails = () => {
     : item.salePrice != null && item.salePrice < item.price;
 
   return (
-    <div className="min-h-screen bg-[#f8f3ee] pb-6 sm:pb-32">
-      <div className="relative mx-auto aspect-[4/3] w-full max-w-5xl overflow-hidden bg-[#f2e6dc] sm:aspect-[16/10] sm:rounded-b-[1.8rem] lg:aspect-[16/9] lg:rounded-[1.8rem] lg:mt-6 lg:shadow-soft">
+    <div className="min-h-screen bg-cream pb-6 sm:pb-32">
+      <div className="relative mx-auto aspect-[4/3] w-full max-w-5xl overflow-hidden bg-cream-dark sm:aspect-[16/10] sm:rounded-b-[1.8rem] lg:aspect-[16/9] lg:rounded-[1.8rem] lg:mt-6 lg:shadow-soft">
         {item.image?.url ? (
           <img src={item.image.url} alt={item.name} className="h-full w-full object-cover object-center" />
         ) : (
@@ -86,7 +86,7 @@ const FoodDetails = () => {
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1f1816]/65 via-[#1f1816]/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brown-dark/80 via-brown-dark/10 to-transparent" />
 
         <button
           onClick={() => navigate(-1)}
@@ -108,12 +108,12 @@ const FoodDetails = () => {
       </div>
 
       <div className="mx-auto max-w-3xl animate-fade-up px-4 pb-24 pt-6 sm:pb-32 sm:pt-8">
-        <div className="rounded-[1.7rem] border border-[#f0dfd0] bg-white p-4 shadow-[0_22px_50px_-28px_rgba(68,48,38,0.45)] sm:p-5">
+        <div className="rounded-[1.7rem] border border-brown/10 bg-white p-4 shadow-[0_22px_50px_-28px_rgba(68,48,38,0.45)] sm:p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="mb-2 flex items-center gap-2">
                 {item.category?.name && (
-                  <span className="inline-flex items-center rounded-full bg-[#f8efe8] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-brown-light">
+                  <span className="inline-flex items-center rounded-full bg-cream-dark px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-brown-light">
                     {item.category.name}
                   </span>
                 )}
@@ -140,7 +140,7 @@ const FoodDetails = () => {
         </div>
 
         {item.variants?.length > 0 && (
-          <div className="mt-6 rounded-[1.7rem] border border-[#f0dfd0] bg-white p-4 shadow-[0_18px_32px_-26px_rgba(68,48,38,0.5)] sm:p-5">
+          <div className="mt-6 rounded-[1.7rem] border border-brown/10 bg-white p-4 shadow-[0_18px_32px_-26px_rgba(68,48,38,0.5)] sm:p-5">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brown-light">Select size</p>
@@ -163,12 +163,12 @@ const FoodDetails = () => {
                     onClick={() => setSelectedVariant(variant)}
                     className={`group relative flex items-center justify-between rounded-2xl border p-3 text-left transition-all duration-200 ${
                       isSelected
-                        ? "border-accent bg-[#fff5ee] shadow-[0_14px_28px_-20px_rgba(180,102,55,0.65)]"
-                        : "border-[#f2e4d8] bg-[#fffaf7] hover:border-accent/60 hover:bg-[#fff9f5]"
+                        ? "border-accent bg-cream-dark shadow-[0_14px_28px_-20px_rgba(180,102,55,0.65)]"
+                        : "border-brown/10 bg-[#fffaf7] hover:border-accent/60 hover:bg-[#fff9f5]"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`flex h-6 w-6 items-center justify-center rounded-full border ${isSelected ? "border-accent bg-accent text-white" : "border-[#e6d7ca] bg-white text-brown-light"}`}>
+                      <div className={`flex h-6 w-6 items-center justify-center rounded-full border ${isSelected ? "border-accent bg-accent text-white" : "border-brown/10 bg-white text-brown-light"}`}>
                         {isSelected ? <Check size={12} /> : <span className="inline-block h-2 w-2 rounded-full bg-current" />}
                       </div>
                       <div>
@@ -193,12 +193,12 @@ const FoodDetails = () => {
         )}
 
         {!item.available ? (
-          <div className="mt-8 rounded-[1.3rem] bg-[#f4eee9] px-4 py-3 text-center text-sm font-semibold text-brown-dark">
+          <div className="mt-8 rounded-[1.3rem] bg-cream-dark px-4 py-3 text-center text-sm font-semibold text-brown-dark">
             Currently unavailable
           </div>
         ) : (
           <div className="sticky bottom-0 z-20 -mx-4 border-t border-brown/10 bg-white/90 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-soft backdrop-blur-md sm:fixed sm:inset-x-0 sm:mx-0 sm:p-4 sm:pb-4">
-            <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-[1.2rem] bg-[#f8f1ec] p-2.5 sm:p-3">
+            <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-[1.2rem] bg-cream-dark p-2.5 sm:p-3">
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-brown-light">Selected</div>
                 <div className="truncate text-sm font-semibold text-brown-dark">
@@ -207,7 +207,7 @@ const FoodDetails = () => {
               </div>
 
               {current ? (
-                <div className="flex items-center gap-3 rounded-full bg-white px-2 py-1.5 shadow-sm ring-1 ring-[#f1e2d8]">
+                <div className="flex items-center gap-3 rounded-full bg-white px-2 py-1.5 shadow-sm ring-1 ring-brown/10">
                   <button
                     onClick={() => updateOrderQty(current._id, current.qty - 1)}
                     aria-label="Decrease quantity"
