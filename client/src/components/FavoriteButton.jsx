@@ -15,12 +15,12 @@ const FavoriteButton = ({ item, size = 18, className = "" }) => {
       }}
       aria-label={active ? "Remove from favorites" : "Add to favorites"}
       aria-pressed={active}
-      className={`details-control w-9 h-9 rounded-full flex items-center justify-center bg-white/90 backdrop-blur shadow-card transition-colors ${className}`}
+      className={`details-control flex h-9 w-9 items-center justify-center rounded-full bg-[#f8eee3]/90 text-[#2b211c] shadow-card backdrop-blur transition-colors dark:bg-[#2b211c]/90 dark:text-[#fff8f0] ${className}`}
     >
       <Heart
         size={size}
         strokeWidth={2}
-        className={active ? "fill-accent text-accent" : "text-brown-light"}
+        className={active ? "fill-accent text-accent" : "text-current"}
       />
     </motion.button>
   );

@@ -91,7 +91,7 @@ const FoodDetails = () => {
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
-          className="details-control absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-brown-dark shadow-card backdrop-blur sm:left-6 sm:top-6"
+          className="details-control absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#f8eee3]/90 text-[#2b211c] shadow-card backdrop-blur transition-colors dark:bg-[#2b211c]/90 dark:text-[#fff8f0] sm:left-6 sm:top-6"
         >
           <ArrowLeft size={20} />
         </button>
