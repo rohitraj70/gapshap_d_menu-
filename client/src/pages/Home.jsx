@@ -208,22 +208,22 @@ const Home = () => {
           </div>
         </section>
 
-        <section className={`flex flex-col gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center sm:justify-between ${cafeSettings.acceptingOrders ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"}`}>
+        <section className={`flex flex-col gap-3 rounded-2xl border p-4 shadow-[0_14px_26px_-20px_rgba(0,0,0,0.6)] sm:flex-row sm:items-center sm:justify-between ${cafeSettings.acceptingOrders ? "border-emerald-200 bg-emerald-50 dark:border-[#2d5c52] dark:bg-[#172d29]" : "border-amber-200 bg-amber-50 dark:border-[#6a4d2d] dark:bg-[#2f241b]"}`}>
           <div className="flex items-start gap-3">
             <div className={`mt-0.5 rounded-full p-2 ${cafeSettings.acceptingOrders ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"}`}>
               {cafeSettings.acceptingOrders ? <ShoppingBag size={17} /> : <Phone size={17} />}
             </div>
             <div>
-              <p className={`text-sm font-bold ${cafeSettings.acceptingOrders ? "text-emerald-800" : "text-amber-900"}`}>
+              <p className={`text-sm font-bold ${cafeSettings.acceptingOrders ? "text-emerald-800 dark:text-[#bbf7d0]" : "text-amber-900 dark:text-[#fde68a]"}`}>
                 {cafeSettings.acceptingOrders ? "Orders are open" : "Orders are temporarily closed"}
               </p>
-              <p className={`mt-1 text-xs ${cafeSettings.acceptingOrders ? "text-emerald-700" : "text-amber-800"}`}>
+              <p className={`mt-1 text-xs ${cafeSettings.acceptingOrders ? "text-emerald-700 dark:text-[#86efac]" : "text-amber-800 dark:text-[#fcd34d]"}`}>
                 {cafeSettings.acceptingOrders ? "Place your order and we will confirm it shortly." : "Please try again later or contact the cafe."}
               </p>
             </div>
           </div>
           {cafeSettings.customerCareNumber && (
-            <a href={`tel:${cafeSettings.customerCareNumber}`} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold text-brown-dark shadow-sm ring-1 ring-brown/10">
+            <a href={`tel:${cafeSettings.customerCareNumber}`} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold text-brown-dark shadow-sm ring-1 ring-brown/10 transition-colors hover:bg-cream dark:bg-[#2b211c] dark:text-[#fff8f0] dark:ring-[#5b4032] dark:hover:bg-[#352a25]">
               <Phone size={15} /> {cafeSettings.customerCareNumber}
             </a>
           )}

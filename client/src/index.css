@@ -97,8 +97,33 @@ html.dark .to-orange-50 {
   background-image: none;
 }
 
-html.dark .border-amber-200 {
-  border-color: rgba(240, 167, 90, 0.27);
+html.dark .bg-emerald-50,
+html.dark .bg-emerald-100,
+.bg-emerald-50,
+.bg-emerald-100 {
+  background-color: rgba(18, 42, 36, 0.95) !important;
+}
+
+html.dark .text-emerald-800,
+.text-emerald-800 { color: #bbf7d0 !important; }
+html.dark .text-emerald-700,
+.text-emerald-700 { color: #86efac !important; }
+html.dark .text-amber-900,
+.text-amber-900 { color: #fde68a !important; }
+html.dark .text-amber-800,
+.text-amber-800 { color: #fcd34d !important; }
+
+html.dark .border-amber-200,
+html.dark .border-emerald-200 {
+  border-color: rgba(240, 167, 90, 0.2);
+}
+
+html.dark .bg-white,
+html.dark .bg-white\/90,
+html.dark .bg-white\/80,
+html.dark .bg-white\/60,
+html.dark .bg-white\/95 {
+  background-color: rgba(43, 33, 28, 0.96) !important;
 }
 
  .top-banner {
@@ -139,16 +164,18 @@ html.dark .brand-name {
   text-shadow: 0 1px 12px rgba(240, 167, 90, 0.2);
 }
 
-html.dark .details-control {
-  background-color: #f8eee3;
-  color: #2b211c;
-  border: 1px solid rgba(240, 167, 90, 0.35);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+html.dark .details-control,
+.details-control {
+  background-color: rgba(31, 23, 20, 0.9);
+  color: #f8f0e8;
+  border: 1px solid rgba(240, 167, 90, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
-html.dark .details-control:hover {
-  background-color: #f0a75a;
-  color: #241b18;
+html.dark .details-control:hover,
+.details-control:hover {
+  background-color: rgba(43, 33, 28, 1);
+  color: #fff8f0;
 }
 
 html.dark .collection-header {

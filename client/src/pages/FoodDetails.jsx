@@ -91,7 +91,7 @@ const FoodDetails = () => {
         <button
           onClick={() => navigate(-1)}
           aria-label="Go back"
-          className="details-control absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#f8eee3]/90 text-[#2b211c] shadow-card backdrop-blur transition-colors dark:bg-[#2b211c]/90 dark:text-[#fff8f0] sm:left-6 sm:top-6"
+          className="details-control absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-[#1f1714]/90 text-[#f8f0e8] shadow-card backdrop-blur transition-colors border border-[#4d3b31] sm:left-6 sm:top-6"
         >
           <ArrowLeft size={20} />
         </button>
@@ -108,7 +108,7 @@ const FoodDetails = () => {
       </div>
 
       <div className="mx-auto max-w-3xl animate-fade-up px-4 pb-24 pt-6 sm:pb-32 sm:pt-8">
-        <div className="rounded-[1.7rem] border border-brown/10 bg-white p-4 shadow-[0_22px_50px_-28px_rgba(68,48,38,0.45)] sm:p-5">
+        <div className="rounded-[1.7rem] border border-brown/10 bg-white p-4 shadow-[0_22px_50px_-28px_rgba(68,48,38,0.45)] dark:border-[#4d3b31] dark:bg-[#221b18] dark:shadow-[0_18px_40px_-26px_rgba(0,0,0,0.82)] sm:p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="mb-2 flex items-center gap-2">
@@ -140,7 +140,7 @@ const FoodDetails = () => {
         </div>
 
         {item.variants?.length > 0 && (
-          <div className="mt-6 rounded-[1.7rem] border border-brown/10 bg-white p-4 shadow-[0_18px_32px_-26px_rgba(68,48,38,0.5)] sm:p-5">
+          <div className="mt-6 rounded-[1.7rem] border border-brown/10 bg-white p-4 shadow-[0_18px_32px_-26px_rgba(68,48,38,0.5)] dark:border-[#4d3b31] dark:bg-[#221b18] dark:shadow-[0_18px_36px_-28px_rgba(0,0,0,0.8)] sm:p-5">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brown-light">Select size</p>
@@ -164,7 +164,7 @@ const FoodDetails = () => {
                     className={`group relative flex items-center justify-between rounded-2xl border p-3 text-left transition-all duration-200 ${
                       isSelected
                         ? "border-accent bg-accent text-white shadow-[0_18px_30px_-22px_rgba(230,126,34,0.9)]"
-                        : "border-brown/15 bg-white text-brown-dark hover:border-accent/60 hover:bg-[#fff9f5]"
+                        : "border-brown/15 bg-white text-brown-dark hover:border-accent/60 hover:bg-[#fff9f5] dark:border-[#5b4032] dark:bg-[#2b211c] dark:text-[#fff8f0] dark:hover:border-[#f0a75a]/60 dark:hover:bg-[#312924]"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -197,8 +197,8 @@ const FoodDetails = () => {
             Currently unavailable
           </div>
         ) : (
-          <div className="sticky bottom-0 z-20 -mx-4 border-t border-brown/10 bg-white/90 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-soft backdrop-blur-md sm:fixed sm:inset-x-0 sm:mx-0 sm:p-4 sm:pb-4">
-            <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-[1.2rem] bg-cream-dark p-2.5 sm:p-3">
+          <div className="sticky bottom-0 z-20 -mx-4 border-t border-brown/10 bg-white/90 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-soft backdrop-blur-md dark:border-[#4d3b31] dark:bg-[#1d1714]/95 sm:fixed sm:inset-x-0 sm:mx-0 sm:p-4 sm:pb-4">
+            <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-[1.2rem] bg-cream-dark p-2.5 dark:bg-[#2a211d] sm:p-3">
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-brown-light">Selected</div>
                 <div className="truncate text-sm font-semibold text-brown-dark">
@@ -211,7 +211,7 @@ const FoodDetails = () => {
                   <button
                     onClick={() => updateOrderQty(current._id, current.qty - 1)}
                     aria-label="Decrease quantity"
-                    className="details-control flex h-8 w-8 items-center justify-center rounded-full bg-[#f8f2ee] text-brown-dark hover:text-accent"
+                    className="details-control flex h-8 w-8 items-center justify-center rounded-full bg-[#1f1714] text-[#f8f0e8] border border-[#4d3b31] hover:text-accent"
                   >
                     <Minus size={16} />
                   </button>
@@ -219,7 +219,7 @@ const FoodDetails = () => {
                   <button
                     onClick={() => updateOrderQty(current._id, current.qty + 1)}
                     aria-label="Increase quantity"
-                    className="details-control flex h-8 w-8 items-center justify-center rounded-full bg-[#f8f2ee] text-brown-dark hover:text-accent"
+                    className="details-control flex h-8 w-8 items-center justify-center rounded-full bg-[#1f1714] text-[#f8f0e8] border border-[#4d3b31] hover:text-accent"
                   >
                     <Plus size={16} />
                   </button>
