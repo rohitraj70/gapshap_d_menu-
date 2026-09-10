@@ -16,13 +16,15 @@
       (() => {
         try {
           const savedTheme = localStorage.getItem('gapshap_theme');
-          const isDark = savedTheme ? savedTheme === 'dark' : true;
+          const isDark = savedTheme !== 'light';
           document.documentElement.classList.toggle('dark', isDark);
-          document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
-          localStorage.setItem('gapshap_theme', isDark ? 'dark' : 'light');
+          document.documentElement.style.colorScheme = 'dark';
+          document.documentElement.style.backgroundColor = '#120f0d';
+          localStorage.setItem('gapshap_theme', 'dark');
         } catch (error) {
           document.documentElement.classList.add('dark');
           document.documentElement.style.colorScheme = 'dark';
+          document.documentElement.style.backgroundColor = '#120f0d';
         }
       })();
     </script>

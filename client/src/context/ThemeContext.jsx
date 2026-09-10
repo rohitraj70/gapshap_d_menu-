@@ -5,16 +5,19 @@ const ThemeContext = createContext({ darkMode: true });
 
 export const ThemeProvider = ({ children }) => {
   useEffect(() => {
-    try {
-      const savedTheme = localStorage.getItem(THEME_KEY);
-      const isDark = savedTheme ? savedTheme === "dark" : true;
-      document.documentElement.classList.toggle("dark", isDark);
-      document.documentElement.style.colorScheme = isDark ? "dark" : "light";
-      localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
-    } catch (error) {
+    const applyDarkTheme = () => {
       document.documentElement.classList.add("dark");
       document.documentElement.style.colorScheme = "dark";
-    }
+      document.documentElement.style.backgroundColor = "#120f0d";
+
+      try {
+        localStorage.setItem(THEME_KEY, "dark");
+      } catch (error) {
+        // Ignore storage errors and keep the dark theme applied.
+      }
+    };
+
+    applyDarkTheme();
   }, []);
 
   return (
