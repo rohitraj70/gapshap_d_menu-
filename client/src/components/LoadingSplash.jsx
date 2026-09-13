@@ -17,11 +17,11 @@ const LoadingSplash = ({ visible }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-[999] flex items-center justify-center bg-[#120f0d] transition-opacity duration-400 ${
+      className={`fixed inset-0 z-[999] flex items-center justify-center overflow-hidden bg-[#120f0d] px-5 py-6 transition-opacity duration-400 [padding-top:calc(env(safe-area-inset-top)+1.5rem)] [padding-bottom:calc(env(safe-area-inset-bottom)+1.5rem)] ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <div className="flex flex-col items-center justify-center px-6 text-center">
+      <div className="flex w-full max-w-[420px] flex-col items-center justify-center text-center sm:max-w-[480px]">
         <div className="relative flex h-24 w-24 items-center justify-center rounded-[1.8rem] border border-[#f0a75a]/30 bg-[#1d1714] shadow-[0_26px_70px_-30px_rgba(0,0,0,0.9)]">
           <img src="/Gapshap-logo.png" alt="Gapshup Cafe" className="h-16 w-16 rounded-2xl object-cover" />
           <div className="absolute -inset-3 rounded-[2.1rem] border border-[#f0a75a]/20" />
@@ -32,10 +32,10 @@ const LoadingSplash = ({ visible }) => {
           Loading menu
         </div>
 
-        <h1 className="mt-3 font-display text-3xl leading-tight text-[#fff8f0] sm:text-4xl">
+        <h1 className="mt-3 max-w-[15ch] text-3xl leading-tight text-[#fff8f0] sm:text-4xl">
           Welcome to <span className="text-[#f0a75a]">Gapshup</span>'s digital menu
         </h1>
-        <p className="mt-3 max-w-md text-sm leading-6 text-[#d7bba3]">
+        <p className="mt-3 max-w-[28rem] text-sm leading-6 text-[#d7bba3]">
           Preparing your favorite dishes and cafe experience...
         </p>
 
