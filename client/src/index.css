@@ -227,6 +227,21 @@ html.dark .collection-clear {
   45% { transform: translateX(-18px); }
 }
 
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-80%);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(30%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0.5;
+  }
+}
+
 html.dark input,
 html.dark textarea,
 html.dark select { color: #f8eee3; }

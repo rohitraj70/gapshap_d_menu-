@@ -7,6 +7,7 @@ import CategoryTabs from "../components/CategoryTabs";
 import FoodCard from "../components/FoodCard";
 import FloatingFavButton from "../components/FloatingFavButton";
 import EmptyState from "../components/EmptyState";
+import LoadingSplash from "../components/LoadingSplash";
 import { FoodGridSkeleton, ChipsSkeleton, LoadingMenuMessage } from "../components/Skeletons";
 import { fetchCategories, fetchMenu, fetchCafeSettings } from "../services/api";
 
@@ -184,7 +185,9 @@ const Home = () => {
   }, [filteredItems.length, hasMoreItems]);
 
   return (
-    <div className="min-h-screen bg-cream pb-28">
+    <>
+      <LoadingSplash visible={loading} />
+      <div className="min-h-screen bg-cream pb-28">
       <Navbar />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8 space-y-7">
@@ -260,6 +263,7 @@ const Home = () => {
 
       <FloatingFavButton />
     </div>
+    </>
   );
 };
 
