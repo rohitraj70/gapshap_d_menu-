@@ -103,7 +103,7 @@ export const getOrderById = asyncHandler(async (req, res) => {
 });
 
 export const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { status } = req.body;
+  const { status, declineReason } = req.body;
   const { id } = req.params;
 
   if (!status || !["pending", "confirmed", "completed", "declined"].includes(status)) {
@@ -118,6 +118,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 
   order.status = status;
+  order.declineReason = status === "declined" ? (typeof declineReason === "string" ? declineReason.trim() : "") : "";
   await order.save();
 
   if (global.io) {
@@ -125,6 +126,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
       order: {
         ...order.toObject(),
         status: order.status,
+        declineReason: order.declineReason,
       },
     });
   }

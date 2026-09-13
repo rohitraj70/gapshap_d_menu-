@@ -14,6 +14,7 @@ import OrderHistory from "./pages/OrderHistory";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import Orders from "./pages/admin/Orders";
+import Feedback from "./pages/admin/Feedback";
 import Categories from "./pages/admin/Categories";
 import MenuItems from "./pages/admin/MenuItems";
 
@@ -39,6 +40,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/admin/dashboard" element={<Dashboard />} />
               <Route path="/admin/orders" element={<Orders />} />
+              <Route path="/admin/feedback" element={<Feedback />} />
               <Route path="/admin/categories" element={<Categories />} />
               <Route path="/admin/menu" element={<MenuItems />} />
             </Route>

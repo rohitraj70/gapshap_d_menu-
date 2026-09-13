@@ -11,7 +11,7 @@ const statusStyles = {
   declined: "bg-rose-100 text-rose-700",
 };
 
-const OrderCard = ({ order, onStatusChange }) => {
+const OrderCard = ({ order, onStatusChange, onDeclineRequest }) => {
   const statusLabel = order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : "Pending";
 
   return (
@@ -68,6 +68,12 @@ const OrderCard = ({ order, onStatusChange }) => {
       </div>
 
       {order.notes && <p className="mt-4 text-sm text-brown-light">Note: {order.notes}</p>}
+      {order.status === "declined" && order.declineReason && (
+        <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+          <p className="font-semibold uppercase tracking-[0.14em] text-rose-700">Decline reason</p>
+          <p className="mt-1 leading-6">{order.declineReason}</p>
+        </div>
+      )}
 
       {(order.status === "pending" || order.status === "confirmed") && (
         <div className="mt-4 flex flex-wrap gap-2">
@@ -88,7 +94,7 @@ const OrderCard = ({ order, onStatusChange }) => {
             </button>
           )}
           <button
-            onClick={() => onStatusChange(order._id, "declined")}
+            onClick={() => onDeclineRequest(order._id)}
             className="inline-flex items-center gap-2 rounded-full bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700"
           >
             <X size={16} /> Decline
@@ -104,6 +110,8 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [newOrderCount, setNewOrderCount] = useState(0);
+  const [declineTarget, setDeclineTarget] = useState(null);
+  const [declineReason, setDeclineReason] = useState("");
   const audioContextRef = useRef(null);
   const knownOrderIdsRef = useRef(new Set());
 
@@ -224,14 +232,21 @@ const Orders = () => {
 
   const pendingCount = useMemo(() => orders.filter((order) => order.status === "pending").length, [orders]);
 
-  const handleStatusChange = async (orderId, nextStatus) => {
+  const handleStatusChange = async (orderId, nextStatus, reason = "") => {
     try {
-      await updateOrderStatus(orderId, nextStatus);
-      setOrders((prev) => prev.map((order) => order._id === orderId ? { ...order, status: nextStatus } : order));
+      await updateOrderStatus(orderId, nextStatus, reason);
+      setOrders((prev) => prev.map((order) => order._id === orderId ? { ...order, status: nextStatus, declineReason: nextStatus === "declined" ? reason : "" } : order));
       setNewOrderCount((prev) => (prev > 0 ? Math.max(0, prev - 1) : 0));
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const confirmDecline = async () => {
+    if (!declineTarget) return;
+    await handleStatusChange(declineTarget, "declined", declineReason);
+    setDeclineTarget(null);
+    setDeclineReason("");
   };
 
   return (
@@ -279,8 +294,43 @@ const Orders = () => {
         ) : (
           <div className="space-y-4">
             {orders.map((order) => (
-              <OrderCard key={order._id} order={order} onStatusChange={handleStatusChange} />
+              <OrderCard key={order._id} order={order} onStatusChange={handleStatusChange} onDeclineRequest={setDeclineTarget} />
             ))}
+          </div>
+        )}
+
+        {declineTarget && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-brown-dark/50 p-4">
+            <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl">
+              <h3 className="font-display text-xl font-bold text-brown-dark">Decline order</h3>
+              <p className="mt-2 text-sm text-brown-light">Add a reason so the customer can see why this order was declined.</p>
+              <textarea
+                value={declineReason}
+                onChange={(event) => setDeclineReason(event.target.value)}
+                rows={4}
+                placeholder="Reason for decline..."
+                className="mt-4 w-full rounded-xl border border-brown/10 bg-cream px-3 py-2.5 text-sm text-brown-dark placeholder:text-brown-light focus:border-accent focus:outline-none"
+              />
+              <div className="mt-4 flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeclineTarget(null);
+                    setDeclineReason("");
+                  }}
+                  className="rounded-full border border-brown/10 bg-white px-3 py-2 text-sm font-semibold text-brown-dark"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDecline}
+                  className="rounded-full bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-700"
+                >
+                  Decline order
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </main>

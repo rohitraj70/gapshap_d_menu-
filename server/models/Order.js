@@ -31,6 +31,7 @@ const orderSchema = new mongoose.Schema(
     items: { type: [orderItemSchema], required: true },
     totalAmount: { type: Number, required: true, min: 0 },
     notes: { type: String, default: "" },
+    declineReason: { type: String, default: "" },
     expiresAt: { type: Date, default: getNextMidnight },
   },
   { timestamps: true }

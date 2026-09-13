@@ -169,6 +169,13 @@ const OrderHistory = () => {
                     </div>
                   </div>
 
+                  {order.status === "declined" && order.declineReason && (
+                    <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-xs text-rose-700">
+                      <p className="font-semibold uppercase tracking-[0.16em] text-rose-700">Decline reason</p>
+                      <p className="mt-1 leading-5">{order.declineReason}</p>
+                    </div>
+                  )}
+
                   {order.orderType === "outside" && order.phone && order.status !== "declined" && order.status !== "completed" && (
                     <button
                       onClick={() => handleCall(order.phone)}

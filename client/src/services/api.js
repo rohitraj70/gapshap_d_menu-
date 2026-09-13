@@ -36,7 +36,10 @@ export const fetchMenuByCategory = (categoryId) => api.get(`/menu/category/${cat
 export const createOrder = (payload) => api.post("/orders", payload);
 export const getOrders = () => api.get("/orders");
 export const getOrderById = (id) => api.get(`/orders/${id}`);
-export const updateOrderStatus = (id, status) => api.put(`/orders/${id}/status`, { status });
+export const updateOrderStatus = (id, status, declineReason = "") => api.put(`/orders/${id}/status`, { status, declineReason });
+
+export const submitFeedback = (payload) => api.post("/feedback", payload);
+export const getFeedback = () => api.get("/feedback");
 
 // Cafe settings
 export const fetchCafeSettings = () => api.get("/settings");

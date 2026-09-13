@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { io } from "socket.io-client";
-import { CheckCircle2, Clock3, XCircle, ArrowLeft } from "lucide-react";
-import { API_BASE_URL, getOrderById } from "../services/api";
+import { CheckCircle2, Clock3, XCircle, ArrowLeft, Send } from "lucide-react";
+import { API_BASE_URL, getOrderById, submitFeedback } from "../services/api";
 
 const statusConfig = {
   pending: {
@@ -57,6 +57,10 @@ const OrderStatus = () => {
   const [searchParams] = useSearchParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [feedbackError, setFeedbackError] = useState("");
+  const [feedbackSuccess, setFeedbackSuccess] = useState("");
+  const [submittingFeedback, setSubmittingFeedback] = useState(false);
   const navigate = useNavigate();
   const socketRef = useRef(null);
 
@@ -158,6 +162,33 @@ const OrderStatus = () => {
     );
   }
 
+  const handleFeedbackSubmit = async (event) => {
+    event.preventDefault();
+
+    const trimmedFeedback = feedbackMessage.trim();
+    if (!trimmedFeedback) {
+      setFeedbackError("Please enter a message before sending feedback.");
+      return;
+    }
+
+    try {
+      setSubmittingFeedback(true);
+      setFeedbackError("");
+      await submitFeedback({
+        orderId: order._id,
+        customerName: order.customerName,
+        message: trimmedFeedback,
+      });
+      setFeedbackSuccess("Thank you for your feedback.");
+      setFeedbackMessage("");
+    } catch (error) {
+      console.error(error);
+      setFeedbackError("Unable to submit feedback right now. Please try again.");
+    } finally {
+      setSubmittingFeedback(false);
+    }
+  };
+
   const config = statusConfig[order.status] || statusConfig.pending;
   const StatusIcon = config.icon;
 
@@ -222,6 +253,33 @@ const OrderStatus = () => {
               </div>
             ))}
           </div>
+
+          {order.status === "declined" && order.declineReason && (
+            <div className="mt-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+              <p className="font-semibold uppercase tracking-[0.16em] text-rose-700">Decline reason</p>
+              <p className="mt-2 leading-6">{order.declineReason}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleFeedbackSubmit} className="mt-6 rounded-2xl border border-brown/10 bg-cream p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brown-light">Feedback</p>
+            <textarea
+              value={feedbackMessage}
+              onChange={(event) => setFeedbackMessage(event.target.value)}
+              rows={4}
+              placeholder="Share your experience with the cafe..."
+              className="mt-3 w-full rounded-xl border border-brown/10 bg-white px-3 py-2.5 text-sm text-brown-dark placeholder:text-brown-light focus:border-accent focus:outline-none"
+            />
+            {feedbackError && <p className="mt-2 text-sm text-rose-600">{feedbackError}</p>}
+            {feedbackSuccess && <p className="mt-2 text-sm text-emerald-600">{feedbackSuccess}</p>}
+            <button
+              type="submit"
+              disabled={submittingFeedback}
+              className="mt-3 inline-flex items-center gap-2 rounded-full bg-brown-dark px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              <Send size={15} /> {submittingFeedback ? "Sending..." : "Send feedback"}
+            </button>
+          </form>
 
           <div className="mt-6 flex items-center justify-between border-t border-brown/10 pt-4">
             <span className="text-sm text-brown-light">Total</span>
