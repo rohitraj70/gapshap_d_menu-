@@ -72,6 +72,9 @@ html.dark body .text-brown,
 html.dark .text-brown-light,
 html.dark body .text-brown-light,
 .text-brown-light { color: var(--app-text-muted) !important; }
+html.dark .text-accent,
+html.dark body .text-accent,
+.text-accent { color: #f0a75a !important; }
 html.dark .border-brown\/5,
 html.dark body .border-brown\/5,
 .border-brown\/5 { border-color: rgba(249, 241, 234, 0.08) !important; }
