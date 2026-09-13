@@ -88,6 +88,7 @@ const Home = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
+  const [menuReady, setMenuReady] = useState(false);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [search, setSearch] = useState(savedState.search || "");
   const [activeCategory, setActiveCategory] = useState(savedState.activeCategory || null);
@@ -115,19 +116,30 @@ const Home = () => {
   useEffect(() => {
     if (loading) {
       setShowSplash(true);
+      setMenuReady(false);
       return undefined;
     }
 
     if (items.length === 0) {
       setShowSplash(false);
+      setMenuReady(false);
       return undefined;
     }
 
     const splashTimer = setTimeout(() => {
-      requestAnimationFrame(() => setShowSplash(false));
+      requestAnimationFrame(() => {
+        setShowSplash(false);
+      });
     }, 5000);
 
-    return () => clearTimeout(splashTimer);
+    const readyTimer = setTimeout(() => {
+      setMenuReady(true);
+    }, 5200);
+
+    return () => {
+      clearTimeout(splashTimer);
+      clearTimeout(readyTimer);
+    };
   }, [loading, items.length]);
 
   useEffect(() => {
@@ -246,6 +258,7 @@ const Home = () => {
               activeId={activeCategory}
               onSelect={setActiveCategory}
               itemCounts={availableItemCounts}
+              shouldNudge={menuReady}
             />
           )}
 

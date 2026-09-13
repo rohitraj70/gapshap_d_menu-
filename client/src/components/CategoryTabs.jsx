@@ -1,9 +1,9 @@
 import { ChevronRight } from "lucide-react";
 
-const CategoryTabs = ({ categories, activeId, onSelect, itemCounts = {} }) => {
+const CategoryTabs = ({ categories, activeId, onSelect, itemCounts = {}, shouldNudge = false }) => {
   return (
     <div className="relative -mx-4 md:mx-0">
-      <div className="category-tabs-scroll flex gap-2 overflow-x-auto hide-scrollbar px-4 py-1 md:flex-wrap md:overflow-visible md:px-0 md:gap-y-2">
+      <div className={`category-tabs-scroll flex gap-2 overflow-x-auto hide-scrollbar px-4 py-1 md:flex-wrap md:overflow-visible md:px-0 md:gap-y-2 ${shouldNudge ? "category-tabs-scroll-active" : ""}`}>
         <button
           onClick={() => onSelect(null)}
           className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
