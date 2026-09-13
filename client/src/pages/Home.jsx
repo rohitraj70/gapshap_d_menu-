@@ -233,28 +233,7 @@ const Home = () => {
 
         {!search && (
           <>
-            {loading ? (
-              <ChipsSkeleton />
-            ) : (
-              featured.length > 0 && (
-                <section>
-                  <h2 className="font-display text-xl font-semibold text-brown-dark flex items-center gap-1.5 mb-3">
-                    Most Loved <Flame size={18} className="text-accent" />
-                  </h2>
-                  <div className="flex gap-3 overflow-x-auto hide-scrollbar -mx-4 px-4 pb-1">
-                    {featured.map((item) => (
-                      <motion.div
-                        key={item._id}
-                        whileHover={{ y: -3 }}
-                        className="shrink-0 w-40"
-                      >
-                        <FoodCard item={item} />
-                      </motion.div>
-                    ))}
-                  </div>
-                </section>
-              )
-            )}
+            {loading && <ChipsSkeleton />}
           </>
         )}
 

@@ -46,7 +46,7 @@ const FoodCard = memo(({ item }) => {
             </div>
           )}
           {item.featured && (
-            <span className="absolute left-2 top-2 rounded-full bg-accent px-2 py-1 text-[11px] font-bold text-white shadow-md">
+            <span className="absolute left-2 top-2 z-10 rounded-full bg-accent px-2 py-1 text-[11px] font-bold text-white shadow-md">
               Most Loved ❤️
             </span>
           )}
