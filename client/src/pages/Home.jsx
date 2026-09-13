@@ -87,6 +87,7 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [search, setSearch] = useState(savedState.search || "");
   const [activeCategory, setActiveCategory] = useState(savedState.activeCategory || null);
@@ -110,6 +111,24 @@ const Home = () => {
   useEffect(() => {
     setVisibleCount(INITIAL_VISIBLE_ITEMS);
   }, [search, activeCategory]);
+
+  useEffect(() => {
+    if (loading) {
+      setShowSplash(true);
+      return undefined;
+    }
+
+    if (items.length === 0) {
+      setShowSplash(false);
+      return undefined;
+    }
+
+    const splashTimer = setTimeout(() => {
+      requestAnimationFrame(() => setShowSplash(false));
+    }, 5000);
+
+    return () => clearTimeout(splashTimer);
+  }, [loading, items.length]);
 
   useEffect(() => {
     const load = async () => {
@@ -186,11 +205,13 @@ const Home = () => {
 
   return (
     <>
-      <LoadingSplash visible={loading} />
+      <LoadingSplash visible={showSplash} />
       <div className="min-h-screen bg-cream pb-28">
       <Navbar />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8 space-y-7">
+        <SearchBar value={search} onChange={setSearch} />
+
         <section className={`flex flex-col gap-3 rounded-2xl border p-4 shadow-[0_14px_26px_-20px_rgba(0,0,0,0.6)] sm:flex-row sm:items-center sm:justify-between ${cafeSettings.acceptingOrders ? "border-emerald-200 bg-emerald-50 dark:border-[#2d5c52] dark:bg-[#172d29]" : "border-amber-200 bg-amber-50 dark:border-[#6a4d2d] dark:bg-[#2f241b]"}`}>
           <div className="flex items-start gap-3">
             <div className={`mt-0.5 rounded-full p-2 ${cafeSettings.acceptingOrders ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"}`}>
@@ -211,8 +232,6 @@ const Home = () => {
             </a>
           )}
         </section>
-
-        <SearchBar value={search} onChange={setSearch} />
 
         {!search && (
           <>
