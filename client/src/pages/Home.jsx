@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown, Flame, SearchX, Sparkles, Phone, ShoppingBag } from "lucide-react";
+import { SearchX, Phone, ShoppingBag } from "lucide-react";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import CategoryTabs from "../components/CategoryTabs";
@@ -188,26 +188,6 @@ const Home = () => {
       <Navbar />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8 space-y-7">
-        <section className="top-banner relative overflow-hidden rounded-[1.75rem] bg-brown-dark px-6 py-8 sm:px-10 sm:py-10 text-cream shadow-soft">
-          <div className="top-banner-ring absolute -right-10 -top-16 h-56 w-56 rounded-full border-[22px] border-accent/30" />
-          <div className="top-banner-ring absolute right-10 bottom-[-72px] h-40 w-40 rounded-full border-[16px] border-cream/10" />
-          <div className="top-banner-glow absolute left-1/2 top-[-12rem] h-64 w-64 -translate-x-1/2 rounded-full" />
-          <div className="relative max-w-xl">
-            <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-accent-light">
-              <Sparkles size={14} /> Your table is waiting
-            </p>
-            <h1 className="font-display text-4xl leading-[0.98] sm:text-5xl font-semibold tracking-tight">
-              Good food.<br /><em className="text-accent-light">Better gapshup.</em>
-            </h1>
-            <p className="mt-4 max-w-md text-sm leading-6 text-cream/70">
-              Welcome in. Explore the menu, add your picks to My Orders, then show your list at the counter.
-            </p>
-            <a href="#menu" className="mt-6 inline-flex items-center gap-2 rounded-full bg-cream px-4 py-2.5 text-xs font-bold text-brown-dark hover:bg-accent hover:text-white transition-colors">
-              Explore the menu <ArrowDown size={15} />
-            </a>
-          </div>
-        </section>
-
         <section className={`flex flex-col gap-3 rounded-2xl border p-4 shadow-[0_14px_26px_-20px_rgba(0,0,0,0.6)] sm:flex-row sm:items-center sm:justify-between ${cafeSettings.acceptingOrders ? "border-emerald-200 bg-emerald-50 dark:border-[#2d5c52] dark:bg-[#172d29]" : "border-amber-200 bg-amber-50 dark:border-[#6a4d2d] dark:bg-[#2f241b]"}`}>
           <div className="flex items-start gap-3">
             <div className={`mt-0.5 rounded-full p-2 ${cafeSettings.acceptingOrders ? "bg-emerald-600 text-white" : "bg-amber-500 text-white"}`}>
