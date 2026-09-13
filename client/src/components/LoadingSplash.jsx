@@ -17,7 +17,7 @@ const LoadingSplash = ({ visible }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-[999] flex min-h-screen items-center justify-center overflow-hidden bg-[#120f0d] px-5 py-6 transition-opacity duration-500 [padding-top:calc(env(safe-area-inset-top)+1.5rem)] [padding-bottom:calc(env(safe-area-inset-bottom)+1.5rem)] ${
+      className={`fixed inset-0 z-[999] flex items-center justify-center overflow-hidden bg-[#120f0d] px-5 py-6 transition-opacity duration-500 [padding-top:env(safe-area-inset-top)] [padding-bottom:env(safe-area-inset-bottom)] ${
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
