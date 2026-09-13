@@ -12,6 +12,15 @@ export const FoodCardSkeleton = () => (
   </div>
 );
 
+export const LoadingMenuMessage = () => (
+  <div className="flex items-center justify-center rounded-2xl border border-brown/10 bg-white/80 px-4 py-4 shadow-card dark:border-[#4d3b31] dark:bg-[#2a211d]/90">
+    <div className="flex items-center gap-3 text-sm font-semibold text-brown-dark dark:text-[#fff8f0]">
+      <span className="inline-flex h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+      <span>Please wait while we load your menu...</span>
+    </div>
+  </div>
+);
+
 export const FoodGridSkeleton = ({ count = 6 }) => (
   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
     {Array.from({ length: count }).map((_, i) => (

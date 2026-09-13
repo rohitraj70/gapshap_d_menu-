@@ -7,7 +7,7 @@ import CategoryTabs from "../components/CategoryTabs";
 import FoodCard from "../components/FoodCard";
 import FloatingFavButton from "../components/FloatingFavButton";
 import EmptyState from "../components/EmptyState";
-import { FoodGridSkeleton, ChipsSkeleton } from "../components/Skeletons";
+import { FoodGridSkeleton, ChipsSkeleton, LoadingMenuMessage } from "../components/Skeletons";
 import { fetchCategories, fetchMenu, fetchCafeSettings } from "../services/api";
 
 const shuffleItems = (items) => {
@@ -232,7 +232,12 @@ const Home = () => {
 
         <section>
           {loading ? (
-            <FoodGridSkeleton count={6} />
+            <>
+              <LoadingMenuMessage />
+              <div className="mt-4">
+                <FoodGridSkeleton count={6} />
+              </div>
+            </>
           ) : filteredItems.length === 0 ? (
             <EmptyState
               icon={SearchX}
